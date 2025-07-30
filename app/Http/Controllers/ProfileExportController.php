@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class ProfileExportController extends Controller
@@ -49,24 +50,25 @@ final class ProfileExportController extends Controller
         return response()->json(['error' => 'Invalid format'], 400);
     }
 
-    /**
-     * @return false|string
-     */
-    private function convertToCsv(array $data): string|false
+    private function convertToCsv(array $data): string
     {
-        if (empty($data)) {
-            return "No data available\n";
+        $csv = fopen('php://temp', 'r+');
+        if ($csv === false) {
+            throw new RuntimeException('Unable to open temporary memory for CSV export.');
         }
 
-        $csv = fopen('php://temp', 'r+');
-        fputcsv($csv, array_keys($data[0])); // Header row
+        if (!empty($data)) {
+            fputcsv($csv, array_keys($data[0]));
 
-        foreach ($data as $row) {
-            $formattedRow = array_map(function ($value) {
-                return is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $value;
-            }, array_values($row));
+            foreach ($data as $row) {
+                $formattedRow = array_map(function ($value) {
+                    return is_array($value)
+                        ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                        : $value;
+                }, array_values($row));
 
-            fputcsv($csv, $formattedRow);
+                fputcsv($csv, $formattedRow);
+            }
         }
 
         rewind($csv);
