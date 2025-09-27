@@ -173,10 +173,17 @@ window.addEventListener('load', function() {
         var len = textarea.value.length;
         textarea.setSelectionRange(len, len);
     }
+
+    checkAndLoadForAnchor();
+});
+
+document.addEventListener('turbolinks:load', function() {
+    checkAndLoadForAnchor();
 });
 
 let page = 1;
 let isLoading = false;
+let isLoadingForAnchor = false;
 
 window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
@@ -184,8 +191,69 @@ window.addEventListener('scroll', () => {
     }
 });
 
+function checkAndLoadForAnchor() {
+    const hash = window.location.hash;
+    if (!hash || !hash.startsWith('#note-')) {
+        return;
+    }
+
+    const targetId = hash.substring(1);
+    const targetElement = document.getElementById(targetId);
+
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
+
+    if (!document.getElementById('note-list')) {
+        return;
+    }
+
+    loadMoreDataForAnchor(targetId);
+}
+
+function loadMoreDataForAnchor(targetId) {
+    if (isLoading || isLoadingForAnchor) {
+        return;
+    }
+
+    isLoadingForAnchor = true;
+    page++;
+    document.getElementById('loading').style.display = 'block';
+
+    fetch(`${appBaseUrl}/notes?page=${page}`)
+        .then(response => response.text())
+        .then(data => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(data, 'text/html');
+            const newNotes = htmlDoc.querySelectorAll('#note-list .list-group-item');
+
+            newNotes.forEach(note => document.getElementById('note-list').appendChild(note));
+            document.getElementById('loading').style.display = 'none';
+            isLoadingForAnchor = false;
+
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            if (newNotes.length === 0) {
+                console.log('Note with anchor not found and no more notes to load');
+                return;
+            }
+
+            setTimeout(() => loadMoreDataForAnchor(targetId), 100);
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById('loading').style.display = 'none';
+            isLoadingForAnchor = false;
+        });
+}
+
 function loadMoreData() {
-    if (isLoading) {
+    if (isLoading || isLoadingForAnchor) {
         return;
     }
     if (!document.getElementById('note-list')) {
