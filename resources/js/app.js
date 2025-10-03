@@ -61,11 +61,11 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('note.show', {note: getUuidFromRoute()});
+                Turbolinks.visit(getRouteUrl('note.show', {note: getUuidFromRoute()}));
             } else if ([
                 'note.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('notes.show') + '#note-' + getUuidFromRoute();
+                Turbolinks.visit(getRouteUrl('notes.show') + '#note-' + getUuidFromRoute());
             } else if ([
                 'profile.show',
                 'user-profile-information.update',
@@ -73,9 +73,9 @@ const keydownListener = (event) => {
                 'two-factor.enable',
                 'current-user-photo.destroy',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('notes.show');
+                Turbolinks.visit(getRouteUrl('notes.show'));
             } else {
-                window.location.href = getRouteUrl('notes.show');
+                Turbolinks.visit(getRouteUrl('notes.show'));
             }
         }
 
@@ -85,13 +85,13 @@ const keydownListener = (event) => {
                     'filter.exclude.show',
                     'filter.search.show',
                 ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('notes.show')
+                Turbolinks.visit(getRouteUrl('notes.show'))
             }
         }
 
         if (event.key === 'a') {
             if (appCurrentRouteName === 'menu.show') {
-                window.location.href = getRouteUrl('profile.show')
+                Turbolinks.visit(getRouteUrl('profile.show'))
             }
         }
 
@@ -107,18 +107,18 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('note.emojis.show', {note: getUuidFromRoute()});
+                Turbolinks.visit(getRouteUrl('note.emojis.show', {note: getUuidFromRoute()}));
             } else {
-                window.location.href = getRouteUrl('filter.exclude.show');
+                Turbolinks.visit(getRouteUrl('filter.exclude.show'));
             }
         }
 
         if (event.key === 'f') {
-            window.location.href = getRouteUrl('filter.show');
+            Turbolinks.visit(getRouteUrl('filter.show'));
         }
 
         if (event.key === 's') {
-            window.location.href = getRouteUrl('filter.search.show');
+            Turbolinks.visit(getRouteUrl('filter.search.show'));
         }
 
         if (event.key === 'l') {
@@ -129,13 +129,13 @@ const keydownListener = (event) => {
 
         if (event.key === 'm') {
             if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('menu.show');
+                Turbolinks.visit(getRouteUrl('menu.show'));
             }
         }
 
         if (event.key === 'n') {
             if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('note.create');
+                Turbolinks.visit(getRouteUrl('note.create'));
             }
         }
 
@@ -145,12 +145,12 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('note.title.show', {uuid: getUuidFromRoute()});
+                Turbolinks.visit(getRouteUrl('note.title.show', {uuid: getUuidFromRoute()}));
             }
         }
 
         if (event.key === '?' || event.key === '/') {
-            window.location.href = getRouteUrl('shortcuts.show');
+            Turbolinks.visit(getRouteUrl('shortcuts.show'));
         }
 
         if (

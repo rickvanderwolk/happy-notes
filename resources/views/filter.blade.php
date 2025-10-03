@@ -1,10 +1,14 @@
 <x-app-layout>
+    @push('head')
+        <meta name="turbolinks-cache-control" content="no-cache">
+    @endpush
+
     @php
         $storageKey = request()->is('filter') ? 'selected_emojis' : 'excluded_emojis';
         $isInclude = request()->is('filter');
     @endphp
 
-    <div x-data @apply-filter.window="window.location.href = '{{ route('notes.show') }}'">
+    <div x-data @apply-filter.window="Turbolinks.visit('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
             <h2 class="section-title">
                 @if($isInclude)

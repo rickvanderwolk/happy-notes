@@ -1,4 +1,8 @@
 <x-app-layout>
+    @push('head')
+        <meta name="turbolinks-cache-control" content="no-cache">
+    @endpush
+
     <x-slot name="header"></x-slot>
 
     <meta name="notes-url" content="{{ url('/') }}">

@@ -43,7 +43,6 @@ final class NoteController extends Controller
 
     public function show(Note $note): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
-        $note = Note::where(['uuid' => $note->uuid])->firstOrFail();
         $note->body = json_decode($note->body, true);
         return view('notes.show', compact('note'));
     }
@@ -79,16 +78,14 @@ final class NoteController extends Controller
 
     public function destroy(Note $note): \Illuminate\Http\RedirectResponse
     {
-        $item = Note::where('uuid', $note->uuid)->firstOrFail();
-        $item->delete();
+        $note->delete();
         return redirect()->route('dashboard');
     }
 
     public function formTitle(Note $note): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
-        $item = Note::where('uuid', $note->uuid)->first();
         return view('notes.form-title', [
-            'item' => $item,
+            'item' => $note,
         ]);
     }
 
@@ -97,8 +94,6 @@ final class NoteController extends Controller
         $data = $request->validate([
             'title' => 'required|string',
         ]);
-
-        $note = Note::where('uuid', $note->uuid)->first();
 
         $selectedEmojis = $note->emojis ?? [];
         $selectedEmojis = collect($selectedEmojis)->flatten()->unique()->values()->toArray();
@@ -115,27 +110,23 @@ final class NoteController extends Controller
 
     public function formEmojis(Note $note): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
-        $item = Note::where('uuid', $note->uuid)->first();
         return view('notes.form-emojis', [
-            'item' => $item,
+            'item' => $note,
         ]);
     }
 
     public function storeEmojis(Request $request, Note $note): \Illuminate\Http\RedirectResponse
     {
-        $item = Note::where('uuid', $note->uuid)->first();
         $selectedEmojis = json_decode($request->input('selectedEmojis', '[]'), true);
         $selectedEmojis = collect($selectedEmojis)->flatten()->unique()->values()->toArray();
-        $item->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
-        $item->save();
+        $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
+        $note->save();
         return redirect()->route('note.show', ['note' => $note->uuid]);
     }
 
     public function storeBody(Request $request, Note $note): \Illuminate\Http\RedirectResponse
     {
         $body = $request->input('body');
-
-        $note = Note::where('uuid', $note->uuid)->first();
 
         if (empty($body)) {
             $note->body = null;

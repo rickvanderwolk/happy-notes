@@ -17,7 +17,7 @@
 
                         @if($note->progress)
                             <div class="note-progress">
-                                <livewire:progress-bar :idNote="$note->id" />
+                                <livewire:progress-bar :idNote="$note->id" :progress="$note->progress" />
                             </div>
                         @endif
 

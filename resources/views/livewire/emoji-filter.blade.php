@@ -23,7 +23,7 @@
 
     <!-- Emoji selector grid -->
     <div data-cy="emoji-filter-emoji-selector" class="emoji-grid">
-        @foreach($selectableEmojis as $emoji)
+        @foreach($this->selectableEmojis as $emoji)
             <div class="emoji-selector emoji-selector-item text-center" wire:click="selectEmoji('{{ $emoji }}')">
                 <span class="emoji">{{ $emoji }}</span>
             </div>

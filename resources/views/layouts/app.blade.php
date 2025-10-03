@@ -24,6 +24,8 @@
         <!-- Styles -->
         @vite(['resources/css/app.scss'])
         @livewireStyles
+
+        @stack('head')
     </head>
     <body>
         <x-banner/>
