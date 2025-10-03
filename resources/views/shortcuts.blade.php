@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
-            <h2 class="section-title">Keyboard Shortcuts ⌨️</h2>
+            <h2 class="section-title"><i class="fa fa-keyboard me-2"></i>Keyboard Shortcuts</h2>
             <p class="section-description-text">Speed up your workflow with these keyboard shortcuts</p>
         </div>
 
@@ -164,7 +164,7 @@
 
         <div class="text-center mt-6">
             <p class="section-description-text">
-                💡 <strong>Tip:</strong> Most shortcuts work context-sensitive, adapting to the current page you're viewing.
+                <i class="fa fa-lightbulb me-2"></i><strong>Tip:</strong> Most shortcuts work context-sensitive, adapting to the current page you're viewing.
             </p>
         </div>
     </div>

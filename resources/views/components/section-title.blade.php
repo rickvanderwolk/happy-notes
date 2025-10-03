@@ -1,13 +1,14 @@
-<div class="md:col-span-1 flex justify-between">
-    <div class="px-4 sm:px-0">
-        <h3 class="text-lg font-medium section-title-text">{{ $title }}</h3>
+<div class="mb-6">
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <h3 class="account-card-title">{{ $title }}</h3>
+            <p class="account-card-description">{{ $description }}</p>
+        </div>
 
-        <p class="mt-1 text-sm section-description-text">
-            {{ $description }}
-        </p>
-    </div>
-
-    <div class="px-4 sm:px-0">
-        {{ $aside ?? '' }}
+        @if(isset($aside))
+            <div>
+                {{ $aside }}
+            </div>
+        @endif
     </div>
 </div>

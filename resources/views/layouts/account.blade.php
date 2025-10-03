@@ -16,19 +16,45 @@
         <link rel="manifest" href="/site.webmanifest" />
 
         <!-- Styles -->
-        @vite(['resources/css/account.scss'])
+        @vite(['resources/css/app.scss'])
         @livewireStyles
     </head>
-    <body class="custom-scrollbar">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-center">
-                <div class="w-full md:w-10/12 lg:w-8/12">
-                    {{ $slot }}
+    <body>
+        <meta name="app-base-url" content="{{ url('/') }}">
+        <meta name="app-current-route-name" content="{{ Route::currentRouteName() }}">
+
+        <div id="app" class="container custom-scrollbar">
+            <div class="row">
+                <div class="col-12 col-sm-11 col-md-10 col-lg-9 col-xl-6 ms-auto me-auto">
+                    {{-- Simple navbar for account pages --}}
+                    <div id="main-navbar" class="main-navbar">
+                        <div class="navbar-inner">
+                            <div class="row g-0">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <h3 class="emoji-wrapper"></h3>
+                                            <h3 class="emoji-wrapper">
+                                                <a href="{{ route('notes.show') }}" aria-label="Close">
+                                                    <i class="fa fa-close"></i>
+                                                </a>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <main>
+                        {{ $slot }}
+                    </main>
                 </div>
             </div>
         </div>
 
         <!-- Scripts -->
+        @vite(['resources/js/app.js'])
         @livewireScripts
     </body>
 </html>

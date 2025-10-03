@@ -55,12 +55,14 @@
   border-color: $border-dark;
 
   &:hover:not(:disabled) {
-    background: $surface-hover;
-    border-color: $text-secondary;
+    background: rgba($primary, 0.1);
+    border-color: $primary;
+    transform: translateY(-1px);
   }
 
   &:active:not(:disabled) {
-    background: $border;
+    background: rgba($primary, 0.15);
+    transform: translateY(0);
   }
 }
 

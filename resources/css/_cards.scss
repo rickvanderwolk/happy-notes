@@ -231,18 +231,71 @@
   border-radius: $radius-lg;
   padding: $space-6;
   margin-bottom: $space-6;
+  transition: all $transition-base;
+
+  &:hover {
+    border-color: rgba($primary, 0.3);
+    box-shadow: $shadow-sm;
+  }
 
   .account-card-title {
     font-size: $font-size-xl;
     font-weight: $font-weight-bold;
-    margin-bottom: $space-4;
+    margin-bottom: $space-3;
     color: $text-primary;
+    text-align: left;
   }
 
   .account-card-description {
     font-size: $font-size-sm;
     color: $text-secondary;
+    margin-bottom: $space-5;
+    line-height: $line-height-relaxed;
+    text-align: left;
+  }
+
+  // Better spacing for form elements
+  .grid {
+    gap: $space-5;
+  }
+
+  // Actions at bottom
+  .section-actions {
+    margin-top: $space-6;
+    padding-top: $space-5;
+  }
+
+  // Text alignment for description text
+  .max-w-xl,
+  .max-w-2xl,
+  .max-w-3xl {
+    text-align: left;
+  }
+
+  > p {
+    text-align: left;
+  }
+}
+
+// Account section wrapper
+.account-section {
+  margin-bottom: $space-8;
+
+  .account-section-header {
+    text-align: center;
     margin-bottom: $space-6;
+
+    .account-section-title {
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $space-2;
+    }
+
+    .account-section-subtitle {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
   }
 }
 
@@ -308,8 +361,26 @@
     }
   }
 
-  .account-card .account-card-description {
-    color: $dark-text-secondary;
+  .account-card {
+    &:hover {
+      border-color: rgba($primary, 0.4);
+    }
+
+    .account-card-description {
+      color: $dark-text-secondary;
+    }
+  }
+
+  .account-section {
+    .account-section-header {
+      .account-section-title {
+        color: $dark-text;
+      }
+
+      .account-section-subtitle {
+        color: $dark-text-secondary;
+      }
+    }
   }
 
   .card.card-flat {
