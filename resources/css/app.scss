@@ -261,7 +261,7 @@ p {
     margin-right: auto;
 
     .navbar-inner {
-        padding: 0;
+        padding: 0 $space-3; // Match note card padding for consistent alignment
         margin: 0;
     }
 
@@ -345,43 +345,15 @@ p {
 
             button {
                 padding: 10px;
-                margin-left: -10px;
             }
         }
 
         .emoji {
             margin: 0;
         }
-
-        // Align with note card edges
-        &:first-child {
-            a:first-child, button:first-child {
-                margin-left: -10px;
-            }
-        }
-
-        &:last-child {
-            a:last-child, button:last-child {
-                margin-right: -10px;
-            }
-        }
     }
 
-    .d-flex {
-        &.justify-content-start {
-            .emoji-wrapper:first-child a:first-child,
-            .emoji-wrapper:first-child button:first-child {
-                margin-left: -$space-2;
-            }
-        }
-
-        &.justify-content-end {
-            .emoji-wrapper:last-child a:last-child,
-            .emoji-wrapper:last-child button:last-child {
-                margin-right: -$space-2;
-            }
-        }
-    }
+    // Remove old negative margin code - now using navbar-inner padding for consistent alignment
 }
 
 // List group modernization
