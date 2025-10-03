@@ -121,7 +121,7 @@
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
-                    Edit note body
+                    Edit body
                     <span class="shortcut-context">in note view</span>
                 </div>
                 <div class="shortcut-keys">
