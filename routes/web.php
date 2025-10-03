@@ -37,6 +37,10 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
         return view('menu');
     })->name('menu.show');
 
+    Route::get('/shortcuts', function () {
+        return view('shortcuts');
+    })->name('shortcuts.show');
+
     Route::get('/', function () { return redirect(route('notes.show')); })->name('dashboard');
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.show');
     Route::post('/notes', [NoteController::class, 'store'])->name('note.store');

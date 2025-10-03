@@ -215,6 +215,13 @@
   &:hover .menu-item-icon {
     color: $primary-dark;
   }
+
+  // Desktop only menu items (hide on mobile/touch devices)
+  &.menu-item-desktop-only {
+    @media (hover: none) {
+      display: none;
+    }
+  }
 }
 
 // Account card

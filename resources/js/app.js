@@ -120,13 +120,13 @@ const keydownListener = (event) => {
         }
 
         if (event.key === 'm') {
-            if (appCurrentRouteName === 'notes.show') {
+            if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
                 window.location.href = getRouteUrl('menu.show');
             }
         }
 
         if (event.key === 'n') {
-            if (appCurrentRouteName === 'notes.show') {
+            if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
                 window.location.href = getRouteUrl('note.create');
             }
         }
@@ -141,6 +141,10 @@ const keydownListener = (event) => {
             }
         }
 
+        if (event.key === '?' || event.key === '/') {
+            window.location.href = getRouteUrl('shortcuts.show');
+        }
+
         if (
             event.key >= '1'
             && event.key <= '9'
@@ -149,7 +153,7 @@ const keydownListener = (event) => {
             let noteList = document.getElementById('note-list');
 
             if (noteList) {
-                let listItems = noteList.getElementsByClassName('list-group-item');
+                let listItems = noteList.getElementsByClassName('note-card');
                 let index = parseInt(event.key, 10) - 1;
 
                 if (listItems.length > index) {
