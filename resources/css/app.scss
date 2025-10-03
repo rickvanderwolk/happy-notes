@@ -310,11 +310,14 @@ p {
         display: flex !important;
         flex-direction: row !important;
         align-items: center;
-        gap: $space-1;
+        gap: $space-2;
         flex-wrap: nowrap;
 
         a, button {
             flex-shrink: 0;
+            display: flex;
+            gap: $space-2;
+            align-items: center;
         }
 
         form {
