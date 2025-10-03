@@ -29,22 +29,26 @@ final class ProfileExportController extends Controller
 
         if ($format === 'json') {
             $jsonOutput = json_encode($exportData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            $filename = 'happynotes_export_' . date('Y-m-d_His') . '.json';
 
-            return Response::streamDownload(function () use ($jsonOutput) {
-                echo $jsonOutput;
-            }, 'user_data.json', [
-                'Content-Type' => 'application/json',
-            ]);
+            return response($jsonOutput)
+                ->header('Content-Type', 'application/json')
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         }
 
         if ($format === 'csv') {
             $csvOutput = $this->convertToCsv($exportData);
+            $filename = 'happynotes_export_' . date('Y-m-d_His') . '.csv';
 
-            return Response::streamDownload(function () use ($csvOutput) {
-                echo $csvOutput;
-            }, 'user_data.csv', [
-                'Content-Type' => 'text/csv',
-            ]);
+            return response($csvOutput)
+                ->header('Content-Type', 'text/csv')
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         }
 
         return response()->json(['error' => 'Invalid format'], 400);

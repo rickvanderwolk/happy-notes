@@ -9,10 +9,10 @@
 
     <x-slot name="content">
         <div>
-            <a href="{{ route('user.export.notes.create', ['format' => 'csv']) }}" class="btn btn-secondary me-2">
+            <a href="{{ route('user.export.notes.create', ['format' => 'csv']) }}" class="btn btn-secondary me-2" data-turbo="false" download>
                 Download CSV
             </a>
-            <a href="{{ route('user.export.notes.create', ['format' => 'json']) }}" class="btn btn-secondary">
+            <a href="{{ route('user.export.notes.create', ['format' => 'json']) }}" class="btn btn-secondary" data-turbo="false" download>
                 Download JSON
             </a>
         </div>
