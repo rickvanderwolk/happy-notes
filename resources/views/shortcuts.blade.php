@@ -121,7 +121,7 @@
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
-                    Focus editor
+                    Edit note body
                     <span class="shortcut-context">in note view</span>
                 </div>
                 <div class="shortcut-keys">
