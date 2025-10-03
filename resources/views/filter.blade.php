@@ -6,14 +6,14 @@
 
     <div x-data @apply-filter.window="window.location.href = '{{ route('notes.show') }}'">
         <div class="text-center mb-4">
-            <h2 class="text-2xl font-bold">
+            <h2 class="section-title">
                 @if($isInclude)
                     Filter Notes ✨
                 @else
                     Exclude Notes 🚫
                 @endif
             </h2>
-            <p class="text-sm section-description-text mt-2">
+            <p class="section-description-text mt-2">
                 @if($isInclude)
                     Select emojis to show only notes with these emojis
                 @else

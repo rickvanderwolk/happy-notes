@@ -1,16 +1,15 @@
 <div>
-    <div class="mb-4" style="position: relative;">
+    <div class="mb-4 input-group">
         <textarea
             wire:model.live="search_query"
-            class="form-control elegant-input"
+            class="form-control elegant-input input-large"
             placeholder="🔍 Search notes..."
             rows="1"
             autofocus
-            style="font-size: 20px; font-weight: 500;"
             wire:keydown.enter.prevent="applyFilter"
         ></textarea>
         @if($search_query)
-            <button wire:click="$set('search_query', '')" class="input-clear" type="button" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
+            <button wire:click="$set('search_query', '')" class="input-clear" type="button">
                 ×
             </button>
         @endif
@@ -22,8 +21,8 @@
     </div>
 
     @if($search_query && isset($resultCount))
-        <div class="text-center p-3 bg-gray-100 rounded-lg">
-            <span class="text-sm text-gray-600">
+        <div class="result-count-indicator">
+            <span class="result-count-text">
                 Found <strong>{{ $resultCount }}</strong> note{{ $resultCount !== 1 ? 's' : '' }}
             </span>
         </div>

@@ -23,9 +23,7 @@
 
                         @if(!empty($note->emojis))
                             <div data-cy="emoji-wrapper" class="note-emojis">
-                                @foreach($note->emojis as $emoji)
-                                    <span class="emoji">{{ $emoji }}</span>
-                                @endforeach
+                                <x-emoji-list :emojis="$note->emojis" size="small" />
                             </div>
                         @endif
                     </div>

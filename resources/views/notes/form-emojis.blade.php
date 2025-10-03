@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header"></x-slot>
 
-    <div class="container" style="padding-bottom: 100px;">
+    <div class="container form-page-container">
         <div class="text-center mb-4">
-            <h2 class="text-2xl font-bold">Edit Emojis 🎨</h2>
+            <h2 class="section-title">Edit Emojis 🎨</h2>
         </div>
 
         <form id="emoji-form" action="{{ route('note.emojis.store', ['note' => $item->uuid]) }}" method="POST">
@@ -21,7 +21,7 @@
         </form>
 
         <div class="fixed-button-wrapper">
-            <div style="max-width: 500px; margin: 0 auto; padding: 0 16px;">
+            <div class="fixed-button-inner">
                 <button data-cy="save-note-emojis" type="submit" form="emoji-form" class="btn btn-success btn-block btn-lg">
                     Save Note ✓
                 </button>

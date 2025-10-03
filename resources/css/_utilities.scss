@@ -121,3 +121,187 @@
 html.smooth-scroll {
   scroll-behavior: smooth;
 }
+
+// Section styling
+.section-title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  text-align: center;
+  color: $text-primary;
+  margin-bottom: $space-2;
+}
+
+.section-description-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  text-align: center;
+}
+
+// Emoji chip component
+.emoji-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($primary, 0.4);
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  position: relative;
+  flex-shrink: 0;
+  transition: all $transition-fast;
+  cursor: pointer;
+
+  .emoji {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: rgba($primary, 0.5);
+    transform: scale(1.05);
+  }
+
+  .remove-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: $danger;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: $font-weight-bold;
+    line-height: 1;
+  }
+}
+
+// Selected emojis container
+.selected-emojis-container {
+  background: rgba($primary, 0.1);
+  border-radius: $radius-md;
+  padding: $space-3;
+  margin-bottom: $space-4;
+
+  .emoji-chips-wrapper {
+    display: flex;
+    gap: $space-3;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+
+// Emoji selector hover
+.emoji-selector-item {
+  padding: $space-2;
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+  background: transparent;
+
+  &:hover {
+    background: rgba($primary, 0.2);
+    transform: scale(1.1);
+  }
+
+  .emoji {
+    font-size: 32px;
+    line-height: 1;
+  }
+}
+
+// Result count indicator
+.result-count-indicator {
+  text-align: center;
+  padding: $space-3;
+  background: rgba($border, 0.3);
+  border-radius: $radius-md;
+
+  .result-count-text {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+
+    strong {
+      color: $text-primary;
+      font-weight: $font-weight-semibold;
+    }
+  }
+}
+
+// App version text
+.app-version-text {
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $text-tertiary;
+  margin-top: $space-12 + $space-8;
+}
+
+// Form page container
+.form-page-container {
+  padding-bottom: 100px;
+}
+
+// Large text input (for titles)
+.input-large {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+}
+
+// Logo sizing utilities
+.logo-menu {
+  width: 100px;
+  height: auto;
+  margin: 0 auto $space-4;
+  display: block;
+}
+
+// Fixed button wrapper inner
+.fixed-button-inner {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 $space-4;
+}
+
+// Dark mode utilities
+@media (prefers-color-scheme: dark) {
+  .section-title {
+    color: $dark-text;
+  }
+
+  .section-description-text {
+    color: $dark-text-secondary;
+  }
+
+  .emoji-chip {
+    background: rgba($primary, 0.3);
+
+    &:hover {
+      background: rgba($primary, 0.4);
+    }
+  }
+
+  .selected-emojis-container {
+    background: rgba($primary, 0.08);
+  }
+
+  .emoji-selector-item:hover {
+    background: rgba($primary, 0.15);
+  }
+
+  .result-count-indicator {
+    background: rgba($dark-border, 0.5);
+
+    .result-count-text {
+      color: $dark-text-secondary;
+
+      strong {
+        color: $dark-text;
+      }
+    }
+  }
+
+  .app-version-text {
+    color: $dark-text-secondary;
+  }
+}

@@ -2,9 +2,9 @@
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
             <a href="{{ route('notes.show') }}">
-                <img src="/logo.png" alt="HappyNotes" class="logo" style="width: 100px; height: auto; margin: 0 auto 16px; display: block;">
+                <img src="/logo.png" alt="HappyNotes" class="logo logo-menu">
             </a>
-            <h2 class="text-2xl font-bold">Menu</h2>
+            <h2 class="section-title">Menu</h2>
         </div>
 
         <div class="menu-card-modern">
@@ -34,7 +34,7 @@
             </form>
         </div>
 
-        <div class="text-center text-xs text-gray-400" style="margin-top: 80px;">
+        <div class="app-version-text">
             {{ config('app.name') }} {{ config('app.version') }}
         </div>
     </div>

@@ -19,11 +19,8 @@
                 <div
                     data-cy="note-emoji-wrapper"
                     onclick="window.location.href='{{ route('note.emojis.show', ['note' => $note->uuid]) }}'"
-                    class="emoji-wrapper emoji-wrapper-left cursor-pointer"
                 >
-                    @foreach($note->emojis as $emojiIndex => $emoji)
-                        <span class="emoji">{{ $emoji }}</span>
-                    @endforeach
+                    <x-emoji-list :emojis="$note->emojis" class="emoji-wrapper-left cursor-pointer" />
                 </div>
             </div>
 

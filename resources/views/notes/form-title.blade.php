@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header"></x-slot>
 
-    <div class="container" style="padding-bottom: 100px;">
+    <div class="container form-page-container">
         <div class="text-center mb-4">
-            <h2 class="text-2xl font-bold">Edit Title ✏️</h2>
+            <h2 class="section-title">Edit Title ✏️</h2>
         </div>
 
         <form id="title-form" action="{{ route('note.title.store', ['note' => $item->uuid]) }}" method="POST">
@@ -14,19 +14,18 @@
                     id="titleTextarea"
                     data-cy="note-title-editor"
                     name="title"
-                    class="form-control elegant-input"
+                    class="form-control elegant-input input-large"
                     placeholder="Title"
                     rows="3"
                     autofocus
                     required
-                    style="font-size: 20px; font-weight: 500;"
                     onkeydown="if(event.key === 'Enter') event.preventDefault();"
                 >{{ $item->title }}</textarea>
             </div>
         </form>
 
         <div class="fixed-button-wrapper">
-            <div style="max-width: 500px; margin: 0 auto; padding: 0 16px;">
+            <div class="fixed-button-inner">
                 <button data-cy="save-note" type="submit" form="title-form" class="btn btn-success btn-block btn-lg">
                     Save Note ✓
                 </button>
