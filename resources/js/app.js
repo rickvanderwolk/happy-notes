@@ -212,11 +212,41 @@ document.addEventListener('turbolinks:load', function() {
             loadMoreData();
         }
     };
-    
+
     window.addEventListener('scroll', scrollListener);
+
+    // Show real notes and hide skeleton loaders
+    showRealNotes();
+
+    // Show real note content and hide skeleton loaders
+    showRealNoteContent();
 
     checkAndLoadForAnchor();
 });
+
+function showRealNotes() {
+    const skeletonContainer = document.getElementById('skeleton-container');
+    const noteList = document.getElementById('note-list');
+
+    if (skeletonContainer && noteList) {
+        // Hide skeleton loaders
+        skeletonContainer.style.display = 'none';
+        // Show real notes
+        noteList.style.display = 'flex';
+    }
+}
+
+function showRealNoteContent() {
+    const noteSkeletonContainer = document.getElementById('note-skeleton-container');
+    const noteContent = document.getElementById('note-content');
+
+    if (noteSkeletonContainer && noteContent) {
+        // Hide skeleton loaders
+        noteSkeletonContainer.style.display = 'none';
+        // Show real note content
+        noteContent.style.display = 'block';
+    }
+}
 
 function checkAndLoadForAnchor() {
     const hash = window.location.hash;

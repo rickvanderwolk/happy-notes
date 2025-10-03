@@ -378,4 +378,112 @@
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.15);
   }
+
+  .skeleton-loader {
+    .skeleton-title,
+    .skeleton-emoji {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+}
+
+// Skeleton loader
+.skeleton-loader {
+  pointer-events: none;
+
+  .skeleton-title,
+  .skeleton-emoji {
+    background: rgba($text-tertiary, 0.15);
+    border-radius: $radius-sm;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  .skeleton-title {
+    height: 20px;
+    width: 70%;
+    margin-bottom: $space-2;
+  }
+
+  .skeleton-emojis {
+    display: flex;
+    gap: $space-3;
+    margin-top: $space-2;
+  }
+
+  .skeleton-emoji {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Note detail skeleton loader
+.note-detail-skeleton {
+  .skeleton-note-title,
+  .skeleton-progress-bar,
+  .skeleton-emoji,
+  .skeleton-text-line {
+    background: rgba($text-tertiary, 0.15);
+    border-radius: $radius-sm;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  .skeleton-note-title {
+    height: 40px;
+    width: 60%;
+    margin-bottom: $space-6;
+    border-radius: $radius-md;
+  }
+
+  .skeleton-progress-bar {
+    height: 6px;
+    width: 100%;
+    margin-bottom: $space-4;
+    border-radius: $radius-full;
+  }
+
+  .skeleton-emojis-row {
+    display: flex;
+    gap: $space-4;
+    margin-bottom: $space-8;
+  }
+
+  .skeleton-emoji {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .skeleton-editor-content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    margin-top: $space-6;
+  }
+
+  .skeleton-text-line {
+    height: 16px;
+    border-radius: 4px;
+  }
+}
+
+// Dark mode for note detail skeleton
+@media (prefers-color-scheme: dark) {
+  .note-detail-skeleton {
+    .skeleton-note-title,
+    .skeleton-progress-bar,
+    .skeleton-emoji,
+    .skeleton-text-line {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
 }

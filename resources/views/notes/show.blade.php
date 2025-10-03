@@ -3,26 +3,33 @@
 
     <div>
         @if($note)
-            <div class="note-detail-header mb-4">
-                <h1
-                    data-cy="note-title"
-                    onclick="window.location.href='{{ route('note.title.show', ['note' => $note->uuid]) }}'"
-                    class="note-detail-title cursor-pointer hover-scale-sm transition"
-                >
-                    {{ $note->title }}
-                </h1>
-
-                <div data-cy="note-progress-bar" class="my-3">
-                    <livewire:progress-bar :idNote="$note->id" />
-                </div>
-
-                <div
-                    data-cy="note-emoji-wrapper"
-                    onclick="window.location.href='{{ route('note.emojis.show', ['note' => $note->uuid]) }}'"
-                >
-                    <x-emoji-list :emojis="$note->emojis" class="emoji-wrapper-left cursor-pointer" />
-                </div>
+            <!-- Skeleton loader - shown initially -->
+            <div id="note-skeleton-container">
+                <x-note-detail-skeleton />
             </div>
+
+            <!-- Real note content - hidden initially -->
+            <div id="note-content" style="display: none;">
+                <div class="note-detail-header mb-4">
+                    <h1
+                        data-cy="note-title"
+                        onclick="window.location.href='{{ route('note.title.show', ['note' => $note->uuid]) }}'"
+                        class="note-detail-title cursor-pointer hover-scale-sm transition"
+                    >
+                        {{ $note->title }}
+                    </h1>
+
+                    <div data-cy="note-progress-bar" class="my-3">
+                        <livewire:progress-bar :idNote="$note->id" />
+                    </div>
+
+                    <div
+                        data-cy="note-emoji-wrapper"
+                        onclick="window.location.href='{{ route('note.emojis.show', ['note' => $note->uuid]) }}'"
+                    >
+                        <x-emoji-list :emojis="$note->emojis" class="emoji-wrapper-left cursor-pointer" />
+                    </div>
+                </div>
 
                 <div class="col-12">
                     <div id="toc-container" style="display: none;">

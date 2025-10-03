@@ -5,7 +5,15 @@
 
     <div>
         @if(isset($notes) && $notes->count() > 0)
-            <div id="note-list" data-cy="note-list" class="notes-list">
+            <!-- Skeleton loaders - shown initially, hidden by JavaScript after page load -->
+            <div id="skeleton-container" class="notes-list">
+                @for($i = 0; $i < 5; $i++)
+                    <x-note-skeleton />
+                @endfor
+            </div>
+
+            <!-- Real notes - hidden initially, shown by JavaScript after page load -->
+            <div id="note-list" data-cy="note-list" class="notes-list" style="display: none;">
                 @foreach($notes as $note)
                     <div
                         id="note-{{ $note->uuid }}"
