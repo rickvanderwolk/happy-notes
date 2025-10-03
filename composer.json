@@ -4,7 +4,7 @@
     "description": "A note-taking app for free-spirited minds",
     "keywords": ["happynotes", "notes", "note-taking", "emojis"],
     "license": "CC0-1.0",
-    "version": "3.0.0-beta4",
+    "version": "3.0.0-beta5",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
