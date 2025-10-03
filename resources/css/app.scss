@@ -275,9 +275,15 @@ p {
         padding: $space-2;
         border-radius: $radius-full;
 
-        &:hover {
-            color: $text-primary;
-            background: rgba($primary, 0.1);
+        @media (hover: hover) {
+            &:hover {
+                color: $text-primary;
+                background: rgba($primary, 0.1);
+            }
+        }
+
+        &:active {
+            background: transparent;
         }
 
         &.active {
