@@ -13,21 +13,23 @@
         </div>
 
         @if (count($this->sessions) > 0)
-            <div class="mt-5 space-y-6">
+            <div class="mt-5" style="display: flex; flex-direction: column; gap: 12px;">
                 <!-- Other Browser Sessions -->
                 @foreach ($this->sessions as $session)
-                    <div class="flex items-start gap-3">
-                        <i class="fa {{ $session->agent->isDesktop() ? 'fa-desktop' : 'fa-mobile' }} section-description-text mt-1" style="font-size: 16px;"></i>
-                        <div class="flex-1">
-                            <div class="text-sm section-description-text">
+                    <div class="browser-session-item">
+                        <div style="flex-shrink: 0; width: 20px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa {{ $session->agent->isDesktop() ? 'fa-desktop' : 'fa-mobile' }} section-description-text" style="font-size: 16px;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0; text-align: left;">
+                            <div class="text-sm section-description-text" style="font-weight: 500; margin-bottom: 4px;">
                                 {{ $session->agent->platform() ? $session->agent->platform() : __('Unknown') }} - {{ $session->agent->browser() ? $session->agent->browser() : __('Unknown') }}
                             </div>
-                            <div class="text-xs section-description-text">
-                                {{ $session->ip_address }},
+                            <div class="text-xs section-description-text" style="opacity: 0.8;">
+                                {{ $session->ip_address }}
                                 @if ($session->is_current_device)
-                                    <span class="text-green-500 font-semibold">{{ __('This device') }}</span>
+                                    • <span class="text-green-500 font-semibold">{{ __('This device') }}</span>
                                 @else
-                                    {{ __('Last active') }} {{ $session->last_active }}
+                                    • {{ __('Last active') }} {{ $session->last_active }}
                                 @endif
                             </div>
                         </div>

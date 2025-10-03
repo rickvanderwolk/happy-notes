@@ -299,6 +299,18 @@
   }
 }
 
+// Browser session item
+.browser-session-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(245, 245, 245, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
 // Dark mode
 @media (prefers-color-scheme: dark) {
   .card,
@@ -385,5 +397,10 @@
 
   .card.card-flat {
     border-color: $dark-border;
+  }
+
+  .browser-session-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
   }
 }
