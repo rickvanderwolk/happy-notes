@@ -12,13 +12,11 @@
     cursor: pointer;
 
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: $shadow-hover;
+      transform: translateY(-3px) scale(1.015);
     }
 
     &:active {
-      transform: translateY(0);
-      box-shadow: $shadow-md;
+      transform: translateY(0) scale(0.995);
     }
   }
 
@@ -31,7 +29,6 @@
   }
 
   &.card-flat {
-    box-shadow: none;
     border: 1px solid $border;
   }
 }
@@ -47,19 +44,16 @@
   border: 1px solid $border;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-hover;
-    border-color: $primary-light;
+    transform: translateY(-3px) scale(1.01);
   }
 
   &:active {
-    transform: translateY(0);
-    box-shadow: $shadow-md;
+    transform: translateY(0) scale(0.99);
   }
 
   .note-title {
     font-size: $font-size-base;
-    font-weight: $font-weight-semibold;
+    font-weight: $font-weight-bold;
     color: $text-primary;
     margin-bottom: $space-2;
     line-height: $line-height-tight;
@@ -67,12 +61,12 @@
 
   .note-emojis {
     display: flex;
-    gap: $space-2;
+    gap: $space-3;
     margin-top: $space-2;
     flex-wrap: wrap;
 
     .emoji {
-      font-size: 20px;
+      font-size: 22px;
       line-height: 1;
     }
   }
@@ -88,7 +82,6 @@
   border: 1px solid $border;
   border-radius: $radius-lg;
   padding: $space-8;
-  box-shadow: $shadow-sm;
   max-width: 480px;
   width: 100%;
 
@@ -146,7 +139,6 @@
     }
 
     &:hover {
-      background: rgba($primary, 0.1);
       padding-left: calc(#{$space-6} + 4px);
     }
 
@@ -175,17 +167,15 @@
   border: 1px solid $border;
   border-radius: $radius-md;
   text-decoration: none;
-  transition: all $transition-base;
+  transition: all $transition-spring;
   color: inherit;
 
   &:hover {
-    background: rgba($surface, 0.8);
-    border-color: $primary;
-    transform: translateX(4px);
+    transform: translateX(6px) scale(1.01);
   }
 
   &:active {
-    transform: translateX(2px);
+    transform: translateX(3px) scale(1);
   }
 
   .menu-item-content {
@@ -207,7 +197,7 @@
   }
 
   .menu-item-icon {
-    font-size: 24px;
+    font-size: 28px;
     color: $text-tertiary;
     transition: all $transition-fast;
   }
@@ -234,8 +224,11 @@
   transition: all $transition-base;
 
   &:hover {
-    border-color: rgba($primary, 0.3);
-    box-shadow: $shadow-sm;
+    transform: translateY(-2px) scale(1.005);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   .account-card-title {
@@ -331,30 +324,16 @@
   .note-card {
     background: rgba($dark-surface, 0.3);
     border-color: $dark-border;
-
-    &:hover {
-      border-color: $primary;
-      background: rgba($dark-surface, 0.5);
-    }
   }
 
   .menu-card .menu-item {
     color: $dark-text;
     border-bottom-color: $dark-border;
-
-    &:hover {
-      background: rgba($primary, 0.15);
-    }
   }
 
   .menu-item-modern {
     background: rgba($dark-surface, 0.3);
     border-color: $dark-border;
-
-    &:hover {
-      background: rgba($dark-surface, 0.5);
-      border-color: $primary;
-    }
 
     .menu-item-title {
       color: $dark-text;
@@ -374,10 +353,6 @@
   }
 
   .account-card {
-    &:hover {
-      border-color: rgba($primary, 0.4);
-    }
-
     .account-card-description {
       color: $dark-text-secondary;
     }

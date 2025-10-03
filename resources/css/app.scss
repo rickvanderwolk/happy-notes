@@ -44,11 +44,15 @@ img.logo-sm {
 
 // Navbar logo with subtle hover effect
 .navbar-logo {
-    transition: transform $transition-base;
+    transition: transform $transition-spring;
     cursor: pointer;
 
     &:hover {
-        transform: rotate(5deg) scale(1.1);
+        transform: rotate(8deg) scale(1.15);
+    }
+
+    &:active {
+        transform: rotate(0deg) scale(1);
     }
 }
 
@@ -93,7 +97,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-extrabold;
     line-height: $line-height-tight;
     color: $text-primary;
     margin-bottom: $space-4;
@@ -123,15 +127,20 @@ p {
 .emoji-wrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: $space-3;
+    gap: $space-4;
     align-items: center;
 
     .emoji {
         font-size: $emoji-size;
         cursor: pointer;
+        transition: transform $transition-spring;
 
         &:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
+        }
+
+        &:active {
+            transform: scale(0.95);
         }
     }
 }
@@ -152,16 +161,18 @@ p {
 // Emoji grid for selector
 .emoji-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    gap: $space-2;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: $space-3;
     max-width: 100%;
 
     @media (min-width: $breakpoint-sm) {
-        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: $space-4;
     }
 
     @media (min-width: $breakpoint-md) {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: $space-4;
     }
 }
 
@@ -266,9 +277,9 @@ p {
     }
 
     i, a, .emoji {
-        font-size: 24px;
+        font-size: 32px;
         margin: 0;
-        transition: all $transition-base;
+        transition: all $transition-spring;
     }
 
     a, button {
@@ -287,36 +298,56 @@ p {
         @media (hover: hover) {
             &:hover {
                 color: $text-primary;
-                background: rgba($primary, 0.15);
-                transform: translateY(-2px) scale(1.05);
-                box-shadow:
-                    0 0 0 2px rgba($primary, 0.2),
-                    0 4px 12px rgba($primary, 0.25);
 
-                i {
+                i, .emoji {
                     transform: scale(1.15);
-                    filter: drop-shadow(0 2px 4px rgba($primary, 0.3));
                 }
 
-                .emoji {
-                    transform: scale(1.15);
-                    filter: drop-shadow(0 2px 4px rgba($primary, 0.3));
+                // Plus icon - rotate
+                .fa-plus {
+                    transform: rotate(90deg) scale(1.15);
+                }
+
+                // Close icons - pulse
+                .fa-close, .fa-times, .fa-xmark {
+                    animation: pulse 0.6s ease-in-out;
+                }
+
+                // Trash icons - shake
+                .fa-trash, .fa-trash-can {
+                    animation: shake 0.5s ease-in-out;
+                }
+
+                // Filter icon - pulse
+                .fa-filter {
+                    animation: pulse 0.6s ease-in-out;
                 }
             }
         }
 
         &:active {
-            transform: translateY(0) scale(1);
-            box-shadow:
-                0 0 0 2px rgba($primary, 0.3),
-                0 2px 6px rgba($primary, 0.2);
+            i, .emoji {
+                transform: scale(0.95);
+            }
         }
 
         &.active {
             color: $primary-dark;
-            background: rgba($primary, 0.12);
-            box-shadow: 0 0 0 2px rgba($primary, 0.15);
         }
+    }
+
+    // Shake animation for trash
+    @keyframes shake {
+        0%, 100% { transform: rotate(0deg) scale(1.15); }
+        25% { transform: rotate(-8deg) scale(1.15); }
+        50% { transform: rotate(8deg) scale(1.15); }
+        75% { transform: rotate(-8deg) scale(1.15); }
+    }
+
+    // Pulse animation for filter
+    @keyframes pulse {
+        0%, 100% { transform: scale(1.15); }
+        50% { transform: scale(1.25); }
     }
 
     button {
@@ -350,6 +381,15 @@ p {
 
         .emoji {
             margin: 0;
+            transition: transform $transition-spring;
+
+            &:hover {
+                transform: scale(1.15);
+            }
+
+            &:active {
+                transform: scale(0.95);
+            }
         }
     }
 
@@ -375,10 +415,11 @@ p {
     cursor: pointer;
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: $shadow-hover;
-        border-color: $primary;
-        background: rgba($surface, 0.5);
+        transform: translateY(-3px) scale(1.015);
+    }
+
+    &:active {
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -514,32 +555,14 @@ a {
         a, button {
             color: $dark-text-secondary;
 
-            &:hover {
-                color: $dark-text;
-                background: rgba($primary, 0.15);
-                box-shadow:
-                    0 0 0 2px rgba($primary, 0.25),
-                    0 4px 12px rgba($primary, 0.3);
-
-                i {
-                    filter: drop-shadow(0 2px 4px rgba($primary, 0.4));
+            @media (hover: hover) {
+                &:hover {
+                    color: $dark-text;
                 }
-
-                .emoji {
-                    filter: drop-shadow(0 2px 4px rgba($primary, 0.4));
-                }
-            }
-
-            &:active {
-                box-shadow:
-                    0 0 0 2px rgba($primary, 0.35),
-                    0 2px 6px rgba($primary, 0.25);
             }
 
             &.active {
                 color: $primary;
-                background: rgba($primary, 0.12);
-                box-shadow: 0 0 0 2px rgba($primary, 0.2);
             }
         }
     }
@@ -548,11 +571,6 @@ a {
         background: rgba($dark-surface, 0.3);
         color: $dark-text;
         border-color: $dark-border;
-
-        &:hover {
-            border-color: $primary;
-            background: rgba($dark-surface, 0.5);
-        }
     }
 
     #editorjs {

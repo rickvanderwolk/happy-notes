@@ -7,7 +7,7 @@
   justify-content: center;
   padding: $space-3 $space-6;
   font-size: $font-size-base;
-  font-weight: $font-weight-semibold;
+  font-weight: $font-weight-bold;
   line-height: 1;
   border: 2px solid transparent;
   border-radius: $radius-full;
@@ -38,13 +38,11 @@
   &:hover:not(:disabled) {
     background: $primary-dark;
     border-color: $primary-dark;
-    transform: translateY(-1px);
-    box-shadow: $shadow-primary;
+    transform: translateY(-3px) scale(1.03);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: $shadow-sm;
+    transform: translateY(0) scale(0.98);
   }
 }
 
@@ -75,12 +73,11 @@
   &:hover:not(:disabled) {
     background: $success-light;
     border-color: $success-light;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    transform: translateY(-3px) scale(1.03);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
   }
 }
 
@@ -93,12 +90,11 @@
   &:hover:not(:disabled) {
     background: $danger-light;
     border-color: $danger-light;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    transform: translateY(-3px) scale(1.03);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
   }
 }
 
@@ -177,18 +173,16 @@
   background: $primary;
   color: $text-primary;
   border: none;
-  box-shadow: $shadow-lg;
   z-index: $z-fixed;
-  font-size: $font-size-2xl;
-  transition: all $transition-base;
+  font-size: $font-size-3xl;
+  transition: all $transition-spring;
 
   &:hover {
-    transform: rotate(90deg) scale(1.1);
-    box-shadow: $shadow-xl;
+    transform: rotate(90deg) scale(1.15);
   }
 
   &:active {
-    transform: rotate(90deg) scale(1.05);
+    transform: rotate(90deg) scale(1.0);
   }
 }
 
