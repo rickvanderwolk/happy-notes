@@ -22,6 +22,7 @@
     <body>
         <meta name="app-base-url" content="{{ url('/') }}">
         <meta name="app-current-route-name" content="{{ Route::currentRouteName() }}">
+        <meta name="app-route-notes-show" content="{{ route('notes.show') }}">
 
         <div id="app" class="container custom-scrollbar">
             <div class="row">

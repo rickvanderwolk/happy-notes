@@ -66,8 +66,16 @@ const keydownListener = (event) => {
                 'note.show',
             ].includes(appCurrentRouteName)) {
                 window.location.href = getRouteUrl('notes.show') + '#note-' + getUuidFromRoute();
+            } else if ([
+                'profile.show',
+                'user-profile-information.update',
+                'user-password.update',
+                'two-factor.enable',
+                'current-user-photo.destroy',
+            ].includes(appCurrentRouteName)) {
+                window.location.href = getRouteUrl('notes.show');
             } else {
-                window.location.href = getRouteUrl('dashboard');
+                window.location.href = getRouteUrl('notes.show');
             }
         }
 
