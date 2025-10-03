@@ -282,20 +282,40 @@ p {
         justify-content: center;
         min-width: 44px;
         min-height: 44px;
+        position: relative;
 
         @media (hover: hover) {
             &:hover {
                 color: $text-primary;
-                background: rgba($primary, 0.1);
+                background: rgba($primary, 0.15);
+                transform: translateY(-2px) scale(1.05);
+                box-shadow:
+                    0 0 0 2px rgba($primary, 0.2),
+                    0 4px 12px rgba($primary, 0.25);
+
+                i {
+                    transform: scale(1.15);
+                    filter: drop-shadow(0 2px 4px rgba($primary, 0.3));
+                }
+
+                .emoji {
+                    transform: scale(1.15);
+                    filter: drop-shadow(0 2px 4px rgba($primary, 0.3));
+                }
             }
         }
 
         &:active {
-            background: transparent;
+            transform: translateY(0) scale(1);
+            box-shadow:
+                0 0 0 2px rgba($primary, 0.3),
+                0 2px 6px rgba($primary, 0.2);
         }
 
         &.active {
             color: $primary-dark;
+            background: rgba($primary, 0.12);
+            box-shadow: 0 0 0 2px rgba($primary, 0.15);
         }
     }
 
@@ -499,7 +519,7 @@ a {
 // Notification badge
 .notifiation-badge {
     top: 5px !important;
-    left: 35px !important;
+    left: 28px !important;
     background: $secondary !important;
 }
 
@@ -525,10 +545,29 @@ a {
             &:hover {
                 color: $dark-text;
                 background: rgba($primary, 0.15);
+                box-shadow:
+                    0 0 0 2px rgba($primary, 0.25),
+                    0 4px 12px rgba($primary, 0.3);
+
+                i {
+                    filter: drop-shadow(0 2px 4px rgba($primary, 0.4));
+                }
+
+                .emoji {
+                    filter: drop-shadow(0 2px 4px rgba($primary, 0.4));
+                }
+            }
+
+            &:active {
+                box-shadow:
+                    0 0 0 2px rgba($primary, 0.35),
+                    0 2px 6px rgba($primary, 0.25);
             }
 
             &.active {
                 color: $primary;
+                background: rgba($primary, 0.12);
+                box-shadow: 0 0 0 2px rgba($primary, 0.2);
             }
         }
     }
