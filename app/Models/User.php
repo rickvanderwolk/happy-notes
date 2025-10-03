@@ -48,6 +48,10 @@ final class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'selected_emojis' => 'array',
+            'excluded_emojis' => 'array',
+            'all_emojis' => 'array',
+            'search_query_only' => 'boolean',
         ];
     }
 
@@ -67,15 +71,5 @@ final class User extends Authenticatable implements MustVerifyEmail
                 'progress' => 50,
             ]);
         });
-    }
-
-    public function setSelectedEmojisAttribute($value): void
-    {
-        $this->attributes['selected_emojis'] = json_encode($value, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function setExcludedEmojisAttribute($value): void
-    {
-        $this->attributes['excluded_emojis'] = json_encode($value, JSON_UNESCAPED_UNICODE);
     }
 }

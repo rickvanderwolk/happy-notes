@@ -1,0 +1,218 @@
+// HappyNotes - Button Styles
+@use 'variables' as *;
+
+.btn, button[type="submit"], button[type="button"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-3 $space-6;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  border: 2px solid transparent;
+  border-radius: $radius-full;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all $transition-base;
+  white-space: nowrap;
+  user-select: none;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 217, 61, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Primary button (Yellow)
+.btn-primary, button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-outline) {
+  background: $primary;
+  color: $text-primary;
+  border-color: $primary;
+
+  &:hover:not(:disabled) {
+    background: $primary-dark;
+    border-color: $primary-dark;
+    transform: translateY(-1px);
+    box-shadow: $shadow-primary;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: $shadow-sm;
+  }
+}
+
+// Secondary button
+.btn-secondary {
+  background: $surface;
+  color: $text-primary;
+  border-color: $border-dark;
+
+  &:hover:not(:disabled) {
+    background: $surface-hover;
+    border-color: $text-secondary;
+  }
+
+  &:active:not(:disabled) {
+    background: $border;
+  }
+}
+
+// Success button (Green)
+.btn-success {
+  background: $success;
+  color: white;
+  border-color: $success;
+
+  &:hover:not(:disabled) {
+    background: $success-light;
+    border-color: $success-light;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Danger button (Red)
+.btn-danger {
+  background: $danger;
+  color: white;
+  border-color: $danger;
+
+  &:hover:not(:disabled) {
+    background: $danger-light;
+    border-color: $danger-light;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Outline button
+.btn-outline {
+  background: transparent;
+  color: $text-primary;
+  border-color: $border-dark;
+
+  &:hover:not(:disabled) {
+    background: $primary;
+    border-color: $primary;
+    color: $text-primary;
+  }
+
+  &:active:not(:disabled) {
+    background: $primary-dark;
+  }
+}
+
+// Link button
+.btn-link {
+  background: transparent;
+  color: $text-secondary;
+  border-color: transparent;
+  padding: $space-2 $space-3;
+  text-decoration: underline;
+
+  &:hover:not(:disabled) {
+    color: $primary-dark;
+    background: transparent;
+    transform: none;
+  }
+}
+
+// Icon button
+.btn-icon {
+  padding: $space-3;
+  width: $button-height;
+  height: $button-height;
+  border-radius: $radius-full;
+
+  &.btn-icon-sm {
+    width: $button-height-sm;
+    height: $button-height-sm;
+    padding: $space-2;
+  }
+}
+
+// Button sizes
+.btn-sm {
+  padding: $space-2 $space-4;
+  font-size: $font-size-sm;
+  height: $button-height-sm;
+}
+
+.btn-lg {
+  padding: $space-4 $space-8;
+  font-size: $font-size-lg;
+  height: $button-height-lg;
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+// Floating Action Button (FAB)
+.btn-fab {
+  position: fixed;
+  bottom: $space-6;
+  right: $space-6;
+  width: $fab-size;
+  height: $fab-size;
+  border-radius: $radius-full;
+  background: $primary;
+  color: $text-primary;
+  border: none;
+  box-shadow: $shadow-lg;
+  z-index: $z-fixed;
+  font-size: $font-size-2xl;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: $shadow-xl;
+  }
+
+  &:active {
+    transform: rotate(90deg) scale(1.05);
+  }
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  .btn-secondary {
+    background: $dark-surface;
+    color: $dark-text;
+    border-color: $dark-border;
+
+    &:hover:not(:disabled) {
+      background: $dark-surface-hover;
+      border-color: $text-secondary;
+    }
+  }
+
+  .btn-outline {
+    color: $dark-text;
+    border-color: $dark-border;
+
+    &:hover:not(:disabled) {
+      color: $text-primary;
+    }
+  }
+
+  .btn-link {
+    color: $dark-text-secondary;
+  }
+}

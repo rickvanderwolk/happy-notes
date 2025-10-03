@@ -1,12 +1,11 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <img class="logo" src="/images/happynotes_logo_v1.png">
+            <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
         </x-slot>
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-        </div>
+        <h2 class="auth-title">Forgot your password? 🔑</h2>
+        <p class="auth-subtitle mb-6">No worries! We'll send you reset instructions</p>
 
         @session('status')
             <div class="mb-4 font-medium text-sm text-green-600">
@@ -24,13 +23,16 @@
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             </div>
 
-            <div class="flex items-center justify-between mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Back to login') }}
-                </a>
-                <x-button>
-                    {{ __('Email Password Reset Link') }}
+            <div class="mt-6">
+                <x-button class="w-full justify-center">
+                    {{ __('Send Reset Link') }}
                 </x-button>
+            </div>
+
+            <div class="text-center mt-6">
+                <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+                    <i class="fa fa-arrow-left"></i> {{ __('Back to login') }}
+                </a>
             </div>
         </form>
     </x-authentication-card>

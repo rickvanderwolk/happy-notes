@@ -1,0 +1,311 @@
+// HappyNotes - Card Styles
+@use 'variables' as *;
+
+.card {
+  background: transparent;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  padding: $card-padding;
+  transition: all $transition-base;
+
+  &.card-hover {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-hover;
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  &.card-sm {
+    padding: $space-4;
+  }
+
+  &.card-lg {
+    padding: $space-8;
+  }
+
+  &.card-flat {
+    box-shadow: none;
+    border: 1px solid $border;
+  }
+}
+
+// Note card specific
+.note-card {
+  background: rgba($surface, 0.5);
+  border-radius: $radius-md;
+  padding: $space-3;
+  margin-bottom: $space-3;
+  cursor: pointer;
+  transition: all $transition-base;
+  border: 1px solid $border;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-hover;
+    border-color: $primary-light;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: $shadow-md;
+  }
+
+  .note-title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    margin-bottom: $space-2;
+    line-height: $line-height-tight;
+  }
+
+  .note-emojis {
+    display: flex;
+    gap: $space-2;
+    margin-top: $space-2;
+    flex-wrap: wrap;
+
+    .emoji {
+      font-size: 20px;
+      line-height: 1;
+    }
+  }
+
+  .note-progress {
+    margin-top: $space-2;
+  }
+}
+
+// Auth card (for login, register, etc.)
+.auth-card {
+  background: rgba($surface, 0.8);
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: $space-8;
+  box-shadow: $shadow-sm;
+  max-width: 480px;
+  width: 100%;
+
+  .auth-logo {
+    max-width: $logo-size;
+    margin: 0 auto $space-6;
+    display: block;
+    transition: transform $transition-slow;
+
+    &:hover {
+      transform: scale(1.05) rotate(2deg);
+    }
+  }
+
+  .auth-title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    margin-bottom: $space-2;
+    color: $text-primary;
+  }
+
+  .auth-subtitle {
+    font-size: $font-size-sm;
+    text-align: center;
+    color: $text-secondary;
+    margin-bottom: $space-4;
+  }
+
+  .auth-divider {
+    margin: $space-6 0;
+    border-top: 1px solid $border;
+  }
+}
+
+// Menu card (legacy)
+.menu-card {
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: $space-4 $space-6;
+    color: $text-primary;
+    text-decoration: none;
+    border-bottom: 1px solid $border;
+    transition: all $transition-base;
+    font-weight: $font-weight-medium;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba($primary, 0.1);
+      padding-left: calc(#{$space-6} + 4px);
+    }
+
+    i, .emoji {
+      font-size: $font-size-2xl;
+      margin-right: $space-4;
+      width: 32px;
+      text-align: center;
+    }
+  }
+}
+
+// Modern menu card
+.menu-card-modern {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.menu-item-modern {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-5 $space-6;
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  text-decoration: none;
+  transition: all $transition-base;
+  color: inherit;
+
+  &:hover {
+    background: rgba($surface, 0.8);
+    border-color: $primary;
+    transform: translateX(4px);
+  }
+
+  &:active {
+    transform: translateX(2px);
+  }
+
+  .menu-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+    flex: 1;
+  }
+
+  .menu-item-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+
+  .menu-item-subtitle {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .menu-item-icon {
+    font-size: 24px;
+    color: $text-tertiary;
+    transition: all $transition-fast;
+  }
+
+  &:hover .menu-item-icon {
+    color: $primary-dark;
+  }
+}
+
+// Account card
+.account-card {
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  margin-bottom: $space-6;
+
+  .account-card-title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $space-4;
+    color: $text-primary;
+  }
+
+  .account-card-description {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    margin-bottom: $space-6;
+  }
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  .card,
+  .note-card,
+  .auth-card,
+  .menu-card,
+  .account-card {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+
+    .note-title,
+    .auth-title,
+    .account-card-title {
+      color: $dark-text;
+    }
+  }
+
+  .note-card {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+
+    &:hover {
+      border-color: $primary;
+      background: rgba($dark-surface, 0.5);
+    }
+  }
+
+  .menu-card .menu-item {
+    color: $dark-text;
+    border-bottom-color: $dark-border;
+
+    &:hover {
+      background: rgba($primary, 0.15);
+    }
+  }
+
+  .menu-item-modern {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+
+    &:hover {
+      background: rgba($dark-surface, 0.5);
+      border-color: $primary;
+    }
+
+    .menu-item-title {
+      color: $dark-text;
+    }
+
+    .menu-item-subtitle {
+      color: $dark-text-secondary;
+    }
+
+    .menu-item-icon {
+      color: $dark-text-secondary;
+    }
+
+    &:hover .menu-item-icon {
+      color: $primary;
+    }
+  }
+
+  .account-card .account-card-description {
+    color: $dark-text-secondary;
+  }
+
+  .card.card-flat {
+    border-color: $dark-border;
+  }
+}

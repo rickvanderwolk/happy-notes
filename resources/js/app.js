@@ -41,8 +41,7 @@ Livewire.on('emojisChanged', (emojis) => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const keydownListener = (event) => {
+const keydownListener = (event) => {
         const ignoreTags = ['INPUT', 'TEXTAREA', 'SELECT'];
         if (
             ignoreTags.includes(event.target.tagName)
@@ -161,10 +160,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         }
-    };
+};
 
+function setupKeyboardShortcuts() {
+    window.removeEventListener('keyup', keydownListener);
     window.addEventListener('keyup', keydownListener);
-});
+}
+
+document.addEventListener('DOMContentLoaded', setupKeyboardShortcuts);
+document.addEventListener('turbolinks:load', setupKeyboardShortcuts);
 
 window.addEventListener('load', function() {
     var textarea = document.getElementById('titleTextarea');

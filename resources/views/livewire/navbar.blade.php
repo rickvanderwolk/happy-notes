@@ -1,7 +1,7 @@
 <div id="main-navbar" class="main-navbar" data-cy="main-navbar">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 col-md-12 ms-auto me-auto">
+    <div class="navbar-inner">
+        <div class="row g-0">
+            <div class="col-12">
                 @php
                     $currentRouteName = session('original_route_name', '');
                     $note = request()->route('note');

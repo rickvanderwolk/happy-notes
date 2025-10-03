@@ -5,23 +5,24 @@
 
     <div>
         @if(isset($notes) && $notes->count() > 0)
-            <div id="note-list" data-cy="note-list" class="list-group">
+            <div id="note-list" data-cy="note-list" class="notes-list">
                 @foreach($notes as $note)
                     <div
                         id="note-{{ $note->uuid }}"
                         data-cy="note-list-item"
-                        class="list-group-item"
+                        class="note-card"
                         onclick="window.location.href='{{ route('note.show', $note->uuid) }}'"
-                        style="cursor: pointer;"
                     >
-                        {{ $note->title }}
+                        <div class="note-title">{{ $note->title }}</div>
 
                         @if($note->progress)
-                            <livewire:progress-bar :idNote="$note->id" />
+                            <div class="note-progress">
+                                <livewire:progress-bar :idNote="$note->id" />
+                            </div>
                         @endif
 
                         @if(!empty($note->emojis))
-                            <div data-cy="emoji-wrapper" class="emoji-wrapper">
+                            <div data-cy="emoji-wrapper" class="note-emojis">
                                 @foreach($note->emojis as $emoji)
                                     <span class="emoji">{{ $emoji }}</span>
                                 @endforeach
@@ -30,13 +31,24 @@
                     </div>
                 @endforeach
             </div>
-            <!-- Laadaanwijzing -->
-            <div id="loading" style="display: none; text-align: center; padding: 10px;">Loading more notes...</div>
+
+            <!-- Loading indicator -->
+            <div id="loading" class="text-center py-4" style="display: none;">
+                <span class="text-sm text-gray-500">Loading more notes...</span>
+            </div>
+
             <div style="display: none;">
                 {{ $notes->links() }}
             </div>
         @else
-            <div>No notes found</div>
+            <div class="empty-state">
+                <img src="/logo.png" alt="HappyNotes" class="empty-state-logo" style="width: 150px; height: auto; margin: 0 auto 24px; display: block;">
+                <h3 class="empty-state-title">No notes yet</h3>
+                <p class="empty-state-subtitle">Start capturing your thoughts and ideas</p>
+                <a href="{{ route('note.create') }}" class="btn btn-primary mt-4">
+                    <i class="fa fa-plus"></i> Create your first note
+                </a>
+            </div>
         @endif
     </div>
 </x-app-layout>

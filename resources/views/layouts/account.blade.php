@@ -19,18 +19,16 @@
         @vite(['resources/css/account.scss'])
         @livewireStyles
     </head>
-    <body>
-        <div class="container mx-auto">
-            <div class="container mx-auto">
-                <div class="flex justify-center">
-                    <div class="w-full md:w-8/12">
-                        {{ $slot }}
-                    </div>
+    <body class="custom-scrollbar">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center">
+                <div class="w-full md:w-10/12 lg:w-8/12">
+                    {{ $slot }}
                 </div>
             </div>
         </div>
 
-        <!-- Styles -->
+        <!-- Scripts -->
         @livewireScripts
     </body>
 </html>

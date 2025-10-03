@@ -1,0 +1,118 @@
+// HappyNotes Design System - Variables
+
+// Colors - Light Mode
+$primary: #FFD93D;
+$primary-dark: #FFC107;
+$primary-light: #FFE682;
+$secondary: #FFAA33;
+$secondary-dark: #FF9800;
+
+$background: #FFFEF9;
+$background-alt: #FAFAF8;
+$surface: #FFFFFF;
+$surface-hover: #F8F8F8;
+
+$text-primary: #333333;
+$text-secondary: #666666;
+$text-tertiary: #999999;
+
+$border: #F0F0F0;
+$border-dark: #E0E0E0;
+
+$success: #4CAF50;
+$success-light: #81C784;
+$danger: #FF6B6B;
+$danger-light: #FF8787;
+$warning: #FFA726;
+$info: #29B6F6;
+
+// Colors - Dark Mode
+$dark-bg: #0A0A0A;
+$dark-bg-alt: #141414;
+$dark-surface: #1A1A1A;
+$dark-surface-hover: #242424;
+$dark-text: #E0E0E0;
+$dark-text-secondary: #A0A0A0;
+$dark-border: #2A2A2A;
+
+// Spacing (4px grid)
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+$radius-full: 9999px;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+$shadow-primary: 0 4px 12px rgba(255, 217, 61, 0.4);
+$shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
+
+// Typography
+$font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 28px;
+$font-size-4xl: 32px;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.2;
+$line-height-base: 1.5;
+$line-height-relaxed: 1.6;
+
+// Transitions
+$transition-fast: 150ms ease-in-out;
+$transition-base: 250ms ease-in-out;
+$transition-slow: 350ms ease-in-out;
+
+// Z-index layers
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1200px;
+
+// Component specific
+$input-height: 44px;
+$input-padding: 12px 16px;
+$button-height: 44px;
+$button-height-sm: 36px;
+$button-height-lg: 52px;
+$card-padding: $space-6;
+$navbar-height: 60px;
+$fab-size: 64px;
+$emoji-size: 32px;
+$emoji-size-sm: 24px;
+$emoji-size-lg: 36px;
+$logo-size: 150px;
+$logo-size-sm: 75px;

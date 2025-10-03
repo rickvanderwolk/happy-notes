@@ -1,6 +1,6 @@
 {
-  "name": "happynotes.cc",
-  "short_name": "happynotes.cc",
+  "name": "MyWebSite",
+  "short_name": "MySite",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

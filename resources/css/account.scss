@@ -1,10 +1,129 @@
+// HappyNotes Design System
+@use 'variables' as *;
+@use 'utilities' as *;
+@use 'buttons' as *;
+@use 'cards' as *;
+@use 'forms' as *;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-img.logo {
-    max-width: 125px;
+// Base styles
+html {
+    scroll-behavior: smooth;
 }
+
+body {
+    font-family: $font-family;
+    color: $text-primary;
+    background: $background;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: $space-6 0;
+}
+
+// Logo styles
+img.logo {
+    max-width: $logo-size;
+    animation: happy-bounce-account 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    cursor: pointer;
+
+    &:hover {
+        animation: spin-zoom-account 0.6s ease-out forwards;
+    }
+}
+
 img.logo-sm {
-    max-width: 75px;
+    max-width: $logo-size-sm;
+}
+
+@keyframes happy-bounce-account {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+@keyframes spin-zoom-account {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    100% {
+        transform: translateY(0) rotate(360deg) scale(1.15);
+    }
+}
+
+// Account page specific
+.account-header {
+    text-align: center;
+    margin-bottom: $space-8;
+
+    h1 {
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin-top: $space-4;
+    }
+}
+
+// Section border
+.section-border {
+    height: 1px;
+    background: $border;
+    margin: $space-8 0;
+}
+
+// Section title text
+.section-title-text {
+    color: $text-primary;
+}
+
+.section-description-text {
+    color: $text-secondary;
+}
+
+// Links
+a {
+    color: $text-secondary;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $primary-dark;
+    }
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+    body {
+        color: $dark-text;
+        background: $dark-bg;
+    }
+
+    .account-header h1 {
+        color: $dark-text;
+    }
+
+    .section-border {
+        background: $dark-border;
+    }
+
+    .section-title-text {
+        color: $dark-text;
+    }
+
+    .section-description-text {
+        color: $dark-text-secondary;
+    }
+
+    a {
+        color: $dark-text-secondary;
+
+        &:hover {
+            color: $primary;
+        }
+    }
 }

@@ -41,19 +41,14 @@
         <meta name="app-route-note-emojis-show" content="{{ route('note.emojis.show', ':note') }}">
         <meta name="app-route-profile-show" content="{{ route('profile.show',) }}">
 
-        <div id="app" class="container">
+        <div id="app" class="container custom-scrollbar">
             <div class="row">
                 <div class="col-12 col-sm-11 col-md-10 col-lg-9 col-xl-6 ms-auto me-auto">
-                    <div class="row">
-                        <div class="col-12 p-0">
-                            <livewire:navbar />
-                        </div>
-                        <div class="col-12">
-                            <main>
-                                {{ $slot }}
-                            </main>
-                        </div>
-                    </div>
+                    <livewire:navbar />
+
+                    <main>
+                        {{ $slot }}
+                    </main>
                 </div>
             </div>
         </div>

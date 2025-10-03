@@ -1,8 +1,11 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <img class="logo" src="/images/happynotes_logo_v1.png">
+            <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
         </x-slot>
+
+        <h2 class="auth-title">Join {{ config('app.name') }}! 🎉</h2>
+        <p class="auth-subtitle mb-6">Create your account to get started</p>
 
         <x-validation-errors class="mb-4" />
 
@@ -46,14 +49,19 @@
                 </div>
             @endif
 
-            <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
-
-                <x-button class="ms-4">
-                    {{ __('Register') }}
+            <div class="mt-6">
+                <x-button class="w-full justify-center">
+                    {{ __('Create Account') }}
                 </x-button>
+            </div>
+
+            <div class="text-center mt-6">
+                <p class="text-sm text-gray-600">
+                    Already have an account?
+                    <a class="text-primary hover:text-primary-dark font-semibold" href="{{ route('login') }}">
+                        {{ __('Sign in') }}
+                    </a>
+                </p>
             </div>
         </form>
     </x-authentication-card>

@@ -8,19 +8,18 @@
     <div>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
 
-        <div class="text-center">
-            <div class="inline-flex items-center mb-6">
-                <img class="logo logo-sm" src="/images/happynotes_logo_v1.png">
-            </div>
-
-            <h1 class="text-lg font-medium text-gray-900">Account management</h1>
-            <br>
-            <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
-                Back to app
+        <div class="account-header">
+            <a href="{{ route('notes.show') }}">
+                <img class="logo logo-sm mx-auto mb-4" src="/logo.png" alt="HappyNotes">
             </a>
-            <br>
+
+            <h1>Account Management 🎨</h1>
+
+            <a href="{{ route('dashboard') }}" class="btn btn-outline mt-4">
+                ← Back to app
+            </a>
+
             <x-section-border />
-            <br class="sm:hidden">
         </div>
 
         @if (Laravel\Fortify\Features::canUpdateProfileInformation())
@@ -63,10 +62,9 @@
             @endif
 
             <div class="text-center">
-                <br>
                 <x-section-border />
-                <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
-                    Back to app
+                <a href="{{ route('dashboard') }}" class="btn btn-outline">
+                    ← Back to app
                 </a>
             </div>
 
