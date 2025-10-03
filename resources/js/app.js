@@ -181,18 +181,29 @@ window.addEventListener('load', function() {
     checkAndLoadForAnchor();
 });
 
-document.addEventListener('turbolinks:load', function() {
-    checkAndLoadForAnchor();
-});
-
 let page = 1;
 let isLoading = false;
 let isLoadingForAnchor = false;
+let scrollListener = null;
 
-window.addEventListener('scroll', () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        loadMoreData();
+document.addEventListener('turbolinks:load', function() {
+    page = 1;
+    isLoading = false;
+    isLoadingForAnchor = false;
+
+    if (scrollListener) {
+        window.removeEventListener('scroll', scrollListener);
     }
+
+    scrollListener = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+            loadMoreData();
+        }
+    };
+    
+    window.addEventListener('scroll', scrollListener);
+
+    checkAndLoadForAnchor();
 });
 
 function checkAndLoadForAnchor() {
@@ -221,19 +232,26 @@ function loadMoreDataForAnchor(targetId) {
         return;
     }
 
+    const noteList = document.getElementById('note-list');
+    const loadingEl = document.getElementById('loading');
+
+    if (!noteList || !loadingEl) {
+        return;
+    }
+
     isLoadingForAnchor = true;
     page++;
-    document.getElementById('loading').style.display = 'block';
+    loadingEl.style.display = 'block';
 
     fetch(`${appBaseUrl}/notes?page=${page}`)
         .then(response => response.text())
         .then(data => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(data, 'text/html');
-            const newNotes = htmlDoc.querySelectorAll('#note-list .list-group-item');
+            const newNotes = htmlDoc.querySelectorAll('#note-list .note-card');
 
-            newNotes.forEach(note => document.getElementById('note-list').appendChild(note));
-            document.getElementById('loading').style.display = 'none';
+            newNotes.forEach(note => noteList.appendChild(note));
+            loadingEl.style.display = 'none';
             isLoadingForAnchor = false;
 
             const targetElement = document.getElementById(targetId);
@@ -250,8 +268,8 @@ function loadMoreDataForAnchor(targetId) {
             setTimeout(() => loadMoreDataForAnchor(targetId), 100);
         })
         .catch(error => {
-            console.error(error);
-            document.getElementById('loading').style.display = 'none';
+            console.error('Error loading more notes for anchor:', error);
+            loadingEl.style.display = 'none';
             isLoadingForAnchor = false;
         });
 }
@@ -260,33 +278,38 @@ function loadMoreData() {
     if (isLoading || isLoadingForAnchor) {
         return;
     }
-    if (!document.getElementById('note-list')) {
+
+    const noteList = document.getElementById('note-list');
+    const loadingEl = document.getElementById('loading');
+
+    if (!noteList || !loadingEl) {
         return;
     }
 
     isLoading = true;
     page++;
-    document.getElementById('loading').style.display = 'block';
+    loadingEl.style.display = 'block';
 
     fetch(`${appBaseUrl}/notes?page=${page}`)
         .then(response => response.text())
         .then(data => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(data, 'text/html');
-            const newNotes = htmlDoc.querySelectorAll('#note-list .list-group-item');
+            const newNotes = htmlDoc.querySelectorAll('#note-list .note-card');
 
-            newNotes.forEach(note => document.getElementById('note-list').appendChild(note));
-            document.getElementById('loading').style.display = 'none';
+            newNotes.forEach(note => noteList.appendChild(note));
+            loadingEl.style.display = 'none';
             isLoading = false;
 
             if (newNotes.length === 0) {
                 isLoading = true;
-                document.getElementById('loading').textContent = 'No more notes to load.';
+                loadingEl.style.display = 'block';
+                loadingEl.textContent = 'No more notes to load.';
             }
         })
         .catch(error => {
-            console.error(error);
-            document.getElementById('loading').style.display = 'none';
+            console.error('Error loading more notes:', error);
+            loadingEl.style.display = 'none';
             isLoading = false;
         });
 }
