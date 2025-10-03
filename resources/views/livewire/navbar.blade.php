@@ -51,7 +51,7 @@
 
                 @elseif((request()->routeIs( 'notes.show')))
                     <div class="row">
-                        <div class="col-4 d-flex justify-content-start">
+                        <div class="col-12 d-flex justify-content-between align-items-center">
                             <h3 class="emoji-wrapper">
                                 <a href="{{ route('menu.show') }}" class="{{ request()->is('menu') ? 'active' : '' }}" aria-label="Menu">
                                     <i class="fa fa-bars"></i>
@@ -60,8 +60,6 @@
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </h3>
-                        </div>
-                        <div class="col-8 d-flex justify-content-end">
                             <h3 class="emoji-wrapper">
                                 @if(count($selectedEmojis ?? []) > 0)
                                     <a href="{{ route('filter.show') }}" class="{{ request()->is('filter') ? 'active' : '' }}" aria-label="Filter">
