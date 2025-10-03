@@ -21,6 +21,7 @@
                     autofocus
                     required
                     style="font-size: 20px; font-weight: 500;"
+                    onkeydown="if(event.key === 'Enter') event.preventDefault();"
                 ></textarea>
             </div>
 

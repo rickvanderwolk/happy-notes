@@ -1,17 +1,16 @@
 <div>
-    <div class="input-group mb-4">
-        <span class="input-icon">🔍</span>
-        <input
-            type="text"
+    <div class="mb-4" style="position: relative;">
+        <textarea
             wire:model.live="search_query"
-            class="form-control"
-            placeholder="Search notes..."
+            class="form-control elegant-input"
+            placeholder="🔍 Search notes..."
+            rows="1"
             autofocus
-            style="padding-left: 42px; font-size: 18px;"
-            wire:keydown.enter="applyFilter"
-        >
+            style="font-size: 20px; font-weight: 500;"
+            wire:keydown.enter.prevent="applyFilter"
+        ></textarea>
         @if($search_query)
-            <button wire:click="$set('search_query', '')" class="input-clear" type="button">
+            <button wire:click="$set('search_query', '')" class="input-clear" type="button" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
                 ×
             </button>
         @endif
