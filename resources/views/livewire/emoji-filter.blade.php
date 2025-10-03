@@ -1,8 +1,8 @@
 <div wire:keydown.window.backspace="deselectAll" wire:keydown.window.enter="$dispatch('applyFilter')">
     <!-- Selected emojis - horizontaal naast elkaar -->
     @if(!empty($currentEmojis))
-        <div class="selected-emojis mb-4 p-3" style="background: rgba(255, 217, 61, 0.1); border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: nowrap; min-width: min-content;">
+        <div class="selected-emojis mb-4 p-3" style="background: rgba(255, 217, 61, 0.1); border-radius: 12px;">
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                 @foreach($currentEmojis as $emoji)
                     <div
                         class="emoji-chip cursor-pointer transition hover-scale"
