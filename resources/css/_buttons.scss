@@ -5,6 +5,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: $space-2; // Consistent spacing between icon and text
   padding: $space-3 $space-6;
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
@@ -38,11 +39,12 @@
   &:hover:not(:disabled) {
     background: $primary-dark;
     border-color: $primary-dark;
-    transform: translateY(-3px) scale(1.03);
+    color: $text-primary; // Keep text color consistent
+    transform: scale(1.05);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0) scale(0.98);
+    transform: scale(0.98);
   }
 }
 
@@ -55,12 +57,13 @@
   &:hover:not(:disabled) {
     background: rgba($primary, 0.1);
     border-color: $primary;
-    transform: translateY(-1px);
+    color: $text-primary; // Keep text color consistent
+    transform: scale(1.05);
   }
 
   &:active:not(:disabled) {
     background: rgba($primary, 0.15);
-    transform: translateY(0);
+    transform: scale(0.98);
   }
 }
 
@@ -73,11 +76,12 @@
   &:hover:not(:disabled) {
     background: $success-light;
     border-color: $success-light;
-    transform: translateY(-3px) scale(1.03);
+    color: white; // Keep text color consistent
+    transform: scale(1.05);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0) scale(0.98);
+    transform: scale(0.98);
   }
 }
 
@@ -90,11 +94,12 @@
   &:hover:not(:disabled) {
     background: $danger-light;
     border-color: $danger-light;
-    transform: translateY(-3px) scale(1.03);
+    color: white; // Keep text color consistent
+    transform: scale(1.05);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0) scale(0.98);
+    transform: scale(0.98);
   }
 }
 
@@ -108,10 +113,12 @@
     background: $primary;
     border-color: $primary;
     color: $text-primary;
+    transform: scale(1.05);
   }
 
   &:active:not(:disabled) {
     background: $primary-dark;
+    transform: scale(0.98);
   }
 }
 

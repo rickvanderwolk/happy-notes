@@ -27,7 +27,7 @@
         <div class="fixed-button-wrapper">
             <div class="fixed-button-inner">
                 <button data-cy="save-note-emojis" type="submit" form="emoji-form" class="btn btn-success btn-block btn-lg">
-                    Save Note ✓
+                    <i class="fa fa-check"></i>Save Note
                 </button>
             </div>
         </div>

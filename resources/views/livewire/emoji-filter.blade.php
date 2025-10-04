@@ -16,7 +16,7 @@
     @if(!empty($currentEmojis))
         <div class="text-center mb-4">
             <button wire:click="deselectAll" class="btn btn-outline">
-                <i class="fa fa-times-circle"></i> Clear all (Backspace)
+                <i class="fa fa-times-circle"></i>Clear all (Backspace)
             </button>
         </div>
     @endif

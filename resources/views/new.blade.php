@@ -41,7 +41,7 @@
         <div class="fixed-button-wrapper">
             <div class="fixed-button-inner">
                 <button data-cy="save-new-note" type="submit" form="note.store" onclick="document.querySelector('form').submit()" class="btn btn-success btn-block btn-lg">
-                    Save Note ✓
+                    <i class="fa fa-check"></i>Save Note
                 </button>
             </div>
         </div>

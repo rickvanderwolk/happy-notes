@@ -52,7 +52,7 @@
                 <h3 class="empty-state-title">No notes yet</h3>
                 <p class="empty-state-subtitle">Start capturing your thoughts and ideas</p>
                 <a href="{{ route('note.create') }}" class="btn btn-primary mt-4">
-                    <i class="fa fa-plus"></i> Create your first note
+                    <i class="fa fa-plus"></i>Create your first note
                 </a>
             </div>
         @endif
