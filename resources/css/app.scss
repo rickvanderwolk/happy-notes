@@ -161,7 +161,7 @@ p {
 // Emoji grid for selector
 .emoji-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
     gap: $space-3;
     max-width: 100%;
 
