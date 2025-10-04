@@ -4,8 +4,11 @@
         <x-authentication-card>
 
             <x-slot name="logo">
-                <img class="logo" src="/images/happynotes_logo_v1.png"></p>
+                <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
             </x-slot>
+
+            <h2 class="auth-title">Welcome back! 👋</h2>
+            <p class="auth-subtitle mb-6">Sign in to {{ config('app.name') }}</p>
 
             <x-validation-errors class="mb-4" />
 
@@ -28,33 +31,32 @@
                     <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
                 </div>
 
-                <div class="block mt-4">
-                    <label for="remember_me" class="flex items-center">
+                <div class="flex items-center justify-between mt-4">
+                    <label for="remember_me" class="flex items-center cursor-pointer" style="padding-top: 7px;">
                         <x-checkbox id="remember_me" name="remember" />
-                        <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                        <span class="ms-2 text-sm text-gray-600 hover:text-gray-900">{{ __('Remember me') }}</span>
                     </label>
-                </div>
 
-                <div class="flex items-center justify-end mt-4">
                     @if (Route::has('password.request'))
-                        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                            {{ __('Forgot your password?') }}
+                        <a class="text-sm text-gray-600 hover:text-gray-900 no-underline" href="{{ route('password.request') }}">
+                            {{ __('Forgot password?') }}
                         </a>
                     @endif
+                </div>
 
-                    <x-button class="ms-4">
+                <div class="mt-6">
+                    <x-button class="w-full justify-center">
                         {{ __('Log in') }}
                     </x-button>
                 </div>
 
-                <br>
-                <hr>
-
-                <div class="flex items-center justify-center mt-4">
-                    Don't have an account?&nbsp;
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
-                        {{ __('Register') }}
-                    </a>
+                <div class="text-center mt-6">
+                    <p class="text-sm text-gray-600">
+                        Don't have an account?
+                        <a class="text-primary hover:text-primary-dark font-semibold" href="{{ route('register') }}">
+                            {{ __('Sign up') }}
+                        </a>
+                    </p>
                 </div>
             </form>
         </x-authentication-card>

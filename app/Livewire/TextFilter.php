@@ -7,7 +7,7 @@ use Livewire\Component;
 
 final class TextFilter extends Component
 {
-    public ?string $search_query;
+    public ?string $search_query = null;
     public bool $search_query_only = false;
 
     protected $casts = [
@@ -17,8 +17,8 @@ final class TextFilter extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        $this->search_query = $user->search_query;
-        $this->search_query_only = $user->search_query_only;
+        $this->search_query = $user->search_query ?? null;
+        $this->search_query_only = $user->search_query_only ?? false;
     }
 
     public function updatedSearchQuery(): void
@@ -37,6 +37,11 @@ final class TextFilter extends Component
             $user->update(['search_query_only' => $this->search_query_only]);
             $this->dispatch('filterUpdated');
         }
+    }
+
+    public function applyFilter(): void
+    {
+        $this->dispatch('applyFilter');
     }
 
     public function render(): \Illuminate\View\View|\Illuminate\Contracts\View\View

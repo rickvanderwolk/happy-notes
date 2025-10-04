@@ -4,12 +4,12 @@
 $id = $id ?? md5($attributes->wire('model'));
 
 $maxWidth = [
-    'sm' => 'sm:max-w-sm',
-    'md' => 'sm:max-w-md',
-    'lg' => 'sm:max-w-lg',
-    'xl' => 'sm:max-w-xl',
-    '2xl' => 'sm:max-w-2xl',
-][$maxWidth ?? '2xl'];
+    'sm' => '400px',
+    'md' => '500px',
+    'lg' => '600px',
+    'xl' => '700px',
+    '2xl' => '800px',
+][$maxWidth ?? 'md'];
 @endphp
 
 <div
@@ -18,26 +18,71 @@ $maxWidth = [
     x-on:keydown.escape.window="show = false"
     x-show="show"
     id="{{ $id }}"
-    class="jetstream-modal fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
     style="display: none;"
+    x-transition
 >
-    <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="ease-in duration-200"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0">
-        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-    </div>
+    {{-- Backdrop --}}
+    <div
+        x-show="show"
+        class="modal-backdrop"
+        x-on:click="show = false"
+        x-transition:enter="transition-opacity ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition-opacity ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    ></div>
 
-    <div x-show="show" class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto"
-                    x-trap.inert.noscroll="show"
-                    x-transition:enter="ease-out duration-300"
-                    x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                    x-transition:leave="ease-in duration-200"
-                    x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                    x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+    {{-- Modal Content --}}
+    <div
+        x-show="show"
+        class="modal-content"
+        style="max-width: {{ $maxWidth }};"
+        x-trap.inert.noscroll="show"
+        x-transition:enter="transition-all ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95 translate-y-8"
+        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+        x-transition:leave="transition-all ease-in duration-150"
+        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+        x-transition:leave-end="opacity-0 scale-95 translate-y-8"
+    >
         {{ $slot }}
     </div>
 </div>
+
+<style>
+[x-cloak] { display: none !important; }
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 9998;
+}
+
+.modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 2rem);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+}
+
+@media (prefers-color-scheme: dark) {
+    .modal-content {
+        background: #1a1a1a;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+}
+</style>

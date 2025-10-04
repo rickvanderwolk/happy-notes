@@ -1,13 +1,17 @@
-<div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-    <div>
-        {{ $logo }}
-    </div>
+<div class="min-h-screen flex flex-col justify-center items-center p-4">
+    <div class="auth-card">
+        <div class="text-center mb-6">
+            {{ $logo }}
+        </div>
 
-    <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
         {{ $slot }}
     </div>
 
-    <div class="flex items-center justify-center mt-4">
-        {{ config('app.version') }}
+    <div class="version-text text-center mt-6">
+        {{ config('app.name') }} {{ config('app.version') }}
+        <span class="mx-2">•</span>
+        <a class="hover:text-gray-600" href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer">
+            About
+        </a>
     </div>
 </div>

@@ -1,22 +1,36 @@
 <x-app-layout>
+    @push('head')
+        <meta name="turbolinks-cache-control" content="no-cache">
+    @endpush
+
     <x-slot name="header"></x-slot>
 
-    <div class="container">
-        <form action="{{ route('note.emojis.store', ['note' => $item->uuid]) }}" method="POST">
+    <div class="container form-page-container">
+        <div class="text-center mb-4">
+            <h2 class="section-title">Emojis 🎨</h2>
+        </div>
+
+        <form id="emoji-form" action="{{ route('note.emojis.store', ['note' => $item->uuid]) }}" method="POST">
             @csrf
 
-            <livewire:emoji-filter
-                :storageKey="null"
-                :updateUser="false"
-                :customEmojis="$item->emojis"
-            />
+            <div class="mb-4">
+                <livewire:emoji-filter
+                    :storageKey="null"
+                    :updateUser="false"
+                    :customEmojis="$item->emojis"
+                />
+            </div>
 
             <input type="hidden" name="selectedEmojis" id="selectedEmojis">
-
-            <div class="d-grid gap-2" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: auto; max-width: 400px;">
-                <button data-cy="save-note-emojis" type="submit" class="btn btn-success">Save Note</button>
-            </div>
         </form>
+
+        <div class="fixed-button-wrapper">
+            <div class="fixed-button-inner">
+                <button data-cy="save-note-emojis" type="submit" form="emoji-form" class="btn btn-success btn-block btn-lg">
+                    <i class="fa fa-check"></i>Save Note
+                </button>
+            </div>
+        </div>
     </div>
 
     @livewireScripts

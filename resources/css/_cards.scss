@@ -1,0 +1,491 @@
+// HappyNotes - Card Styles
+@use 'variables' as *;
+
+.card {
+  background: transparent;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  padding: $card-padding;
+  transition: all $transition-base;
+
+  &.card-hover {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-3px) scale(1.015);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.995);
+    }
+  }
+
+  &.card-sm {
+    padding: $space-4;
+  }
+
+  &.card-lg {
+    padding: $space-8;
+  }
+
+  &.card-flat {
+    border: 1px solid $border;
+  }
+}
+
+// Note card specific
+.note-card {
+  background: rgba($surface, 0.5);
+  border-radius: $radius-md;
+  padding: $space-3;
+  margin-bottom: $space-3;
+  cursor: pointer;
+  transition: all $transition-base;
+  border: 1px solid $border;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.01);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  .note-title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin-bottom: $space-2;
+    line-height: $line-height-tight;
+  }
+
+  .note-emojis {
+    display: flex;
+    gap: $space-3;
+    margin-top: $space-2;
+    flex-wrap: wrap;
+
+    .emoji {
+      font-size: 22px;
+      line-height: 1;
+    }
+  }
+
+  .note-progress {
+    margin-top: $space-2;
+  }
+}
+
+// Auth card (for login, register, etc.)
+.auth-card {
+  background: rgba($surface, 0.8);
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: $space-8;
+  max-width: 480px;
+  width: 100%;
+
+  .auth-logo {
+    max-width: $logo-size;
+    margin: 0 auto $space-6;
+    display: block;
+    transition: transform $transition-slow;
+
+    &:hover {
+      transform: scale(1.05) rotate(2deg);
+    }
+  }
+
+  .auth-title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    margin-bottom: $space-2;
+    color: $text-primary;
+  }
+
+  .auth-subtitle {
+    font-size: $font-size-sm;
+    text-align: center;
+    color: $text-secondary;
+    margin-bottom: $space-4;
+  }
+
+  .auth-divider {
+    margin: $space-6 0;
+    border-top: 1px solid $border;
+  }
+}
+
+// Menu card (legacy)
+.menu-card {
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: $space-4 $space-6;
+    color: $text-primary;
+    text-decoration: none;
+    border-bottom: 1px solid $border;
+    transition: all $transition-base;
+    font-weight: $font-weight-medium;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      padding-left: calc(#{$space-6} + 4px);
+    }
+
+    i, .emoji {
+      font-size: $font-size-2xl;
+      margin-right: $space-4;
+      width: 32px;
+      text-align: center;
+    }
+  }
+}
+
+// Modern menu card
+.menu-card-modern {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.menu-item-modern {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-5 $space-6;
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  text-decoration: none;
+  transition: all $transition-spring;
+  color: inherit;
+
+  &:hover {
+    transform: translateX(6px) scale(1.01);
+  }
+
+  &:active {
+    transform: translateX(3px) scale(1);
+  }
+
+  .menu-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+    flex: 1;
+  }
+
+  .menu-item-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+
+  .menu-item-subtitle {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .menu-item-icon {
+    font-size: 28px;
+    color: $text-tertiary;
+    transition: all $transition-fast;
+  }
+
+  &:hover .menu-item-icon {
+    color: $primary-dark;
+  }
+
+  // Desktop only menu items (hide on mobile/touch devices)
+  &.menu-item-desktop-only {
+    @media (hover: none) {
+      display: none;
+    }
+  }
+}
+
+// Account card
+.account-card {
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  margin-bottom: $space-6;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.005);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  .account-card-title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $space-3;
+    color: $text-primary;
+    text-align: left;
+  }
+
+  .account-card-description {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    margin-bottom: $space-5;
+    line-height: $line-height-relaxed;
+    text-align: left;
+  }
+
+  // Better spacing for form elements
+  .grid {
+    gap: $space-5;
+  }
+
+  // Actions at bottom
+  .section-actions {
+    margin-top: $space-6;
+    padding-top: $space-5;
+  }
+
+  // Text alignment for description text
+  .max-w-xl,
+  .max-w-2xl,
+  .max-w-3xl {
+    text-align: left;
+  }
+
+  > p {
+    text-align: left;
+  }
+}
+
+// Account section wrapper
+.account-section {
+  margin-bottom: $space-8;
+
+  .account-section-header {
+    text-align: center;
+    margin-bottom: $space-6;
+
+    .account-section-title {
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $space-2;
+    }
+
+    .account-section-subtitle {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
+  }
+}
+
+// Browser session item
+.browser-session-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(245, 245, 245, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  .card,
+  .note-card,
+  .auth-card,
+  .menu-card,
+  .account-card {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+
+    .note-title,
+    .auth-title,
+    .account-card-title {
+      color: $dark-text;
+    }
+  }
+
+  .note-card {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+  }
+
+  .menu-card .menu-item {
+    color: $dark-text;
+    border-bottom-color: $dark-border;
+  }
+
+  .menu-item-modern {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+
+    .menu-item-title {
+      color: $dark-text;
+    }
+
+    .menu-item-subtitle {
+      color: $dark-text-secondary;
+    }
+
+    .menu-item-icon {
+      color: $dark-text-secondary;
+    }
+
+    &:hover .menu-item-icon {
+      color: $primary;
+    }
+  }
+
+  .account-card {
+    .account-card-description {
+      color: $dark-text-secondary;
+    }
+  }
+
+  .account-section {
+    .account-section-header {
+      .account-section-title {
+        color: $dark-text;
+      }
+
+      .account-section-subtitle {
+        color: $dark-text-secondary;
+      }
+    }
+  }
+
+  .card.card-flat {
+    border-color: $dark-border;
+  }
+
+  .browser-session-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .skeleton-loader {
+    .skeleton-title,
+    .skeleton-emoji {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+}
+
+// Skeleton loader
+.skeleton-loader {
+  pointer-events: none;
+
+  .skeleton-title,
+  .skeleton-emoji {
+    background: rgba($text-tertiary, 0.15);
+    border-radius: $radius-sm;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  .skeleton-title {
+    height: 20px;
+    width: 70%;
+    margin-bottom: $space-2;
+  }
+
+  .skeleton-emojis {
+    display: flex;
+    gap: $space-3;
+    margin-top: $space-2;
+  }
+
+  .skeleton-emoji {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Note detail skeleton loader
+.note-detail-skeleton {
+  padding: 0 $space-3; // Match note content padding for consistency
+
+  .skeleton-note-title,
+  .skeleton-progress-bar,
+  .skeleton-emoji,
+  .skeleton-text-line {
+    background: rgba($text-tertiary, 0.15);
+    border-radius: $radius-sm;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  .skeleton-note-title {
+    height: 40px;
+    width: 60%;
+    margin-bottom: $space-6;
+    border-radius: $radius-md;
+  }
+
+  .skeleton-progress-bar {
+    height: 6px;
+    width: 100%;
+    margin-bottom: $space-4;
+    border-radius: $radius-full;
+  }
+
+  .skeleton-emojis-row {
+    display: flex;
+    gap: $space-4;
+    margin-bottom: $space-8;
+  }
+
+  .skeleton-emoji {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .skeleton-editor-content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    margin-top: $space-6;
+  }
+
+  .skeleton-text-line {
+    height: 16px;
+    border-radius: 4px;
+  }
+}
+
+// Dark mode for note detail skeleton
+@media (prefers-color-scheme: dark) {
+  .note-detail-skeleton {
+    .skeleton-note-title,
+    .skeleton-progress-bar,
+    .skeleton-emoji,
+    .skeleton-text-line {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+}

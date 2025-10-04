@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 final class EmojiFilter extends Component
@@ -11,6 +12,10 @@ final class EmojiFilter extends Component
     public $emojis = [];
     public $storageKey;
     public $updateUser = false;
+
+    // Cache user emoji data to avoid repeated Auth::user() calls
+    public $selectedEmojisCache = [];
+    public $excludedEmojisCache = [];
 
     public function mount($storageKey = null, $updateUser = false, $customEmojis = []): void
     {
@@ -23,6 +28,17 @@ final class EmojiFilter extends Component
             ? json_decode($user->all_emojis, true)
             : $user->all_emojis;
         $this->allEmojis = $this->allEmojis ?? [];
+
+        // Cache user emoji data
+        $this->selectedEmojisCache = is_string($user->selected_emojis)
+            ? json_decode($user->selected_emojis, true)
+            : $user->selected_emojis;
+        $this->selectedEmojisCache = $this->selectedEmojisCache ?? [];
+
+        $this->excludedEmojisCache = is_string($user->excluded_emojis)
+            ? json_decode($user->excluded_emojis, true)
+            : $user->excluded_emojis;
+        $this->excludedEmojisCache = $this->excludedEmojisCache ?? [];
 
         if ($this->storageKey && $user->{$this->storageKey}) {
             $this->emojis = is_string($user->{$this->storageKey})
@@ -45,36 +61,22 @@ final class EmojiFilter extends Component
             return;
         }
 
-        $user = Auth::user();
-
-        $selected = is_string($user->selected_emojis)
-            ? json_decode($user->selected_emojis, true)
-            : $user->selected_emojis;
-        $excluded = is_string($user->excluded_emojis)
-            ? json_decode($user->excluded_emojis, true)
-            : $user->excluded_emojis;
-
-        $selected = $selected ?? [];
-        $excluded = $excluded ?? [];
-
         if ($this->storageKey === 'selected_emojis') {
-            $excluded = array_filter($excluded, fn ($e) => $e !== $emoji);
+            $this->excludedEmojisCache = array_values(array_filter($this->excludedEmojisCache, fn ($e) => $e !== $emoji));
             $this->emojis[] = $emoji;
+            $this->selectedEmojisCache = $this->emojis;
         } elseif ($this->storageKey === 'excluded_emojis') {
-            $selected = array_filter($selected, fn ($e) => $e !== $emoji);
+            $this->selectedEmojisCache = array_values(array_filter($this->selectedEmojisCache, fn ($e) => $e !== $emoji));
             $this->emojis[] = $emoji;
+            $this->excludedEmojisCache = $this->emojis;
         } else {
             $this->emojis[] = $emoji;
         }
 
         if ($this->updateUser) {
-            $user->selected_emojis = $selected;
-            $user->excluded_emojis = $excluded;
-            if ($this->storageKey === 'selected_emojis') {
-                $user->selected_emojis = $this->emojis;
-            } elseif ($this->storageKey === 'excluded_emojis') {
-                $user->excluded_emojis = $this->emojis;
-            }
+            $user = Auth::user();
+            $user->selected_emojis = $this->selectedEmojisCache;
+            $user->excluded_emojis = $this->excludedEmojisCache;
             $user->save();
         }
 
@@ -84,7 +86,14 @@ final class EmojiFilter extends Component
 
     public function deselectEmoji($emoji): void
     {
-        $this->emojis = array_filter($this->emojis, fn ($e) => $e !== $emoji);
+        $this->emojis = array_values(array_filter($this->emojis, fn ($e) => $e !== $emoji));
+
+        // Update cache
+        if ($this->storageKey === 'selected_emojis') {
+            $this->selectedEmojisCache = $this->emojis;
+        } elseif ($this->storageKey === 'excluded_emojis') {
+            $this->excludedEmojisCache = $this->emojis;
+        }
 
         if ($this->updateUser && $this->storageKey) {
             Auth::user()->update([
@@ -99,6 +108,13 @@ final class EmojiFilter extends Component
     {
         $this->emojis = [];
 
+        // Update cache
+        if ($this->storageKey === 'selected_emojis') {
+            $this->selectedEmojisCache = [];
+        } elseif ($this->storageKey === 'excluded_emojis') {
+            $this->excludedEmojisCache = [];
+        }
+
         if ($this->updateUser && $this->storageKey) {
             Auth::user()->update([
                 $this->storageKey => $this->emojis
@@ -108,23 +124,12 @@ final class EmojiFilter extends Component
         $this->dispatch('filterUpdated');
     }
 
-    public function getSelectableEmojis(): array
+    #[Computed]
+    public function selectableEmojis(): array
     {
-        $user = Auth::user();
-
-        $selected = is_string($user->selected_emojis)
-            ? json_decode($user->selected_emojis, true)
-            : $user->selected_emojis;
-        $excluded = is_string($user->excluded_emojis)
-            ? json_decode($user->excluded_emojis, true)
-            : $user->excluded_emojis;
-
-        $selected = $selected ?? [];
-        $excluded = $excluded ?? [];
-
-        return array_filter($this->allEmojis, function ($emoji) use ($selected, $excluded) {
+        return array_filter($this->allEmojis, function ($emoji) {
             if ($this->storageKey === 'selected_emojis' || $this->storageKey === 'excluded_emojis') {
-                return ! in_array($emoji, $selected) && ! in_array($emoji, $excluded);
+                return ! in_array($emoji, $this->selectedEmojisCache) && ! in_array($emoji, $this->excludedEmojisCache);
             }
             return ! in_array($emoji, $this->emojis);
         });
@@ -133,7 +138,6 @@ final class EmojiFilter extends Component
     public function render(): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
         return view('livewire.emoji-filter', [
-            'selectableEmojis' => $this->getSelectableEmojis(),
             'currentEmojis' => $this->emojis
         ]);
     }

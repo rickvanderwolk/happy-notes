@@ -8,19 +8,19 @@
     </x-slot>
 
     <x-slot name="content">
-        <div class="">
-            <a
-                href="{{ route('user.export.notes.create', ['format' => 'csv']) }}"
-                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-            >
-                Download CSV
-            </a>
-            <a
-                href="{{ route('user.export.notes.create', ['format' => 'json']) }}"
-                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-            >
-                Download JSON
-            </a>
+        <div>
+            <form action="{{ route('user.export.notes.create') }}" method="GET" style="display: inline;">
+                <input type="hidden" name="format" value="csv">
+                <button type="submit" class="btn btn-secondary me-2">
+                    Download CSV
+                </button>
+            </form>
+            <form action="{{ route('user.export.notes.create') }}" method="GET" style="display: inline;">
+                <input type="hidden" name="format" value="json">
+                <button type="submit" class="btn btn-secondary">
+                    Download JSON
+                </button>
+            </form>
         </div>
     </x-slot>
 </x-action-section>

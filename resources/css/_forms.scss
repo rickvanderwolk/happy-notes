@@ -1,0 +1,288 @@
+// HappyNotes - Form Styles
+@use 'variables' as *;
+
+// Input base styles
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select,
+.form-control {
+  width: 100%;
+  height: $input-height;
+  padding: $input-padding;
+  font-size: $font-size-base;
+  font-family: $font-family;
+  color: $text-primary;
+  background: transparent;
+  border: 2px solid $border;
+  border-radius: $radius-lg;
+  transition: all $transition-base;
+
+  &::placeholder {
+    color: $text-tertiary;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.2);
+    background: transparent;
+  }
+
+  &:disabled {
+    background: $border;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &.error,
+  &.is-invalid {
+    border-color: $danger;
+    animation: shake 0.3s;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($danger, 0.2);
+    }
+  }
+
+  &.success,
+  &.is-valid {
+    border-color: $success;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234CAF50'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($success, 0.2);
+    }
+  }
+}
+
+// Textarea specific
+textarea,
+textarea.form-control {
+  height: auto;
+  min-height: 100px;
+  resize: vertical;
+  line-height: $line-height-relaxed;
+}
+
+// Elegant input (borderless)
+.elegant-input,
+input.elegant-input,
+textarea.elegant-input {
+  border: none;
+  border-bottom: 2px solid $border;
+  border-radius: 0;
+  padding: $space-3 $space-2;
+  background: transparent;
+  transition: all $transition-base;
+
+  &:focus {
+    border-bottom-color: $primary;
+    box-shadow: none;
+  }
+
+  &::placeholder {
+    color: $text-tertiary;
+    font-style: italic;
+  }
+}
+
+// Label
+label,
+.form-label {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  margin-bottom: $space-2;
+}
+
+// Checkbox & Radio
+input[type="checkbox"],
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin-right: $space-2;
+  cursor: pointer;
+  accent-color: $primary;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: $space-3;
+
+  .form-check-input {
+    margin-right: $space-3;
+  }
+
+  .form-check-label {
+    margin-bottom: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+// Toggle switch (modern iOS style)
+.form-switch {
+  display: flex;
+  align-items: center;
+  margin-bottom: $space-4;
+
+  .form-check-input {
+    width: 48px;
+    height: 26px;
+    margin-right: $space-3;
+    background-color: $border-dark;
+    border: none;
+    border-radius: $radius-full;
+    position: relative;
+    cursor: pointer;
+    transition: background-color $transition-base;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: $radius-full;
+      background: white;
+      top: 2px;
+      left: 2px;
+      transition: transform $transition-base;
+    }
+
+    &:checked {
+      background-color: $primary;
+
+      &::before {
+        transform: translateX(22px);
+      }
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($primary, 0.2);
+    }
+  }
+
+  .form-check-label {
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+}
+
+// Input error message
+.input-error,
+.invalid-feedback {
+  display: block;
+  font-size: $font-size-sm;
+  color: $danger;
+  margin-top: $space-2;
+}
+
+// Input group (with icon)
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input-icon {
+    position: absolute;
+    left: $space-4;
+    color: $text-tertiary;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  input {
+    padding-left: 42px;
+  }
+
+  .input-clear {
+    position: absolute;
+    right: $space-4;
+    background: none;
+    border: none;
+    color: $text-tertiary;
+    cursor: pointer;
+    padding: $space-2;
+    border-radius: $radius-sm;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $text-primary;
+      background: $surface-hover;
+    }
+  }
+}
+
+// Form section
+.form-section {
+  margin-bottom: $space-8;
+}
+
+// Shake animation for errors
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select,
+  .form-control {
+    color: $dark-text;
+    background: transparent;
+    border-color: $dark-border;
+
+    &::placeholder {
+      color: $dark-text-secondary;
+    }
+
+    &:focus {
+      color: $dark-text;
+      background: transparent;
+    }
+
+    &:disabled {
+      background: $dark-bg-alt;
+    }
+  }
+
+  .elegant-input,
+  input.elegant-input,
+  textarea.elegant-input {
+    background: transparent;
+    border-bottom-color: $dark-border;
+
+    &:focus {
+      color: $dark-text;
+    }
+  }
+
+  label,
+  .form-label {
+    color: $dark-text-secondary;
+  }
+
+  .form-switch .form-check-input {
+    background-color: $dark-border;
+
+    &:checked {
+      background-color: $primary;
+    }
+
+    &::before {
+      background: $dark-surface;
+    }
+  }
+}

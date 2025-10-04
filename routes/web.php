@@ -37,6 +37,10 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
         return view('menu');
     })->name('menu.show');
 
+    Route::get('/shortcuts', function () {
+        return view('shortcuts');
+    })->name('shortcuts.show');
+
     Route::get('/', function () { return redirect(route('notes.show')); })->name('dashboard');
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.show');
     Route::post('/notes', [NoteController::class, 'store'])->name('note.store');
@@ -52,6 +56,8 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
     Route::get('/filter', [FilterController::class, 'index'])->name('filter.show');
     Route::get('/filter/exclude', [FilterController::class, 'index'])->name('filter.exclude.show');
     Route::get('/filter/search', [FilterController::class, 'search'])->name('filter.search.show');
+    Route::post('/filter/clear', [FilterController::class, 'clear'])->name('filter.clear');
+    Route::post('/search/clear', [FilterController::class, 'clearSearch'])->name('search.clear');
 
     Route::get('/user/export', [ProfileExportController::class, 'export'])->name('user.export.notes.create');
 });

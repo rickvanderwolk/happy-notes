@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <img class="logo" src="/images/happynotes_logo_v1.png">
+            <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
         </x-slot>
 
         <x-validation-errors class="mb-4" />

@@ -1,7 +1,99 @@
+// HappyNotes Design System
+@use 'variables' as *;
+@use 'utilities' as *;
+@use 'buttons' as *;
+@use 'cards' as *;
+@use 'forms' as *;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+// Base styles
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font-family;
+    color: $text-primary;
+    background: $background;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Logo styles
 img.logo {
-    max-width: 125px;
+    max-width: $logo-size;
+    animation: happy-bounce 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    cursor: pointer;
+
+    &:hover {
+        animation: spin-zoom 0.6s ease-out forwards;
+    }
+}
+
+img.logo-sm {
+    max-width: $logo-size-sm;
+}
+
+@keyframes happy-bounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+@keyframes spin-zoom {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    100% {
+        transform: translateY(0) rotate(360deg) scale(1.15);
+    }
+}
+
+// Auth page specific
+.min-h-screen {
+    min-height: 100vh;
+}
+
+// Links
+a {
+    color: $text-secondary;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $primary-dark;
+    }
+}
+
+// Version text
+.version-text {
+    font-size: $font-size-sm;
+    color: $text-tertiary;
+    margin-top: $space-4;
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+    body {
+        color: $dark-text;
+        background: $dark-bg;
+    }
+
+    a {
+        color: $dark-text-secondary;
+
+        &:hover {
+            color: $primary;
+        }
+    }
+
+    .version-text {
+        color: $dark-text-secondary;
+    }
 }

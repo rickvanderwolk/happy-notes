@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class ProfileExportController extends Controller
 {
-    public function export(Request $request): \Illuminate\Http\JsonResponse|StreamedResponse
+    public function export(Request $request): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
     {
         $format = $request->query('format', 'json');
         $notes = Note::all();
@@ -28,22 +28,30 @@ final class ProfileExportController extends Controller
         }
 
         if ($format === 'json') {
-            $jsonOutput = json_encode($exportData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            $filename = 'happynotes_export_' . date('Y-m-d_His') . '.json';
+            $content = json_encode($exportData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 
-            return Response::streamDownload(function () use ($jsonOutput) {
-                echo $jsonOutput;
-            }, 'user_data.json', [
+            return Response::make($content, 200, [
                 'Content-Type' => 'application/json',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Content-Length' => strlen($content),
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
             ]);
         }
 
         if ($format === 'csv') {
-            $csvOutput = $this->convertToCsv($exportData);
+            $filename = 'happynotes_export_' . date('Y-m-d_His') . '.csv';
+            $content = $this->convertToCsv($exportData);
 
-            return Response::streamDownload(function () use ($csvOutput) {
-                echo $csvOutput;
-            }, 'user_data.csv', [
-                'Content-Type' => 'text/csv',
+            return Response::make($content, 200, [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Content-Length' => strlen($content),
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
             ]);
         }
 

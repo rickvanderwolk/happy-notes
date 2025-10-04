@@ -41,8 +41,7 @@ Livewire.on('emojisChanged', (emojis) => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const keydownListener = (event) => {
+const keydownListener = (event) => {
         const ignoreTags = ['INPUT', 'TEXTAREA', 'SELECT'];
         if (
             ignoreTags.includes(event.target.tagName)
@@ -62,13 +61,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('note.show', {note: getUuidFromRoute()});
+                Turbolinks.visit(getRouteUrl('note.show', {note: getUuidFromRoute()}));
             } else if ([
                 'note.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('notes.show') + '#note-' + getUuidFromRoute();
+                Turbolinks.visit(getRouteUrl('notes.show') + '#note-' + getUuidFromRoute());
+            } else if ([
+                'profile.show',
+                'user-profile-information.update',
+                'user-password.update',
+                'two-factor.enable',
+                'current-user-photo.destroy',
+            ].includes(appCurrentRouteName)) {
+                Turbolinks.visit(getRouteUrl('notes.show'));
             } else {
-                window.location.href = getRouteUrl('dashboard');
+                Turbolinks.visit(getRouteUrl('notes.show'));
             }
         }
 
@@ -78,13 +85,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     'filter.exclude.show',
                     'filter.search.show',
                 ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('notes.show')
+                Turbolinks.visit(getRouteUrl('notes.show'))
             }
         }
 
         if (event.key === 'a') {
             if (appCurrentRouteName === 'menu.show') {
-                window.location.href = getRouteUrl('profile.show')
+                Turbolinks.visit(getRouteUrl('profile.show'))
             }
         }
 
@@ -100,18 +107,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('note.emojis.show', {note: getUuidFromRoute()});
+                Turbolinks.visit(getRouteUrl('note.emojis.show', {note: getUuidFromRoute()}));
             } else {
-                window.location.href = getRouteUrl('filter.exclude.show');
+                Turbolinks.visit(getRouteUrl('filter.exclude.show'));
             }
         }
 
         if (event.key === 'f') {
-            window.location.href = getRouteUrl('filter.show');
+            Turbolinks.visit(getRouteUrl('filter.show'));
         }
 
         if (event.key === 's') {
-            window.location.href = getRouteUrl('filter.search.show');
+            Turbolinks.visit(getRouteUrl('filter.search.show'));
         }
 
         if (event.key === 'l') {
@@ -121,14 +128,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (event.key === 'm') {
-            if (appCurrentRouteName === 'notes.show') {
-                window.location.href = getRouteUrl('menu.show');
+            if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
+                Turbolinks.visit(getRouteUrl('menu.show'));
             }
         }
 
         if (event.key === 'n') {
-            if (appCurrentRouteName === 'notes.show') {
-                window.location.href = getRouteUrl('note.create');
+            if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
+                Turbolinks.visit(getRouteUrl('note.create'));
             }
         }
 
@@ -138,8 +145,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                window.location.href = getRouteUrl('note.title.show', {uuid: getUuidFromRoute()});
+                Turbolinks.visit(getRouteUrl('note.title.show', {uuid: getUuidFromRoute()}));
             }
+        }
+
+        if (event.key === '?' || event.key === '/') {
+            Turbolinks.visit(getRouteUrl('shortcuts.show'));
         }
 
         if (
@@ -150,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let noteList = document.getElementById('note-list');
 
             if (noteList) {
-                let listItems = noteList.getElementsByClassName('list-group-item');
+                let listItems = noteList.getElementsByClassName('note-card');
                 let index = parseInt(event.key, 10) - 1;
 
                 if (listItems.length > index) {
@@ -161,10 +172,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         }
-    };
+};
 
+function setupKeyboardShortcuts() {
+    window.removeEventListener('keyup', keydownListener);
     window.addEventListener('keyup', keydownListener);
-});
+}
+
+document.addEventListener('DOMContentLoaded', setupKeyboardShortcuts);
+document.addEventListener('turbolinks:load', setupKeyboardShortcuts);
 
 window.addEventListener('load', function() {
     var textarea = document.getElementById('titleTextarea');
@@ -177,19 +193,60 @@ window.addEventListener('load', function() {
     checkAndLoadForAnchor();
 });
 
-document.addEventListener('turbolinks:load', function() {
-    checkAndLoadForAnchor();
-});
-
 let page = 1;
 let isLoading = false;
 let isLoadingForAnchor = false;
+let scrollListener = null;
 
-window.addEventListener('scroll', () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        loadMoreData();
+document.addEventListener('turbolinks:load', function() {
+    page = 1;
+    isLoading = false;
+    isLoadingForAnchor = false;
+
+    if (scrollListener) {
+        window.removeEventListener('scroll', scrollListener);
     }
+
+    scrollListener = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+            loadMoreData();
+        }
+    };
+
+    window.addEventListener('scroll', scrollListener);
+
+    // Show real notes and hide skeleton loaders
+    showRealNotes();
+
+    // Show real note content and hide skeleton loaders
+    showRealNoteContent();
+
+    checkAndLoadForAnchor();
 });
+
+function showRealNotes() {
+    const skeletonContainer = document.getElementById('skeleton-container');
+    const noteList = document.getElementById('note-list');
+
+    if (skeletonContainer && noteList) {
+        // Hide skeleton loaders
+        skeletonContainer.style.display = 'none';
+        // Show real notes
+        noteList.style.display = 'flex';
+    }
+}
+
+function showRealNoteContent() {
+    const noteSkeletonContainer = document.getElementById('note-skeleton-container');
+    const noteContent = document.getElementById('note-content');
+
+    if (noteSkeletonContainer && noteContent) {
+        // Hide skeleton loaders
+        noteSkeletonContainer.style.display = 'none';
+        // Show real note content
+        noteContent.style.display = 'block';
+    }
+}
 
 function checkAndLoadForAnchor() {
     const hash = window.location.hash;
@@ -217,19 +274,26 @@ function loadMoreDataForAnchor(targetId) {
         return;
     }
 
+    const noteList = document.getElementById('note-list');
+    const loadingEl = document.getElementById('loading');
+
+    if (!noteList || !loadingEl) {
+        return;
+    }
+
     isLoadingForAnchor = true;
     page++;
-    document.getElementById('loading').style.display = 'block';
+    loadingEl.style.display = 'block';
 
     fetch(`${appBaseUrl}/notes?page=${page}`)
         .then(response => response.text())
         .then(data => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(data, 'text/html');
-            const newNotes = htmlDoc.querySelectorAll('#note-list .list-group-item');
+            const newNotes = htmlDoc.querySelectorAll('#note-list .note-card');
 
-            newNotes.forEach(note => document.getElementById('note-list').appendChild(note));
-            document.getElementById('loading').style.display = 'none';
+            newNotes.forEach(note => noteList.appendChild(note));
+            loadingEl.style.display = 'none';
             isLoadingForAnchor = false;
 
             const targetElement = document.getElementById(targetId);
@@ -246,8 +310,8 @@ function loadMoreDataForAnchor(targetId) {
             setTimeout(() => loadMoreDataForAnchor(targetId), 100);
         })
         .catch(error => {
-            console.error(error);
-            document.getElementById('loading').style.display = 'none';
+            console.error('Error loading more notes for anchor:', error);
+            loadingEl.style.display = 'none';
             isLoadingForAnchor = false;
         });
 }
@@ -256,33 +320,38 @@ function loadMoreData() {
     if (isLoading || isLoadingForAnchor) {
         return;
     }
-    if (!document.getElementById('note-list')) {
+
+    const noteList = document.getElementById('note-list');
+    const loadingEl = document.getElementById('loading');
+
+    if (!noteList || !loadingEl) {
         return;
     }
 
     isLoading = true;
     page++;
-    document.getElementById('loading').style.display = 'block';
+    loadingEl.style.display = 'block';
 
     fetch(`${appBaseUrl}/notes?page=${page}`)
         .then(response => response.text())
         .then(data => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(data, 'text/html');
-            const newNotes = htmlDoc.querySelectorAll('#note-list .list-group-item');
+            const newNotes = htmlDoc.querySelectorAll('#note-list .note-card');
 
-            newNotes.forEach(note => document.getElementById('note-list').appendChild(note));
-            document.getElementById('loading').style.display = 'none';
+            newNotes.forEach(note => noteList.appendChild(note));
+            loadingEl.style.display = 'none';
             isLoading = false;
 
             if (newNotes.length === 0) {
                 isLoading = true;
-                document.getElementById('loading').textContent = 'No more notes to load.';
+                loadingEl.style.display = 'block';
+                loadingEl.textContent = "That's all!";
             }
         })
         .catch(error => {
-            console.error(error);
-            document.getElementById('loading').style.display = 'none';
+            console.error('Error loading more notes:', error);
+            loadingEl.style.display = 'none';
             isLoading = false;
         });
 }

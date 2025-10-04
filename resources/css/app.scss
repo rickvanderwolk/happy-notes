@@ -1,280 +1,693 @@
+// Bootstrap & FontAwesome
 @use "bootstrap/dist/css/bootstrap.min.css";
 @use "@fortawesome/fontawesome-free/css/all.min.css";
 
+// HappyNotes Design System
+@use 'variables' as *;
+@use 'utilities' as *;
+@use 'buttons' as *;
+@use 'cards' as *;
+@use 'forms' as *;
+
+// Logo styles
 img.logo {
-    max-width: 125px;
+    max-width: $logo-size;
+    animation: happy-bounce-app 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    cursor: pointer;
+
+    &:hover {
+        animation: spin-zoom-app 0.6s ease-out forwards;
+    }
 }
 
+img.logo-sm {
+    max-width: $logo-size-sm;
+}
+
+@keyframes happy-bounce-app {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+@keyframes spin-zoom-app {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    100% {
+        transform: translateY(0) rotate(360deg) scale(1.15);
+    }
+}
+
+// Navbar logo with subtle hover effect
+.navbar-logo {
+    transition: transform $transition-spring;
+    cursor: pointer;
+
+    &:hover {
+        transform: rotate(8deg) scale(1.15);
+    }
+
+    &:active {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+// Empty state logo with bounce animation
+.empty-state-logo {
+    animation: gentle-bounce 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    cursor: pointer;
+
+    &:hover {
+        animation: spin-zoom-logo 0.6s ease-out forwards;
+    }
+}
+
+@keyframes gentle-bounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+@keyframes spin-zoom-logo {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    100% {
+        transform: translateY(0) rotate(360deg) scale(1.15);
+    }
+}
+
+// Base elements
 html,
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-    background-color: #fff;
-    word-break: break-word;
-    font-size: 18px !important;
-    font-family: "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-}
-
-p {
-    font-size: 14px !important;
-}
-
-.emoji-wrapper .emoji {
-    font-size: 24px;
-}
-.emoji-wrapper-xl .emoji {
-    font-size: 28px;
-}
-
-#main-navbar i,
-#main-navbar a,
-#main-navbar .emoji {
-    font-size: 36px;
-    margin-left: 8px;
-    margin-right: 8px;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.list-group-item {
-    font-weight: bold !important;
-}
-a .list-group-item {
-    font-weight: normal !important;
-    text-decoration: none !important;
-}
-
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+body {
+    background-color: $background;
+    font-family: $font-family;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: $text-primary;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: left;
-    color: #222;
-    padding-top: 12px;
-    padding-bottom: 100px;
 }
 
-#menu .fa {
-    color: #cecece;
+h1, h2, h3, h4, h5, h6 {
+    font-weight: $font-weight-extrabold;
+    line-height: $line-height-tight;
+    color: $text-primary;
+    margin-bottom: $space-4;
 }
 
-#nav {
-    padding: 30px;
+h1 { font-size: $font-size-3xl; }
+h2 { font-size: $font-size-2xl; }
+h3 { font-size: $font-size-xl; }
+h4 { font-size: $font-size-lg; }
+h5, h6 { font-size: $font-size-base; }
 
-    a {
-        font-weight: bold;
-        color: #cecece;
+p {
+    font-size: $font-size-base;
+    line-height: $line-height-relaxed;
+    word-break: break-word;
+    margin-bottom: $space-4;
+}
 
-        &.router-link-exact-active {
-            color: #42b983;
+// Emoji styles
+.emoji {
+    font-size: $emoji-size;
+    line-height: 1;
+    display: inline-block;
+    transition: transform $transition-fast;
+}
+
+.emoji-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-4;
+    align-items: center;
+
+    .emoji {
+        font-size: $emoji-size;
+        cursor: pointer;
+        transition: transform $transition-spring;
+
+        &:hover {
+            transform: scale(1.15);
         }
 
-        &active {
-            color: #333 !important;
+        &:active {
+            transform: scale(0.95);
         }
     }
 }
 
-#main-navbar a,
-#main-navbar button {
-    color: #cecece;
+.emoji-wrapper-xl .emoji {
+    font-size: $emoji-size-lg;
+}
+
+.emoji-wrapper-sm .emoji {
+    font-size: $emoji-size-sm;
+}
+
+.emoji-wrapper-left {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+// Emoji grid for selector
+.emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
+    gap: $space-3;
+    max-width: 100%;
+
+    @media (min-width: $breakpoint-sm) {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: $space-4;
+    }
+
+    @media (min-width: $breakpoint-md) {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: $space-4;
+    }
+}
+
+.emoji-selector {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+// Notes list
+.notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+// Empty state
+.empty-state {
+    text-align: center;
+    padding: $space-12 $space-6;
+
+    .empty-state-icon {
+        font-size: 120px;
+        line-height: 1;
+        margin-bottom: $space-6;
+        animation: bounce 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+        cursor: pointer;
+
+        &:hover {
+            animation: spin-zoom-icon 0.6s ease-out forwards;
+        }
+    }
+
+    .empty-state-title {
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin-bottom: $space-3;
+    }
+
+    .empty-state-subtitle {
+        font-size: $font-size-base;
+        color: $text-secondary;
+        margin-bottom: $space-6;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+@keyframes spin-zoom-icon {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    100% {
+        transform: translateY(0) rotate(360deg) scale(1.2);
+    }
+}
+
+// Fixed button wrapper (voor gradient fade)
+.fixed-button-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(255, 254, 249, 1) 70%, transparent);
+    padding: 16px 0 20px;
+    z-index: 100;
+}
+
+// Note detail header
+.note-detail-title {
+    font-size: $font-size-2xl; // 24px - smaller but still larger than body headings
+    font-weight: $font-weight-bold;
+    margin-bottom: $space-4;
+    transition: transform $transition-fast;
+}
+
+.note-detail-header {
+    padding: 0 $space-3; // Match note card padding for consistency
+
+    .emoji {
+        font-size: 30px; // Smaller than default 36px
+    }
+}
+
+// Ensure editor body headings are smaller than note title
+#editorjs {
+    padding: 0 $space-3; // Match note card padding for consistency
+
+    h1 { font-size: 22px; } // Smaller than note-detail-title (24px)
+    h2 { font-size: 20px; }
+    h3 { font-size: 18px; }
+    h4 { font-size: 16px; }
+    h5, h6 { font-size: 16px; }
+}
+
+// Navbar styles
+#main-navbar {
+    position: relative;
+    background: transparent;
+    padding: $space-4 0;
+    margin-bottom: $space-2;
+    transition: all $transition-base;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .navbar-inner {
+        padding: 0;
+        margin: 0;
+    }
+
+    i, a, .emoji {
+        font-size: 32px;
+        margin: 0;
+        transition: all $transition-spring;
+    }
+
+    a, button {
+        color: $text-tertiary;
+        cursor: pointer;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: $radius-full;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 44px;
+        position: relative;
+
+        // Desktop: smaller padding for better visual alignment
+        @media (min-width: $breakpoint-sm) {
+            padding: 6px;
+            min-width: 40px;
+            min-height: 40px;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                color: $text-primary;
+
+                i, .emoji {
+                    transform: scale(1.15);
+                }
+
+                // Plus icon - rotate
+                .fa-plus {
+                    transform: rotate(90deg) scale(1.15);
+                }
+
+                // Close icons - pulse
+                .fa-close, .fa-times, .fa-xmark {
+                    animation: pulse 0.6s ease-in-out;
+                }
+
+                // Trash icons - shake
+                .fa-trash, .fa-trash-can {
+                    animation: shake 0.5s ease-in-out;
+                }
+
+                // Filter icon - pulse
+                .fa-filter {
+                    animation: pulse 0.6s ease-in-out;
+                }
+            }
+        }
+
+        &:active {
+            i, .emoji {
+                transform: scale(0.95);
+            }
+        }
+
+        &.active {
+            color: $primary-dark;
+        }
+    }
+
+    // Shake animation for trash
+    @keyframes shake {
+        0%, 100% { transform: rotate(0deg) scale(1.15); }
+        25% { transform: rotate(-8deg) scale(1.15); }
+        50% { transform: rotate(8deg) scale(1.15); }
+        75% { transform: rotate(-8deg) scale(1.15); }
+    }
+
+    // Pulse animation for filter
+    @keyframes pulse {
+        0%, 100% { transform: scale(1.15); }
+        50% { transform: scale(1.25); }
+    }
+
+    button {
+        padding: 10px;
+        background: none;
+        border: none;
+
+        @media (min-width: $breakpoint-sm) {
+            padding: 6px;
+        }
+    }
+
+    .emoji-wrapper {
+        margin: 0;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center;
+        gap: $space-2;
+        flex-wrap: nowrap;
+
+        // Mobile: align icons with content
+        // Content has 12px padding, icons have 10px padding, so we need 2px margin
+        &:first-child {
+            margin-left: 2px;
+        }
+
+        &:last-child {
+            margin-right: 2px;
+        }
+
+        // Desktop: icons have 6px padding, so we need 6px margin for alignment
+        @media (min-width: $breakpoint-sm) {
+            &:first-child {
+                margin-left: 6px;
+            }
+
+            &:last-child {
+                margin-right: 6px;
+            }
+        }
+
+        a, button {
+            flex-shrink: 0;
+            display: flex;
+            gap: $space-2;
+            align-items: center;
+        }
+
+        form {
+            margin: 0;
+
+            button {
+                padding: 10px;
+
+                @media (min-width: $breakpoint-sm) {
+                    padding: 6px;
+                }
+            }
+        }
+
+        .emoji {
+            margin: 0;
+            transition: transform $transition-spring;
+
+            &:hover {
+                transform: scale(1.15);
+            }
+
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+    }
+
+    // Remove old negative margin code - now using navbar-inner padding for consistent alignment
+}
+
+// List group modernization
+.list-group {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    padding: 0;
+    list-style: none;
+}
+
+.list-group-item {
+    background: rgba($surface, 0.3);
+    border: 1px solid $border;
+    border-radius: $radius-md;
+    padding: $space-4;
+    font-weight: $font-weight-bold;
+    transition: all $transition-base;
     cursor: pointer;
+
+    &:hover {
+        transform: translateY(-3px) scale(1.015);
+    }
+
+    &:active {
+        transform: translateY(0) scale(1);
+    }
+}
+
+a .list-group-item {
+    font-weight: $font-weight-normal;
     text-decoration: none;
+}
+
+// App container
+#app {
+    font-family: $font-family;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: left;
+    color: $text-primary;
+    padding-top: $space-2;
+    padding-bottom: $space-6;
+    min-height: 100vh;
+}
+
+// Menu styles
+#menu {
+    .fa {
+        color: $text-tertiary;
+        transition: color $transition-fast;
+    }
+
+    .list-group-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: $space-2;
+
+        &:hover .fa {
+            color: $text-primary;
+        }
+    }
+}
+
+// Links
+a {
+    text-decoration: none;
+    color: $text-secondary;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $primary-dark;
+    }
 }
 
 .list-group a {
     text-decoration: none;
 }
 
-#main-navbar a.active {
-    color: #333;
-}
-
-.emoji-wrapper {
-    text-align: center;
-}
-
-.list-group-item .emoji:first-child,
-.emoji-wrapper .emoji:first-child,
-#main-navbar i:first-child,
-#main-navbar a:first-child,
-#main-navbar .emoji:first-child, {
-    margin-left: 0;
-}
-
-.list-group-item .emoji:last-child,
-.emoji-wrapper .emoji:last-child,
-#main-navbar i:last-child,
-#main-navbar a:last-child,
-#main-navbar .emoji:last-child, {
-    margin-right: 0;
-}
-
-.list-group-item .emoji,
-.emoji-wrapper-left .emoji {
-    margin-left: 0;
-    margin-right: 16px;
-}
-
-.emoji-wrapper .row .emoji {
-    margin: 0;
-}
-
-#main-navbar i,
-.list-group-item,
-.emoji {
-    cursor: pointer;
-}
-
-.emoji-wrapper-left,
-.list-group-item,
-.list-group-item .emoji-wrapper {
-    text-align: left;
-}
-
-.elegant-input {
-    border: none;
-    outline: none;
-    background-color: transparent;
-    padding: 10px;
-}
-.elegant-input:focus {
-    box-shadow: none;
-}
-
-.progress-bar,
+// Progress bar (modern)
 .progress {
-    max-height: 5px;
-}
-.progress {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-//@media only screen and (max-width: 767px) {
-//    #main-navbar {
-//        position: fixed;
-//        bottom: 0;
-//        left: 0;
-//        width: 100%;
-//        padding: 15px 15px 5px;
-//        margin: 0;
-//        z-index: 100;
-//        background: white;
-//        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-//    }
-//}
-
-#main-navbar .emoji-wrapper .emoji {
-    margin-left: 0;
-}
-#main-navbar button {
-    padding: 0;
-    background: none;
-    border: none;
+    height: 6px;
+    background: $border;
+    border-radius: $radius-full;
+    overflow: hidden;
+    margin-top: $space-2;
+    margin-bottom: $space-2;
 }
 
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    border-radius: $radius-full;
+    transition: width $transition-slow;
+}
+
+// Table of Contents
 #toc-container {
-    padding-top: 20px;
+    padding: $space-6 $space-3 0 $space-3; // Add horizontal padding to match note content
+
+    ul {
+        padding: 0;
+        padding-left: $space-6;
+        list-style: none;
+
+        li {
+            margin-bottom: $space-2;
+
+            &:before {
+                content: "•";
+                color: $primary;
+                font-weight: bold;
+                display: inline-block;
+                width: 1em;
+                margin-left: -1em;
+            }
+        }
+    }
+
+    #toc a {
+        cursor: pointer;
+        text-decoration: none;
+        color: $text-primary;
+        font-weight: $font-weight-medium;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $primary-dark;
+            text-decoration: underline;
+        }
+    }
 }
 
-#toc-container ul {
-    padding: 0;
-    padding-left: 20px;
-}
-
-#toc-container #toc a {
-    cursor: pointer;
-    text-decoration: none;
-    color: #007bff;
-    font-weight: 500;
-}
-
-#toc-container #toc a:hover {
-    text-decoration: underline;
-    color: #0056b3;
-}
-
+// Notification badge
 .notifiation-badge {
     top: 5px !important;
-    left: 35px !important;
+    left: 28px !important;
+    background: $secondary !important;
 }
 
+// Dark mode
 @media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color: #000;
-        --text-color: white;
-        --btn-bg: #333;
-        --link-color: #313131;
-        --border-color: #313131;
-    }
-
     html,
     body,
-    .list-group-item,
-    #editorjs,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p,
-    input,
-    input:active,
-    input:focus,
-    textarea,
-    textarea:active,
-    textarea:focus,
-    input.form-control,
-    input.form-control:focus,
-    textarea.form-control,
-    textarea.form-control:focus,
-    hr,
+    #app {
+        background-color: $dark-bg;
+        color: $dark-text;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: $dark-text;
+    }
+
+    #main-navbar {
+        background: transparent;
+
+        a, button {
+            color: $dark-text-secondary;
+
+            @media (hover: hover) {
+                &:hover {
+                    color: $dark-text;
+                }
+            }
+
+            &.active {
+                color: $primary;
+            }
+        }
+    }
+
+    .list-group-item {
+        background: rgba($dark-surface, 0.3);
+        color: $dark-text;
+        border-color: $dark-border;
+    }
+
+    #editorjs {
+        background-color: transparent;
+        color: $dark-text;
+    }
+
+    hr {
+        border-color: $dark-border;
+    }
+
     .emoji-wrapper {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        border-color: var(--border-color);
+        background-color: transparent;
     }
 
-    a,
-    a .list-group-item,
-    .btn,
-    #menu .fa,
-    #main-navbar a:not(.active),
-    #main-navbar button:not(.active) {
-        color: var(--link-color) !important;
+    .empty-state {
+        .empty-state-title {
+            color: $dark-text;
+        }
+
+        .empty-state-subtitle {
+            color: $dark-text-secondary;
+        }
     }
 
-    a:active,
-    a.active,
-    .router-link-exact-active {
-        color: var(--text-color) !important;
+    a {
+        color: $dark-text-secondary;
+
+        &:hover,
+        &:active,
+        &.active {
+            color: $primary !important;
+        }
     }
 
-    .progress,
-    .progress-stacked {
-        background-color: var(--link-color);
+    #menu {
+        .fa {
+            color: $dark-text-secondary;
+        }
+
+        .list-group-item {
+            color: $dark-text;
+
+            form button {
+                color: $dark-text;
+            }
+        }
     }
 
-    .form-switch,
-    .form-check-input {
-        background-color: var(--bg-color);
-        color: var(--link-color);
-        border-color: var(--border-color);
+    .progress {
+        background-color: $dark-border;
     }
 
-    #menu .list-group-item,
-    #menu .list-group-item form button {
-        color: var(--text-color) !important;
+    #toc-container #toc a {
+        color: $dark-text;
+
+        &:hover {
+            color: $primary;
+        }
+    }
+
+    .fixed-button-wrapper {
+        background: linear-gradient(to top, rgba(10, 10, 10, 1) 70%, transparent);
     }
 }

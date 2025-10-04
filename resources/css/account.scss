@@ -1,10 +1,15 @@
+// HappyNotes Account Pages - Now using main design system
+// This file is kept minimal, most styling is in app.scss
+
+@use 'variables' as *;
+@use 'utilities' as *;
+@use 'buttons' as *;
+@use 'cards' as *;
+@use 'forms' as *;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-img.logo {
-    max-width: 125px;
-}
-img.logo-sm {
-    max-width: 75px;
-}
+// Note: Account pages now use the main app.scss styling for consistency
+// All specific account styling has been moved to _cards.scss and _utilities.scss

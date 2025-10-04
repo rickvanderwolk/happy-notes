@@ -12,10 +12,15 @@ final class ProgressBar extends Component
 
     protected $listeners = ['noteUpdated' => 'updateProgress'];
 
-    public function mount($idNote = null): void
+    public function mount($idNote = null, $progress = null): void
     {
         $this->idNote = $idNote;
-        $this->updateProgress();
+        $this->progress = $progress;
+
+        // Only query if progress wasn't provided
+        if (is_null($this->progress) && $this->idNote) {
+            $this->updateProgress();
+        }
     }
 
     public function updateProgress(): void
