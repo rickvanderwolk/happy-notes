@@ -428,6 +428,8 @@
 
 // Note detail skeleton loader
 .note-detail-skeleton {
+  padding: 0 $space-3; // Match note content padding for consistency
+
   .skeleton-note-title,
   .skeleton-progress-bar,
   .skeleton-emoji,

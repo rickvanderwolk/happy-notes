@@ -261,6 +261,8 @@ p {
 }
 
 .note-detail-header {
+    padding: 0 $space-3; // Match note card padding for consistency
+
     .emoji {
         font-size: 30px; // Smaller than default 36px
     }
@@ -268,6 +270,8 @@ p {
 
 // Ensure editor body headings are smaller than note title
 #editorjs {
+    padding: 0 $space-3; // Match note card padding for consistency
+
     h1 { font-size: 22px; } // Smaller than note-detail-title (24px)
     h2 { font-size: 20px; }
     h3 { font-size: 18px; }
@@ -545,7 +549,7 @@ a {
 
 // Table of Contents
 #toc-container {
-    padding-top: $space-6;
+    padding: $space-6 $space-3 0 $space-3; // Add horizontal padding to match note content
 
     ul {
         padding: 0;
