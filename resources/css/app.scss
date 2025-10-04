@@ -254,10 +254,25 @@ p {
 
 // Note detail header
 .note-detail-title {
-    font-size: $font-size-3xl;
+    font-size: $font-size-2xl; // 24px - smaller but still larger than body headings
     font-weight: $font-weight-bold;
     margin-bottom: $space-4;
     transition: transform $transition-fast;
+}
+
+.note-detail-header {
+    .emoji {
+        font-size: 30px; // Smaller than default 36px
+    }
+}
+
+// Ensure editor body headings are smaller than note title
+#editorjs {
+    h1 { font-size: 22px; } // Smaller than note-detail-title (24px)
+    h2 { font-size: 20px; }
+    h3 { font-size: 18px; }
+    h4 { font-size: 16px; }
+    h5, h6 { font-size: 16px; }
 }
 
 // Navbar styles
