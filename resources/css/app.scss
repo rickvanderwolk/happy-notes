@@ -272,7 +272,7 @@ p {
     margin-right: auto;
 
     .navbar-inner {
-        padding: 0 $space-3; // Match note card padding for consistent alignment
+        padding: 0;
         margin: 0;
     }
 
@@ -294,6 +294,13 @@ p {
         min-width: 44px;
         min-height: 44px;
         position: relative;
+
+        // Desktop: smaller padding for better visual alignment
+        @media (min-width: $breakpoint-sm) {
+            padding: 6px;
+            min-width: 40px;
+            min-height: 40px;
+        }
 
         @media (hover: hover) {
             &:hover {
@@ -354,6 +361,10 @@ p {
         padding: 10px;
         background: none;
         border: none;
+
+        @media (min-width: $breakpoint-sm) {
+            padding: 6px;
+        }
     }
 
     .emoji-wrapper {
@@ -363,6 +374,27 @@ p {
         align-items: center;
         gap: $space-2;
         flex-wrap: nowrap;
+
+        // Mobile: align icons with content
+        // Content has 12px padding, icons have 10px padding, so we need 2px margin
+        &:first-child {
+            margin-left: 2px;
+        }
+
+        &:last-child {
+            margin-right: 2px;
+        }
+
+        // Desktop: icons have 6px padding, so we need 6px margin for alignment
+        @media (min-width: $breakpoint-sm) {
+            &:first-child {
+                margin-left: 6px;
+            }
+
+            &:last-child {
+                margin-right: 6px;
+            }
+        }
 
         a, button {
             flex-shrink: 0;
@@ -376,6 +408,10 @@ p {
 
             button {
                 padding: 10px;
+
+                @media (min-width: $breakpoint-sm) {
+                    padding: 6px;
+                }
             }
         }
 
