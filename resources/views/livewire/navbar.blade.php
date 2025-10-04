@@ -84,7 +84,7 @@
                                     :route="route('filter.search.show')"
                                     :active="$currentRouteName === 'filter.search.show'"
                                     icon="search"
-                                    label="Filter - Text"
+                                    label="Filter - search text"
                                     :showBadge="!empty($searchQuery ?? '')"
                                 />
                             </h3>

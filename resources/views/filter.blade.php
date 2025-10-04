@@ -14,16 +14,16 @@
         <div class="text-center mb-4">
             <h2 class="section-title">
                 @if($isInclude)
-                    Filter Notes ✨
+                    Filter ✨
                 @else
-                    Exclude Notes 🚫
+                    Exclude 🚫
                 @endif
             </h2>
             <p class="section-description-text mt-2">
                 @if($isInclude)
-                    Select emojis to show only notes with these emojis
+                    Only show notes with these emojis
                 @else
-                    Select emojis to hide notes with these emojis
+                    Hide notes with these emojis
                 @endif
             </p>
         </div>

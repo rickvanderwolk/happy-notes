@@ -346,7 +346,7 @@ function loadMoreData() {
             if (newNotes.length === 0) {
                 isLoading = true;
                 loadingEl.style.display = 'block';
-                loadingEl.textContent = 'No more notes to load.';
+                loadingEl.textContent = "That's all!";
             }
         })
         .catch(error => {

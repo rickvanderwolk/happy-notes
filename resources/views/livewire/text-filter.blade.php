@@ -17,7 +17,7 @@
 
     <div class="form-switch mb-4">
         <input wire:model.live="search_query_only" class="form-check-input" type="checkbox" id="customSwitch">
-        <label class="form-check-label" for="customSwitch">Search only (ignore other filters)</label>
+        <label class="form-check-label" for="customSwitch">Search by text only (ignore other filters)</label>
     </div>
 
     @if($search_query && isset($resultCount))

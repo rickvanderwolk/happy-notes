@@ -9,7 +9,7 @@
 
     <div class="container form-page-container">
         <div class="text-center mb-4">
-            <h2 class="section-title">Create a New Note ✨</h2>
+            <h2 class="section-title">New ✨</h2>
         </div>
 
         <form action="{{ route('note.store') }}" method="POST" class="new-note-form">
@@ -20,7 +20,7 @@
                     name="title"
                     data-cy="new-note-title"
                     class="form-control elegant-input input-large"
-                    placeholder="💭 What's on your mind?"
+                    placeholder="💭 Write anything..."
                     rows="3"
                     autofocus
                     required
