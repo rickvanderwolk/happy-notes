@@ -9,12 +9,18 @@
 
     <x-slot name="content">
         <div>
-            <a href="{{ route('user.export.notes.create', ['format' => 'csv']) }}" class="btn btn-secondary me-2" data-turbo="false">
-                Download CSV
-            </a>
-            <a href="{{ route('user.export.notes.create', ['format' => 'json']) }}" class="btn btn-secondary" data-turbo="false">
-                Download JSON
-            </a>
+            <form action="{{ route('user.export.notes.create') }}" method="GET" style="display: inline;">
+                <input type="hidden" name="format" value="csv">
+                <button type="submit" class="btn btn-secondary me-2">
+                    Download CSV
+                </button>
+            </form>
+            <form action="{{ route('user.export.notes.create') }}" method="GET" style="display: inline;">
+                <input type="hidden" name="format" value="json">
+                <button type="submit" class="btn btn-secondary">
+                    Download JSON
+                </button>
+            </form>
         </div>
     </x-slot>
 </x-action-section>
