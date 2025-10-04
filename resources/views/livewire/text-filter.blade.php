@@ -6,7 +6,7 @@
             placeholder="🔍 Search notes..."
             rows="1"
             autofocus
-            wire:keydown.enter.prevent="applyFilter"
+            @keydown.enter.prevent="window.Turbolinks.visit('{{ route('notes.show') }}')"
         ></textarea>
         @if($search_query)
             <button wire:click="$set('search_query', '')" class="input-clear" type="button">

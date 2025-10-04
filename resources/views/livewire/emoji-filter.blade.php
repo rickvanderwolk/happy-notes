@@ -1,4 +1,4 @@
-<div wire:keydown.window.backspace="deselectAll" wire:keydown.window.enter="$dispatch('applyFilter')">
+<div wire:keydown.window.backspace="deselectAll">
     <!-- Selected emojis - horizontaal naast elkaar -->
     @if(!empty($currentEmojis))
         <div class="selected-emojis-container">

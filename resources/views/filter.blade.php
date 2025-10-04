@@ -8,7 +8,9 @@
         $isInclude = request()->is('filter');
     @endphp
 
-    <div x-data @apply-filter.window="Turbolinks.visit('{{ route('notes.show') }}')">
+    <div x-data
+         @apply-filter.window="window.Turbolinks.visit('{{ route('notes.show') }}')"
+         @keydown.window.enter="window.Turbolinks.visit('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
             <h2 class="section-title">
                 @if($isInclude)
