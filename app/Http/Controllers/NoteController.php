@@ -13,8 +13,16 @@ final class NoteController extends Controller
     public function index(): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
         $user = Auth::user();
-        $selectedEmojis = Auth::user()->selected_emojis ?? [];
-        $excludedEmojis = Auth::user()->excluded_emojis ?? [];
+        $selectedEmojis = is_string($user->selected_emojis)
+            ? json_decode($user->selected_emojis, true)
+            : $user->selected_emojis;
+        $selectedEmojis = $selectedEmojis ?? [];
+
+        $excludedEmojis = is_string($user->excluded_emojis)
+            ? json_decode($user->excluded_emojis, true)
+            : $user->excluded_emojis;
+        $excludedEmojis = $excludedEmojis ?? [];
+
         $searchQuery = $user->search_query;
         $searchQueryOnly = $user->search_query_only;
 
@@ -28,11 +36,15 @@ final class NoteController extends Controller
         }
 
         if (empty($searchQuery) || !$searchQueryOnly) {
-            foreach ($selectedEmojis as $emoji) {
-                $notes->whereJsonContains('emojis', $emoji);
+            if (!empty($selectedEmojis)) {
+                foreach ($selectedEmojis as $emoji) {
+                    $notes->whereJsonContains('emojis', $emoji);
+                }
             }
-            foreach ($excludedEmojis as $emoji) {
-                $notes->whereJsonDoesntContain('emojis', $emoji);
+            if (!empty($excludedEmojis)) {
+                foreach ($excludedEmojis as $emoji) {
+                    $notes->whereJsonDoesntContain('emojis', $emoji);
+                }
             }
         }
 
