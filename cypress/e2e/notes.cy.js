@@ -1,5 +1,6 @@
 describe("Notes Tests", () => {
     beforeEach(() => {
+        cy.request('POST', `${Cypress.config('baseUrl')}/api/test/reset-filters`);
         const user = Cypress.env("users").user1;
         cy.login(user.email, user.password);
     });
@@ -11,7 +12,7 @@ describe("Notes Tests", () => {
         cy.get('[data-cy="new-note-title"]').type(`My first note - ${tempId}`);
         cy.selectFirstSelectableEmoji().then((emoji) => { selectedEmojis.push(emoji); return cy.selectFirstSelectableEmoji(); }).then((emoji) => { selectedEmojis.push(emoji); });
         cy.get('[data-cy="save-new-note"]').click();
-        cy.wait(1000);
+        cy.get('[data-cy="note-list"]').should('be.visible');
         cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().should("contain", `My first note - ${tempId}`).as("firstNote");
         cy.get("@firstNote").find('[data-cy="emoji-wrapper"]').should("be.visible");
         selectedEmojis.forEach((emoji) => { cy.get("@firstNote").find('[data-cy="emoji-wrapper"]').should("contain.text", emoji); });

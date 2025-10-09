@@ -1,19 +1,25 @@
 describe('Authorization Tests', () => {
-    it('User 1 should be able to see User 1’s notes', () => {
+    beforeEach(() => {
+        cy.request('POST', `${Cypress.config('baseUrl')}/api/test/reset-filters`);
+    });
+
+    it('User 1 should be able to see User 1 notes', () => {
         const user = Cypress.env("users").user1;
         cy.login(user.email, user.password);
         cy.visit(`${Cypress.config('baseUrl')}`);
+        cy.get('[data-cy="note-list"]').should('be.visible');
         cy.contains(user.notes.first_note.content).should('be.visible');
     });
 
-    it('User 2 should be able to see User 2’s notes', () => {
+    it('User 2 should be able to see User 2 notes', () => {
         const user = Cypress.env("users").user2;
         cy.login(user.email, user.password);
         cy.visit(`${Cypress.config('baseUrl')}`);
+        cy.get('[data-cy="note-list"]').should('be.visible');
         cy.contains(user.notes.first_note.content).should('be.visible');
     });
 
-    it('User 1 should be able to access User 1’s notes via direct URL', () => {
+    it('User 1 should be able to access User 1 notes via direct URL', () => {
         const user = Cypress.env("users").user1;
         cy.login(user.email, user.password);
         cy.request({
@@ -24,7 +30,7 @@ describe('Authorization Tests', () => {
         });
     });
 
-    it('User 2 should be able to access User 2’s notes via direct URL', () => {
+    it('User 2 should be able to access User 2 notes via direct URL', () => {
         const user = Cypress.env("users").user2;
         cy.login(user.email, user.password);
         cy.request({
@@ -35,7 +41,7 @@ describe('Authorization Tests', () => {
         });
     });
 
-    it('User 1 should NOT be able to see User 2’s notes', () => {
+    it('User 1 should NOT be able to see User 2 notes', () => {
         const user = Cypress.env("users").user1;
         const differentUser = Cypress.env("users").user2;
         cy.login(user.email, user.password);
@@ -43,7 +49,7 @@ describe('Authorization Tests', () => {
         cy.contains(differentUser.notes.first_note.content).should('not.exist');
     });
 
-    it('User 2 should NOT be able to see User 1’s notes', () => {
+    it('User 2 should NOT be able to see User 1 notes', () => {
         const user = Cypress.env("users").user2;
         const differentUser = Cypress.env("users").user1;
         cy.login(user.email, user.password);
@@ -51,7 +57,7 @@ describe('Authorization Tests', () => {
         cy.contains(differentUser.notes.first_note.content).should('not.exist');
     });
 
-    it('User 1 should NOT be able to access User 2’s notes via direct URL', () => {
+    it('User 1 should NOT be able to access User 2 notes via direct URL', () => {
         const user = Cypress.env("users").user1;
         const differentUser = Cypress.env("users").user2;
         cy.login(user.email, user.password);
@@ -63,7 +69,7 @@ describe('Authorization Tests', () => {
         });
     });
 
-    it('User 2 should NOT be able to access User 1’s notes via direct URL', () => {
+    it('User 2 should NOT be able to access User 1 notes via direct URL', () => {
         const user = Cypress.env("users").user2;
         const differentUser = Cypress.env("users").user1;
         cy.login(user.email, user.password);
