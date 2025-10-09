@@ -62,11 +62,15 @@ final class EmojiFilter extends Component
         }
 
         if ($this->storageKey === 'selected_emojis') {
-            $this->excludedEmojisCache = array_values(array_filter($this->excludedEmojisCache, fn ($e) => $e !== $emoji));
+            $this->excludedEmojisCache = array_values(
+                array_filter($this->excludedEmojisCache, fn ($e) => $e !== $emoji)
+            );
             $this->emojis[] = $emoji;
             $this->selectedEmojisCache = $this->emojis;
         } elseif ($this->storageKey === 'excluded_emojis') {
-            $this->selectedEmojisCache = array_values(array_filter($this->selectedEmojisCache, fn ($e) => $e !== $emoji));
+            $this->selectedEmojisCache = array_values(
+                array_filter($this->selectedEmojisCache, fn ($e) => $e !== $emoji)
+            );
             $this->emojis[] = $emoji;
             $this->excludedEmojisCache = $this->emojis;
         } else {
