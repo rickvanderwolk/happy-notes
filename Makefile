@@ -52,6 +52,7 @@ build:
 checkup:
 	@echo "🧰 Full project checkup: update → serve (bg) → analyse → test"
 	$(MAKE) update
+	$(MAKE) fresh
 	$(MAKE) serve MODE=background
 	sleep 5
 	$(MAKE) analyse
