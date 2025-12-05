@@ -13,7 +13,7 @@ _A note-taking app for ~~chaotic~~ free-spirited minds 💥🧠📝🎨🚀_
 Happy Notes is a simple web-based (Laravel) note-taking app where you categorize notes with emojis instead of words.
 
 ## Why 🤷
-No note-taking app ever felt natural to me. I tried paper, various apps, and other tools—but I always lost track. Too messy, too rigid. So I built my own: simple, visual, emoji-based. Now, I can finally organize my ideas in a way that works for me.
+No note-taking app ever felt natural to me. I tried paper, various apps, and other tools—but I always lost track. Either too messy or too rigid. So I built my own: simple, visual, emoji-based. Now, I can finally organize my ideas in a way that works for me.
 
 ## How to use 🚀
 You can run Happy Notes yourself. If you’re familiar with Laravel, it should be pretty easy to set up. Maybe one day I’ll write a guide—but honestly, this is my first Laravel project, so you might already know more than I do.
