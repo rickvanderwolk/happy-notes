@@ -57,3 +57,21 @@ checkup:
 	sleep 5
 	$(MAKE) analyse
 	$(MAKE) test
+	@echo ""
+	@echo "✅ All checks passed! Preparing commit..."
+	@current_version=$$(grep -o '"version": "[^"]*"' composer.json | grep -o '[0-9]*\.[0-9]*\.[0-9]*'); \
+	major=$$(echo $$current_version | cut -d. -f1); \
+	minor=$$(echo $$current_version | cut -d. -f2); \
+	patch=$$(echo $$current_version | cut -d. -f3); \
+	new_patch=$$((patch + 1)); \
+	new_version="$$major.$$minor.$$new_patch"; \
+	sed -i '' "s/\"version\": \"$$current_version\"/\"version\": \"$$new_version\"/" composer.json; \
+	git add composer.json composer.lock package-lock.json; \
+	echo "Update dependencies + bump version to $$new_version" | pbcopy; \
+	echo ""; \
+	echo "📦 Version bumped: $$current_version → $$new_version"; \
+	echo ""; \
+	echo "📋 Staged changes:"; \
+	git diff --cached --stat; \
+	echo ""; \
+	echo "✅ Ready! Open GitHub Desktop, paste (Cmd+V) commit message, and commit."
