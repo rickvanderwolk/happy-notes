@@ -27,9 +27,11 @@ final class Navbar extends Component
         $excludedEmojis = $user->excluded_emojis ?? [];
         $searchQuery = $user->search_query ?? null;
 
+        /** @psalm-suppress NoValue */
         if (is_string($selectedEmojis)) {
             $selectedEmojis = json_decode($selectedEmojis, true) ?? [];
         }
+        /** @psalm-suppress NoValue */
         if (is_string($excludedEmojis)) {
             $excludedEmojis = json_decode($excludedEmojis, true) ?? [];
         }
