@@ -1,7 +1,9 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
+            <a href="{{ route('home') }}">
+                <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
+            </a>
         </x-slot>
 
         <div class="mb-4 text-sm text-gray-600">

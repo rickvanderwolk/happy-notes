@@ -78,6 +78,120 @@ a {
     margin-top: $space-4;
 }
 
+// Landing page
+.landing-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $space-8;
+    background: linear-gradient(180deg, $background 0%, darken($background, 2%) 100%);
+}
+
+.landing-content {
+    text-align: center;
+    max-width: 540px;
+}
+
+.landing-logo {
+    display: block;
+    margin: 0 auto $space-6;
+}
+
+.landing-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: $text-primary;
+    margin-bottom: $space-4;
+    letter-spacing: -0.02em;
+}
+
+.landing-tagline {
+    font-size: 1.25rem;
+    color: $text-secondary;
+    margin-bottom: $space-4;
+    line-height: 1.7;
+}
+
+.landing-strikethrough {
+    text-decoration: line-through;
+    text-decoration-color: $primary;
+    text-decoration-thickness: 2px;
+    color: $text-tertiary;
+}
+
+.landing-emojis {
+    font-size: 1.25rem;
+    letter-spacing: 0.25em;
+    margin-bottom: $space-4;
+}
+
+.landing-description {
+    font-size: $font-size-base;
+    color: $text-tertiary;
+    margin-bottom: $space-6;
+    line-height: 1.6;
+}
+
+.landing-opensource {
+    font-size: $font-size-sm;
+    color: $text-tertiary;
+    margin-bottom: $space-2;
+}
+
+.landing-buttons {
+    display: flex;
+    gap: $space-3;
+    justify-content: center;
+    margin-bottom: $space-8;
+
+    .btn {
+        min-width: 120px;
+    }
+}
+
+.landing-footer {
+    margin-top: $space-4;
+}
+
+// Mobile responsive
+@media (max-width: 480px) {
+    .landing-container {
+        padding: $space-6;
+    }
+
+    .landing-title {
+        font-size: 2.5rem;
+    }
+
+    .landing-tagline {
+        font-size: 1.1rem;
+    }
+
+    .landing-emojis {
+        font-size: 1.1rem;
+        letter-spacing: 0.15em;
+    }
+
+    .landing-buttons {
+        flex-direction: column;
+        gap: $space-2;
+
+        .btn {
+            width: 100%;
+        }
+    }
+}
+
+.landing-github {
+    font-size: $font-size-sm;
+    color: $text-tertiary;
+
+    &:hover {
+        color: $primary;
+    }
+}
+
 // Dark mode
 @media (prefers-color-scheme: dark) {
     body {
@@ -95,5 +209,38 @@ a {
 
     .version-text {
         color: $dark-text-secondary;
+    }
+
+    .landing-title {
+        color: $dark-text;
+    }
+
+    .landing-container {
+        background: linear-gradient(180deg, $dark-bg 0%, lighten($dark-bg, 2%) 100%);
+    }
+
+    .landing-tagline {
+        color: $dark-text-secondary;
+    }
+
+    .landing-strikethrough {
+        color: $dark-text-secondary;
+        text-decoration-color: $primary;
+    }
+
+    .landing-description {
+        color: $dark-text-secondary;
+    }
+
+    .landing-opensource {
+        color: $dark-text-secondary;
+    }
+
+    .landing-github {
+        color: $dark-text-secondary;
+
+        &:hover {
+            color: $primary;
+        }
     }
 }

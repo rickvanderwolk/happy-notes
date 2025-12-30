@@ -26,6 +26,14 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', 'Verificatiemail verzonden!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+// Landing page - redirect to notes if logged in, show landing if not
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect(route('notes.show'));
+    }
+    return view('landing');
+})->name('home');
+
 $defaultAppMiddlewares = ['auth:sanctum', config('jetstream.auth_session')];
 if (config('app.force_email_verification')) {
     $defaultAppMiddlewares[] = 'verified';
@@ -41,7 +49,7 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
         return view('shortcuts');
     })->name('shortcuts.show');
 
-    Route::get('/', function () { return redirect(route('notes.show')); })->name('dashboard');
+    Route::get('/dashboard', function () { return redirect(route('notes.show')); })->name('dashboard');
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.show');
     Route::post('/notes', [NoteController::class, 'store'])->name('note.store');
     Route::get('/notes/new', [NoteController::class, 'create'])->name('note.create');

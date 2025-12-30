@@ -4,7 +4,9 @@
         <x-authentication-card>
 
             <x-slot name="logo">
-                <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
+                <a href="{{ route('home') }}">
+                    <img class="logo auth-logo" src="/logo.png" alt="HappyNotes">
+                </a>
             </x-slot>
 
             <h2 class="auth-title">Welcome back! 👋</h2>

@@ -11,7 +11,7 @@
         {{ config('app.name') }} {{ config('app.version') }}
         <span class="mx-2">•</span>
         <a class="hover:text-gray-600" href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer">
-            About
+            GitHub
         </a>
     </div>
 </div>
