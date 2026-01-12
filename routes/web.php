@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CleanupController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileExportController;
@@ -68,4 +69,6 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
     Route::post('/search/clear', [FilterController::class, 'clearSearch'])->name('search.clear');
 
     Route::get('/user/export', [ProfileExportController::class, 'export'])->name('user.export.notes.create');
+
+    Route::get('/cleanup', [CleanupController::class, 'index'])->name('cleanup');
 });

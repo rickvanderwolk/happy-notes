@@ -591,6 +591,49 @@ a {
     background: $secondary !important;
 }
 
+// Cleanup page
+.cleanup-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+}
+
+.cleanup-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-4;
+    background: rgba($surface, 0.3);
+    border: 1px solid $border;
+    border-radius: $radius-md;
+    transition: all $transition-base;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-sm;
+    }
+}
+
+.cleanup-emoji-info {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+
+    .emoji {
+        font-size: $emoji-size;
+    }
+
+    .cleanup-count {
+        color: $text-secondary;
+        font-size: $font-size-sm;
+    }
+}
+
+.cleanup-actions {
+    display: flex;
+    gap: $space-2;
+}
+
 // Dark mode
 @media (prefers-color-scheme: dark) {
     html,
@@ -689,5 +732,14 @@ a {
 
     .fixed-button-wrapper {
         background: linear-gradient(to top, rgba(10, 10, 10, 1) 70%, transparent);
+    }
+
+    .cleanup-item {
+        background: rgba($dark-surface, 0.3);
+        border-color: $dark-border;
+    }
+
+    .cleanup-count {
+        color: $dark-text-secondary;
     }
 }
