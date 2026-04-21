@@ -13,15 +13,8 @@ final class NoteController extends Controller
     public function index(): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
         $user = Auth::user();
-        $selectedEmojis = is_string($user->selected_emojis)
-            ? json_decode($user->selected_emojis, true)
-            : $user->selected_emojis;
-        $selectedEmojis = $selectedEmojis ?? [];
-
-        $excludedEmojis = is_string($user->excluded_emojis)
-            ? json_decode($user->excluded_emojis, true)
-            : $user->excluded_emojis;
-        $excludedEmojis = $excludedEmojis ?? [];
+        $selectedEmojis = $user->selected_emojis ?? [];
+        $excludedEmojis = $user->excluded_emojis ?? [];
 
         $searchQuery = $user->search_query;
         $searchQueryOnly = $user->search_query_only;

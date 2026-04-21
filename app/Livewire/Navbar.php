@@ -23,22 +23,9 @@ final class Navbar extends Component
     public function updateFilter(): void
     {
         $user = Auth::user();
-        $selectedEmojis = $user->selected_emojis ?? [];
-        $excludedEmojis = $user->excluded_emojis ?? [];
-        $searchQuery = $user->search_query ?? null;
-
-        /** @psalm-suppress NoValue */
-        if (is_string($selectedEmojis)) {
-            $selectedEmojis = json_decode($selectedEmojis, true) ?? [];
-        }
-        /** @psalm-suppress NoValue */
-        if (is_string($excludedEmojis)) {
-            $excludedEmojis = json_decode($excludedEmojis, true) ?? [];
-        }
-
-        $this->selectedEmojis = $selectedEmojis;
-        $this->excludedEmojis = $excludedEmojis;
-        $this->searchQuery = $searchQuery;
+        $this->selectedEmojis = $user->selected_emojis ?? [];
+        $this->excludedEmojis = $user->excluded_emojis ?? [];
+        $this->searchQuery = $user->search_query ?? null;
         $this->render();
     }
 

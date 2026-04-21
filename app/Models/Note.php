@@ -72,22 +72,18 @@ final class Note extends Model
             $allEmojis = [];
 
             foreach ($allNotes as $note) {
-                $noteEmojis = is_string($note->emojis) ? json_decode($note->emojis, true) : $note->emojis;
-                $noteEmojis = $noteEmojis ?? [];
+                $noteEmojis = $note->emojis ?? [];
                 $noteEmojis = array_reverse($noteEmojis);
                 $allEmojis = array_merge($allEmojis, $noteEmojis);
             }
 
-            $uniqueEmojis = array_values(array_unique($allEmojis));
-            $user->all_emojis = json_encode($uniqueEmojis, JSON_UNESCAPED_UNICODE);
+            $user->all_emojis = array_values(array_unique($allEmojis));
             $user->save();
         }
     }
 
     /**
      * @return BelongsTo<User, self>
-     * @psalm-return BelongsTo<User>
-     * @phpstan-return BelongsTo<User, self>
      */
     public function user(): BelongsTo
     {

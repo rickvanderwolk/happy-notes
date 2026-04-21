@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\EmojiArrayCast;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,6 +12,13 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property list<string>|null $all_emojis
+ * @property list<string>|null $selected_emojis
+ * @property list<string>|null $excluded_emojis
+ * @property string|null $search_query
+ * @property bool|null $search_query_only
+ */
 final class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
@@ -48,9 +56,9 @@ final class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'selected_emojis' => 'array',
-            'excluded_emojis' => 'array',
-            'all_emojis' => 'array',
+            'selected_emojis' => EmojiArrayCast::class,
+            'excluded_emojis' => EmojiArrayCast::class,
+            'all_emojis' => EmojiArrayCast::class,
             'search_query_only' => 'boolean',
         ];
     }

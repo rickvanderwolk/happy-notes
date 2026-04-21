@@ -45,8 +45,8 @@ final class Cleanup extends Component
     public function filterByEmoji(string $emoji): mixed
     {
         $user = Auth::user();
-        $user->selected_emojis = json_encode([$emoji], JSON_UNESCAPED_UNICODE);
-        $user->excluded_emojis = json_encode([], JSON_UNESCAPED_UNICODE);
+        $user->selected_emojis = [$emoji];
+        $user->excluded_emojis = [];
         $user->save();
 
         return redirect()->route('notes.show');

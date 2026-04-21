@@ -24,26 +24,12 @@ final class EmojiFilter extends Component
 
         $user = Auth::user();
 
-        $this->allEmojis = is_string($user->all_emojis)
-            ? json_decode($user->all_emojis, true)
-            : $user->all_emojis;
-        $this->allEmojis = $this->allEmojis ?? [];
-
-        // Cache user emoji data
-        $this->selectedEmojisCache = is_string($user->selected_emojis)
-            ? json_decode($user->selected_emojis, true)
-            : $user->selected_emojis;
-        $this->selectedEmojisCache = $this->selectedEmojisCache ?? [];
-
-        $this->excludedEmojisCache = is_string($user->excluded_emojis)
-            ? json_decode($user->excluded_emojis, true)
-            : $user->excluded_emojis;
-        $this->excludedEmojisCache = $this->excludedEmojisCache ?? [];
+        $this->allEmojis = $user->all_emojis ?? [];
+        $this->selectedEmojisCache = $user->selected_emojis ?? [];
+        $this->excludedEmojisCache = $user->excluded_emojis ?? [];
 
         if ($this->storageKey && $user->{$this->storageKey}) {
-            $this->emojis = is_string($user->{$this->storageKey})
-                ? json_decode($user->{$this->storageKey}, true)
-                : $user->{$this->storageKey};
+            $this->emojis = $user->{$this->storageKey};
         } elseif (!$this->storageKey && !$this->updateUser) {
             $this->emojis = $customEmojis;
             if (!empty($this->emojis)) {
