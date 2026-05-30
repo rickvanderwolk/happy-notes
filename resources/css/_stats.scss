@@ -244,6 +244,9 @@
 
   .stat-chart-label {
     font-size: 10px;
+    line-height: 14px;
+    height: 14px;
+    overflow: hidden;
     color: $text-tertiary;
     margin-top: $space-2;
     white-space: nowrap;
