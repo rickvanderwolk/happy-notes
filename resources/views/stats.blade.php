@@ -92,20 +92,17 @@
                                     </div>
                                 @endforeach
                             </div>
-                            @if ($p['weekdays']['busiest'])
-                                <p class="stat-note-sub">Most active on {{ $p['weekdays']['busiest'] }}</p>
-                            @endif
 
                             {{-- Time of day --}}
                             <h4 class="stats-subsection-title">Time of day <span class="stats-section-note">(UTC)</span></h4>
-                            <div class="emoji-rank-list">
+                            <div class="stat-chart">
                                 @foreach ($p['dayparts']['list'] as $part)
-                                    <div class="emoji-rank">
-                                        <span class="daypart-label">{{ $part['label'] }}</span>
-                                        <div class="emoji-rank-bar-track">
-                                            <div class="emoji-rank-bar" style="width: {{ $part['count'] > 0 ? max(6, round(($part['count'] / $p['dayparts']['max']) * 100)) : 0 }}%"></div>
+                                    <div class="stat-chart-col">
+                                        <div class="stat-chart-count">{{ $part['count'] }}</div>
+                                        <div class="stat-chart-bar-track">
+                                            <div class="stat-chart-bar" style="height: {{ $part['count'] > 0 ? max(8, round(($part['count'] / $p['dayparts']['max']) * 100)) : 0 }}%"></div>
                                         </div>
-                                        <span class="emoji-rank-count">{{ $part['count'] }}</span>
+                                        <div class="stat-chart-label">{{ $part['label'] }}</div>
                                     </div>
                                 @endforeach
                             </div>

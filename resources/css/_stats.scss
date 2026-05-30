@@ -283,24 +283,20 @@
   align-items: center;
   gap: $space-3;
 
-  .emoji-rank-emoji {
-    font-size: $emoji-size-sm;
-    line-height: 1;
-    flex-shrink: 0;
-    width: 34px;
-    text-align: center;
-  }
-
-  .daypart-label {
-    flex-shrink: 0;
-    width: 84px;
-    font-size: $font-size-sm;
-    color: $text-secondary;
-  }
-
+  // Shared leading-label width so every bar starts at the same x across sections.
+  .emoji-rank-emoji,
   .combo-label {
     flex-shrink: 0;
     width: 84px;
+    text-align: left;
+  }
+
+  .emoji-rank-emoji {
+    font-size: $emoji-size-sm;
+    line-height: 1;
+  }
+
+  .combo-label {
     font-size: $font-size-base;
     white-space: nowrap;
   }
@@ -348,8 +344,7 @@
   .stat-note,
   .stats-subsection-title,
   .stats-toggle-btn,
-  .emoji-rank .emoji-rank-count,
-  .emoji-rank .daypart-label {
+  .emoji-rank .emoji-rank-count {
     color: $dark-text-secondary;
   }
 

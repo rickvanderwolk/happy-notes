@@ -212,27 +212,18 @@ final class StatsController extends Controller
 
     /**
      * @param  array<int,int>  $totals  weekday-iso (1-7) => count
-     * @return array{list:list<array{label:string,count:int}>,max:int,busiest:?string}
+     * @return array{list:list<array{label:string,count:int}>,max:int}
      */
     private function buildWeekdayChart(array $totals): array
     {
         $short = [1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun'];
-        $names = [
-            1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday',
-            5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',
-        ];
 
         $list = [];
         foreach ($short as $iso => $label) {
             $list[] = ['label' => $label, 'count' => $totals[$iso]];
         }
 
-        $busiest = null;
-        if (array_sum($totals) > 0) {
-            $busiest = $names[array_keys($totals, max($totals))[0]];
-        }
-
-        return ['list' => $list, 'max' => max(max($totals), 1), 'busiest' => $busiest];
+        return ['list' => $list, 'max' => max(max($totals), 1)];
     }
 
     /**
@@ -241,7 +232,7 @@ final class StatsController extends Controller
      */
     private function buildDaypartChart(array $counts): array
     {
-        $labels = ['🌙 Night', '🌅 Morning', '☀️ Afternoon', '🌆 Evening'];
+        $labels = ['Night', 'Morning', 'Afternoon', 'Evening'];
 
         $list = [];
         foreach ($labels as $i => $label) {
