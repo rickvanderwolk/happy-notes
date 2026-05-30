@@ -1,0 +1,256 @@
+// Stats page
+@use 'variables' as *;
+
+// Number grid
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3;
+  margin-bottom: $space-6;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $space-5 $space-3;
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  transition: transform $transition-spring;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  .stat-value {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-extrabold;
+    color: $text-primary;
+    line-height: $line-height-tight;
+
+    &.stat-value--text {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .stat-label {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    margin-top: $space-1;
+  }
+}
+
+// Section wrapper
+.stats-section {
+  margin-bottom: $space-8;
+}
+
+.stats-section-title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  margin-bottom: $space-4;
+  text-align: center;
+
+  .stats-section-note {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-normal;
+    color: $text-tertiary;
+  }
+}
+
+// Beta tag next to the page title
+.beta-badge {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: $space-2;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: $radius-full;
+  background: rgba($info, 0.15);
+  color: $info;
+}
+
+// Timeframe badge: muted = all time, accent = recent / trending window
+.period-badge {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: $space-2;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  border-radius: $radius-full;
+  background: $border;
+  color: $text-tertiary;
+  white-space: nowrap;
+
+  &.period-badge--recent {
+    background: rgba($secondary, 0.18);
+    color: $secondary-dark;
+  }
+}
+
+.stat-note {
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin-bottom: $space-8;
+}
+
+.stat-note-sub {
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $text-tertiary;
+  margin-top: $space-4;
+  margin-bottom: 0;
+}
+
+// Per-week bar chart
+.stat-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-2;
+  height: 140px;
+  padding: $space-4;
+  background: rgba($surface, 0.5);
+  border: 1px solid $border;
+  border-radius: $radius-md;
+
+  .stat-chart-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+
+  .stat-chart-count {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $text-secondary;
+    margin-bottom: $space-1;
+  }
+
+  .stat-chart-bar-track {
+    flex: 1;
+    width: 100%;
+    max-width: 28px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .stat-chart-bar {
+    width: 100%;
+    min-height: 0;
+    background: linear-gradient(180deg, $primary 0%, $secondary 100%);
+    border-radius: $radius-sm $radius-sm 0 0;
+    transition: height $transition-slow;
+  }
+
+  .stat-chart-label {
+    font-size: 10px;
+    color: $text-tertiary;
+    margin-top: $space-2;
+    white-space: nowrap;
+  }
+}
+
+// Emoji ranking
+.emoji-rank-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.emoji-rank {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+
+  .emoji-rank-emoji {
+    font-size: $emoji-size-sm;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 34px;
+    text-align: center;
+  }
+
+  .daypart-label {
+    flex-shrink: 0;
+    width: 84px;
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .emoji-rank-bar-track {
+    flex: 1;
+    height: 12px;
+    background: $border;
+    border-radius: $radius-full;
+    overflow: hidden;
+  }
+
+  .emoji-rank-bar {
+    height: 100%;
+    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    border-radius: $radius-full;
+    transition: width $transition-slow;
+  }
+
+  .emoji-rank-count {
+    flex-shrink: 0;
+    min-width: 36px;
+    text-align: right;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $text-secondary;
+  }
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  .stat-card,
+  .stat-chart {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+  }
+
+  .stat-card .stat-value,
+  .stats-section-title {
+    color: $dark-text;
+  }
+
+  .stat-card .stat-label,
+  .stat-note,
+  .emoji-rank .emoji-rank-count,
+  .emoji-rank .daypart-label {
+    color: $dark-text-secondary;
+  }
+
+  .emoji-rank .emoji-rank-bar-track {
+    background: $dark-border;
+  }
+
+  .period-badge {
+    background: $dark-border;
+    color: $dark-text-secondary;
+
+    &.period-badge--recent {
+      background: rgba($secondary, 0.22);
+      color: $secondary;
+    }
+  }
+}

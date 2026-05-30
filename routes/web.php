@@ -4,6 +4,7 @@ use App\Http\Controllers\CleanupController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileExportController;
+use App\Http\Controllers\StatsController;
 use App\Http\Middleware\StoreOriginalRoute;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -49,6 +50,8 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
     Route::get('/shortcuts', function () {
         return view('shortcuts');
     })->name('shortcuts.show');
+
+    Route::get('/stats', [StatsController::class, 'index'])->name('stats.show');
 
     Route::get('/dashboard', function () { return redirect(route('notes.show')); })->name('dashboard');
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.show');

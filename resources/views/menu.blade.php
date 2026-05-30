@@ -19,6 +19,14 @@
                 <i class="fa fa-user menu-item-icon"></i>
             </a>
 
+            <a href="{{ route('stats.show') }}" class="menu-item-modern">
+                <div class="menu-item-content">
+                    <span class="menu-item-title">Stats</span>
+                    <span class="menu-item-subtitle">Your notes in numbers</span>
+                </div>
+                <i class="fa fa-chart-simple menu-item-icon"></i>
+            </a>
+
             <a href="{{ route('shortcuts.show') }}" data-turbolinks="false" class="menu-item-modern menu-item-desktop-only">
                 <div class="menu-item-content">
                     <span class="menu-item-title">
