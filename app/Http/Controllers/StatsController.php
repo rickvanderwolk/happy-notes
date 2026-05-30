@@ -74,7 +74,10 @@ final class StatsController extends Controller
         }
         $maxWeekday = max(max($weekdayTotals), 1);
 
-        $weekdayNames = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday'];
+        $weekdayNames = [
+            1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday',
+            5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',
+        ];
         $busiestIso = array_keys($weekdayTotals, max($weekdayTotals))[0];
         $busiestWeekday = $weekdayNames[$busiestIso] ?? null;
 
