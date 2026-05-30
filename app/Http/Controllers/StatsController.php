@@ -18,26 +18,38 @@ final class StatsController extends Controller
         // everything from it in PHP. Stays light at 10k+ notes and is DB-independent.
         // Note: timestamps are stored in UTC; time-of-day stats are reported in UTC.
         $timestamps = Note::query()->pluck('created_at');
-
         $totalNotes = $timestamps->count();
 
         if ($totalNotes === 0) {
-            return view('stats', $this->emptyPayload());
+            return view('stats', ['totalNotes' => 0]);
         }
 
-        $notingSince = Carbon::parse($timestamps->min())->format('M Y');
+        // Three periods for the breakdown tabs; the headline grid stays lifetime.
+        $keys = ['all', 'quarter', 'month'];
+        $cutoffs = [
+            'all' => null,
+            'quarter' => $now->copy()->subMonths(3)->toDateTimeString(),
+            'month' => $now->copy()->subDays(30)->toDateTimeString(),
+        ];
 
-        // Single pass: count per day and per part-of-day (UTC).
-        $dailyMap = [];        // 'Y-m-d' => count
-        $daypartCounts = [0, 0, 0, 0]; // nacht, ochtend, middag, avond
+        $notes = ['all' => 0, 'quarter' => 0, 'month' => 0];
+        $weekday = ['all' => array_fill(1, 7, 0), 'quarter' => array_fill(1, 7, 0), 'month' => array_fill(1, 7, 0)];
+        $daypart = ['all' => [0, 0, 0, 0], 'quarter' => [0, 0, 0, 0], 'month' => [0, 0, 0, 0]];
+        $dailyMap = [];
+        $monthMap = [];
+        $dowCache = [];
         $newThisWeek = 0;
         $newThisMonth = 0;
+
         foreach ($timestamps as $ts) {
             $ts = (string) $ts;
             $day = substr($ts, 0, 10);
             $hour = (int) substr($ts, 11, 2);
+            $bucket = intdiv($hour, 6);
+            $dow = $dowCache[$day] ??= Carbon::parse($day)->dayOfWeekIso;
 
             $dailyMap[$day] = ($dailyMap[$day] ?? 0) + 1;
+            $monthMap[substr($ts, 0, 7)] = ($monthMap[substr($ts, 0, 7)] ?? 0) + 1;
             if ($day >= $startOfWeekStr) {
                 $newThisWeek++;
             }
@@ -45,12 +57,74 @@ final class StatsController extends Controller
                 $newThisMonth++;
             }
 
-            $daypartCounts[intdiv($hour, 6)]++;
+            foreach ($keys as $k) {
+                if ($cutoffs[$k] === null || $ts >= $cutoffs[$k]) {
+                    $notes[$k]++;
+                    $weekday[$k][$dow]++;
+                    $daypart[$k][$bucket]++;
+                }
+            }
         }
 
-        // --- Notes per week (last 10 weeks) — 70 map lookups. ---
+        // --- Emojis: load only the small emojis column (+ created_at to filter). ---
+        $emojiRows = Note::query()->whereNotNull('emojis')->get(['emojis', 'created_at']);
+
+        $emCounts = ['all' => [], 'quarter' => [], 'month' => []];
+        $emTags = ['all' => 0, 'quarter' => 0, 'month' => 0];
+        $comboCounts = ['all' => [], 'quarter' => [], 'month' => []];
+        $comboLabels = [];
+
+        foreach ($emojiRows as $row) {
+            $tsR = (string) $row->created_at;
+            $emojis = array_values(array_unique($row->emojis ?? []));
+            $cnt = count($emojis);
+
+            foreach ($keys as $k) {
+                if ($cutoffs[$k] !== null && $tsR < $cutoffs[$k]) {
+                    continue;
+                }
+                foreach ($emojis as $emoji) {
+                    $emCounts[$k][$emoji] = ($emCounts[$k][$emoji] ?? 0) + 1;
+                    $emTags[$k]++;
+                }
+                for ($a = 0; $a < $cnt; $a++) {
+                    for ($b = $a + 1; $b < $cnt; $b++) {
+                        $x = $emojis[$a];
+                        $y = $emojis[$b];
+                        if ($x > $y) {
+                            [$x, $y] = [$y, $x];
+                        }
+                        $key = $x . '|' . $y;
+                        $comboCounts[$k][$key] = ($comboCounts[$k][$key] ?? 0) + 1;
+                        $comboLabels[$key] = $x . ' + ' . $y;
+                    }
+                }
+            }
+        }
+
+        // --- Trend series. ---
+        // All time: one bar per month across the entire history (first note -> now).
+        // When that spans many months, only January bars are labelled (with the year).
+        $range = [];
+        $cursorMonth = Carbon::parse($timestamps->min())->startOfMonth();
+        $nowMonth = $now->copy()->startOfMonth();
+        while ($cursorMonth <= $nowMonth) {
+            $range[] = $cursorMonth->copy();
+            $cursorMonth->addMonth();
+        }
+        $denseMonths = count($range) > 14;
+        $months = [];
+        foreach ($range as $month) {
+            $months[] = [
+                'label' => $denseMonths
+                    ? ($month->month === 1 ? $month->format('Y') : '')
+                    : $month->format('M'),
+                'count' => $monthMap[$month->format('Y-m')] ?? 0,
+            ];
+        }
+
         $weeks = [];
-        for ($i = 9; $i >= 0; $i--) {
+        for ($i = 12; $i >= 0; $i--) {
             $weekStart = $now->copy()->startOfWeek()->subWeeks($i);
             $count = 0;
             $cursor = $weekStart->copy();
@@ -60,112 +134,155 @@ final class StatsController extends Controller
             }
             $weeks[] = ['label' => $weekStart->format('j/n'), 'count' => $count];
         }
-        $maxWeek = max(collect($weeks)->max('count'), 1);
 
-        // --- Notes per weekday (one date-parse per active day, not per note). ---
-        $weekdayTotals = array_fill(1, 7, 0);
-        foreach ($dailyMap as $day => $cnt) {
-            $weekdayTotals[Carbon::parse($day)->dayOfWeekIso] += $cnt;
+        $days = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = $now->copy()->startOfDay()->subDays($i);
+            $days[] = [
+                'label' => $i % 5 === 0 ? $date->format('j/n') : '',
+                'count' => $dailyMap[$date->toDateString()] ?? 0,
+            ];
         }
-        $weekdayShort = [1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun'];
-        $weekdays = [];
-        foreach ($weekdayShort as $iso => $label) {
-            $weekdays[] = ['label' => $label, 'count' => $weekdayTotals[$iso]];
-        }
-        $maxWeekday = max(max($weekdayTotals), 1);
 
-        $weekdayNames = [
-            1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday',
-            5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',
+        $trends = [
+            'all' => [
+                'title' => 'Notes per month',
+                'list' => $months,
+                'max' => max(collect($months)->max('count'), 1),
+                'dense' => $denseMonths,
+            ],
+            'quarter' => [
+                'title' => 'Notes per week',
+                'list' => $weeks,
+                'max' => max(collect($weeks)->max('count'), 1),
+                'dense' => false,
+            ],
+            'month' => [
+                'title' => 'Notes per day',
+                'list' => $days,
+                'max' => max(collect($days)->max('count'), 1),
+                'dense' => true,
+            ],
         ];
-        $busiestIso = array_keys($weekdayTotals, max($weekdayTotals))[0];
-        $busiestWeekday = $weekdayNames[$busiestIso] ?? null;
 
-        // --- Parts of the day (UTC). ---
-        $daypartLabels = ['🌙 Night', '🌅 Morning', '☀️ Afternoon', '🌆 Evening'];
-        $dayparts = [];
-        foreach ($daypartLabels as $idx => $label) {
-            $dayparts[] = ['label' => $label, 'count' => $daypartCounts[$idx]];
+        // --- Lifetime headline values. ---
+        $daysSinceFirst = (int) round(abs(
+            Carbon::parse($timestamps->min())->startOfDay()->diffInDays($now->copy()->startOfDay())
+        )) + 1;
+        $uniqueEmojis = count($emCounts['all']);
+        $totalEmojis = $emTags['all'];
+        $notingSince = Carbon::parse($timestamps->min())->format('M Y');
+
+        // Days in each window, capped by account age, for the per-period pace.
+        $windowDays = [
+            'all' => max(1, $daysSinceFirst),
+            'quarter' => max(1, min($daysSinceFirst, (int) round($now->copy()->subMonths(3)->diffInDays($now)))),
+            'month' => max(1, min($daysSinceFirst, 30)),
+        ];
+
+        $labels = ['all' => 'All time', 'quarter' => '3 months', 'month' => '30 days'];
+        $periods = [];
+        foreach ($keys as $k) {
+            $periods[] = [
+                'key' => $k,
+                'label' => $labels[$k],
+                'hasData' => $notes[$k] > 0,
+                'notes' => $notes[$k],
+                'avgPerDay' => round($notes[$k] / $windowDays[$k], 1),
+                'avgEmojisPerNote' => $notes[$k] > 0 ? round($emTags[$k] / $notes[$k], 1) : 0,
+                'totalEmojis' => $emTags[$k],
+                'trend' => $trends[$k],
+                'weekdays' => $this->buildWeekdayChart($weekday[$k]),
+                'dayparts' => $this->buildDaypartChart($daypart[$k]),
+                'topEmojis' => $this->topEmojis($emCounts[$k]),
+                'emojiCombos' => $this->topCombos($comboCounts[$k], $comboLabels),
+            ];
         }
-        $maxDaypart = max(max($daypartCounts), 1);
-
-        // --- Emojis: load only the small emojis column (+ created_at for trending). ---
-        $emojiRows = Note::query()
-            ->whereNotNull('emojis')
-            ->get(['emojis', 'created_at']);
-
-        $allEmojiCounts = [];
-        $recentEmojiCounts = [];
-        $cutoff = $now->copy()->subDays(30);
-        foreach ($emojiRows as $row) {
-            $isRecent = $row->created_at >= $cutoff;
-            foreach (($row->emojis ?? []) as $emoji) {
-                $allEmojiCounts[$emoji] = ($allEmojiCounts[$emoji] ?? 0) + 1;
-                if ($isRecent) {
-                    $recentEmojiCounts[$emoji] = ($recentEmojiCounts[$emoji] ?? 0) + 1;
-                }
-            }
-        }
-        $totalEmojiCount = array_sum($allEmojiCounts);
-        $distinctEmojiCount = count($allEmojiCounts);
-        arsort($allEmojiCounts);
-        arsort($recentEmojiCounts);
-        $topEmojis = $this->formatEmojiRanking(array_slice($allEmojiCounts, 0, 5, true));
-        $trendingEmojis = $this->formatEmojiRanking(array_slice($recentEmojiCounts, 0, 5, true));
 
         return view('stats', compact(
             'totalNotes',
             'newThisWeek',
             'newThisMonth',
+            'uniqueEmojis',
+            'totalEmojis',
             'notingSince',
-            'weeks',
-            'maxWeek',
-            'weekdays',
-            'maxWeekday',
-            'busiestWeekday',
-            'dayparts',
-            'maxDaypart',
-            'totalEmojiCount',
-            'distinctEmojiCount',
-            'topEmojis',
-            'trendingEmojis',
+            'periods',
         ));
     }
 
     /**
-     * @return array<string,mixed>
+     * @param  array<int,int>  $totals  weekday-iso (1-7) => count
+     * @return array{list:list<array{label:string,count:int}>,max:int,busiest:?string}
      */
-    private function emptyPayload(): array
+    private function buildWeekdayChart(array $totals): array
     {
-        return [
-            'totalNotes' => 0,
-            'newThisWeek' => 0,
-            'newThisMonth' => 0,
-            'notingSince' => null,
-            'weeks' => [],
-            'maxWeek' => 1,
-            'weekdays' => [],
-            'maxWeekday' => 1,
-            'busiestWeekday' => null,
-            'dayparts' => [],
-            'maxDaypart' => 1,
-            'totalEmojiCount' => 0,
-            'distinctEmojiCount' => 0,
-            'topEmojis' => [],
-            'trendingEmojis' => [],
+        $short = [1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun'];
+        $names = [
+            1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday',
+            5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',
         ];
+
+        $list = [];
+        foreach ($short as $iso => $label) {
+            $list[] = ['label' => $label, 'count' => $totals[$iso]];
+        }
+
+        $busiest = null;
+        if (array_sum($totals) > 0) {
+            $busiest = $names[array_keys($totals, max($totals))[0]];
+        }
+
+        return ['list' => $list, 'max' => max(max($totals), 1), 'busiest' => $busiest];
+    }
+
+    /**
+     * @param  array<int,int>  $counts  daypart-bucket (0-3) => count
+     * @return array{list:list<array{label:string,count:int}>,max:int}
+     */
+    private function buildDaypartChart(array $counts): array
+    {
+        $labels = ['🌙 Night', '🌅 Morning', '☀️ Afternoon', '🌆 Evening'];
+
+        $list = [];
+        foreach ($labels as $i => $label) {
+            $list[] = ['label' => $label, 'count' => $counts[$i]];
+        }
+
+        return ['list' => $list, 'max' => max(max($counts), 1)];
     }
 
     /**
      * @param  array<string,int>  $counts
      * @return list<array{emoji:string,count:int}>
      */
-    private function formatEmojiRanking(array $counts): array
+    private function topEmojis(array $counts): array
     {
+        arsort($counts);
         $ranking = [];
-        foreach ($counts as $emoji => $count) {
+        foreach (array_slice($counts, 0, 5, true) as $emoji => $count) {
             $ranking[] = ['emoji' => $emoji, 'count' => $count];
         }
         return $ranking;
+    }
+
+    /**
+     * @param  array<string,int>  $counts  pair-key => count
+     * @param  array<string,string>  $labels  pair-key => "a + b"
+     * @return list<array{label:string,count:int}>
+     */
+    private function topCombos(array $counts, array $labels): array
+    {
+        arsort($counts);
+        $combos = [];
+        foreach ($counts as $key => $count) {
+            if ($count < 2) {
+                break;
+            }
+            $combos[] = ['label' => $labels[$key], 'count' => $count];
+            if (count($combos) >= 5) {
+                break;
+            }
+        }
+        return $combos;
     }
 }

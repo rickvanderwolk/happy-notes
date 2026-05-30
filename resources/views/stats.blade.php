@@ -12,7 +12,7 @@
                 <div class="empty-state-subtitle">Create your first note and come back here!</div>
             </div>
         @else
-            {{-- Number grid --}}
+            {{-- Lifetime headline (above the period tabs) --}}
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-value">{{ $totalNotes }}</div>
@@ -27,11 +27,11 @@
                     <div class="stat-label">new this month</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">{{ $distinctEmojiCount }}</div>
+                    <div class="stat-value">{{ $uniqueEmojis }}</div>
                     <div class="stat-label">unique emojis</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">{{ $totalEmojiCount }}</div>
+                    <div class="stat-value">{{ $totalEmojis }}</div>
                     <div class="stat-label">total emojis</div>
                 </div>
                 <div class="stat-card">
@@ -40,92 +40,111 @@
                 </div>
             </div>
 
-            {{-- Notes per week --}}
-            <div class="stats-section">
-                <h3 class="stats-section-title">Notes per week <span class="period-badge period-badge--recent">last 10 weeks</span></h3>
-                <div class="stat-chart">
-                    @foreach ($weeks as $week)
-                        <div class="stat-chart-col">
-                            <div class="stat-chart-count">{{ $week['count'] }}</div>
-                            <div class="stat-chart-bar-track">
-                                <div class="stat-chart-bar" style="height: {{ $week['count'] > 0 ? max(8, round(($week['count'] / $maxWeek) * 100)) : 0 }}%"></div>
-                            </div>
-                            <div class="stat-chart-label">{{ $week['label'] }}</div>
-                        </div>
-                    @endforeach
+            {{-- Period tabs: breakdowns per period --}}
+            <div class="stats-toggle">
+                <input class="stats-toggle-input" type="radio" name="stats-period" id="period-all" checked>
+                <input class="stats-toggle-input" type="radio" name="stats-period" id="period-quarter">
+                <input class="stats-toggle-input" type="radio" name="stats-period" id="period-month">
+                <div class="stats-toggle-bar">
+                    <label class="stats-toggle-btn" for="period-all">All time</label>
+                    <label class="stats-toggle-btn" for="period-quarter">3 months</label>
+                    <label class="stats-toggle-btn" for="period-month">30 days</label>
                 </div>
-            </div>
 
-            {{-- Notes per weekday --}}
-            <div class="stats-section">
-                <h3 class="stats-section-title">Day of the week <span class="period-badge">all time</span></h3>
-                <div class="stat-chart">
-                    @foreach ($weekdays as $weekday)
-                        <div class="stat-chart-col">
-                            <div class="stat-chart-count">{{ $weekday['count'] }}</div>
-                            <div class="stat-chart-bar-track">
-                                <div class="stat-chart-bar" style="height: {{ $weekday['count'] > 0 ? max(8, round(($weekday['count'] / $maxWeekday) * 100)) : 0 }}%"></div>
+                @foreach ($periods as $p)
+                    <div class="stats-toggle-panel" data-panel="{{ $p['key'] }}">
+                        @if (! $p['hasData'])
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🌱</div>
+                                <div class="empty-state-subtitle">No notes in this period yet.</div>
                             </div>
-                            <div class="stat-chart-label">{{ $weekday['label'] }}</div>
-                        </div>
-                    @endforeach
-                </div>
-                @if ($busiestWeekday)
-                    <p class="stat-note-sub">Most active on {{ $busiestWeekday }}</p>
-                @endif
-            </div>
+                        @else
+                            <p class="stat-note-strong">{{ $p['notes'] }} notes</p>
+                            <p class="stat-note-sub">
+                                ≈ {{ $p['avgPerDay'] }} notes per day
+                                @if ($p['totalEmojis'] > 0) · ≈ {{ $p['avgEmojisPerNote'] }} emojis per note @endif
+                            </p>
 
-            {{-- Parts of the day (UTC) --}}
-            <div class="stats-section">
-                <h3 class="stats-section-title">Time of day <span class="period-badge">all time</span> <span class="stats-section-note">(UTC)</span></h3>
-                <div class="emoji-rank-list">
-                    @foreach ($dayparts as $part)
-                        <div class="emoji-rank">
-                            <span class="daypart-label">{{ $part['label'] }}</span>
-                            <div class="emoji-rank-bar-track">
-                                <div class="emoji-rank-bar" style="width: {{ $part['count'] > 0 ? max(6, round(($part['count'] / $maxDaypart) * 100)) : 0 }}%"></div>
+                            {{-- Trend over time --}}
+                            <h4 class="stats-subsection-title">{{ $p['trend']['title'] }}</h4>
+                            <div class="stat-chart{{ $p['trend']['dense'] ? ' stat-chart--dense' : '' }}">
+                                @foreach ($p['trend']['list'] as $bar)
+                                    <div class="stat-chart-col">
+                                        <div class="stat-chart-count">{{ $bar['count'] }}</div>
+                                        <div class="stat-chart-bar-track">
+                                            <div class="stat-chart-bar" style="height: {{ $bar['count'] > 0 ? max(8, round(($bar['count'] / $p['trend']['max']) * 100)) : 0 }}%"></div>
+                                        </div>
+                                        <div class="stat-chart-label">{{ $bar['label'] }}</div>
+                                    </div>
+                                @endforeach
                             </div>
-                            <span class="emoji-rank-count">{{ $part['count'] }}</span>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
 
-            {{-- Top emojis all-time --}}
-            @if (count($topEmojis) > 0)
-                <div class="stats-section">
-                    <h3 class="stats-section-title">Most used emojis <span class="period-badge">all time</span></h3>
-                    <div class="emoji-rank-list">
-                        @foreach ($topEmojis as $item)
-                            <div class="emoji-rank">
-                                <span class="emoji-rank-emoji">{{ $item['emoji'] }}</span>
-                                <div class="emoji-rank-bar-track">
-                                    <div class="emoji-rank-bar" style="width: {{ max(6, round(($item['count'] / $topEmojis[0]['count']) * 100)) }}%"></div>
+                            {{-- Day of the week --}}
+                            <h4 class="stats-subsection-title">Day of the week <span class="stats-section-note">(UTC)</span></h4>
+                            <div class="stat-chart">
+                                @foreach ($p['weekdays']['list'] as $weekday)
+                                    <div class="stat-chart-col">
+                                        <div class="stat-chart-count">{{ $weekday['count'] }}</div>
+                                        <div class="stat-chart-bar-track">
+                                            <div class="stat-chart-bar" style="height: {{ $weekday['count'] > 0 ? max(8, round(($weekday['count'] / $p['weekdays']['max']) * 100)) : 0 }}%"></div>
+                                        </div>
+                                        <div class="stat-chart-label">{{ $weekday['label'] }}</div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if ($p['weekdays']['busiest'])
+                                <p class="stat-note-sub">Most active on {{ $p['weekdays']['busiest'] }}</p>
+                            @endif
+
+                            {{-- Time of day --}}
+                            <h4 class="stats-subsection-title">Time of day <span class="stats-section-note">(UTC)</span></h4>
+                            <div class="emoji-rank-list">
+                                @foreach ($p['dayparts']['list'] as $part)
+                                    <div class="emoji-rank">
+                                        <span class="daypart-label">{{ $part['label'] }}</span>
+                                        <div class="emoji-rank-bar-track">
+                                            <div class="emoji-rank-bar" style="width: {{ $part['count'] > 0 ? max(6, round(($part['count'] / $p['dayparts']['max']) * 100)) : 0 }}%"></div>
+                                        </div>
+                                        <span class="emoji-rank-count">{{ $part['count'] }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            {{-- Top emojis --}}
+                            @if (count($p['topEmojis']) > 0)
+                                <h4 class="stats-subsection-title">Most used emojis</h4>
+                                <div class="emoji-rank-list">
+                                    @foreach ($p['topEmojis'] as $item)
+                                        <div class="emoji-rank">
+                                            <span class="emoji-rank-emoji">{{ $item['emoji'] }}</span>
+                                            <div class="emoji-rank-bar-track">
+                                                <div class="emoji-rank-bar" style="width: {{ max(6, round(($item['count'] / $p['topEmojis'][0]['count']) * 100)) }}%"></div>
+                                            </div>
+                                            <span class="emoji-rank-count">{{ $item['count'] }}&times;</span>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <span class="emoji-rank-count">{{ $item['count'] }}&times;</span>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
+                            @endif
 
-            {{-- Trending emojis --}}
-            @if (count($trendingEmojis) > 0)
-                <div class="stats-section">
-                    <h3 class="stats-section-title"><i class="fa fa-arrow-trend-up me-2"></i>Trending emojis <span class="period-badge period-badge--recent">last 30 days</span></h3>
-                    <div class="emoji-rank-list">
-                        @foreach ($trendingEmojis as $item)
-                            <div class="emoji-rank">
-                                <span class="emoji-rank-emoji">{{ $item['emoji'] }}</span>
-                                <div class="emoji-rank-bar-track">
-                                    <div class="emoji-rank-bar" style="width: {{ max(6, round(($item['count'] / $trendingEmojis[0]['count']) * 100)) }}%"></div>
+                            {{-- Emoji combos --}}
+                            @if (count($p['emojiCombos']) > 0)
+                                <h4 class="stats-subsection-title">Often together</h4>
+                                <div class="emoji-rank-list">
+                                    @foreach ($p['emojiCombos'] as $combo)
+                                        <div class="emoji-rank">
+                                            <span class="combo-label">{{ $combo['label'] }}</span>
+                                            <div class="emoji-rank-bar-track">
+                                                <div class="emoji-rank-bar" style="width: {{ max(6, round(($combo['count'] / $p['emojiCombos'][0]['count']) * 100)) }}%"></div>
+                                            </div>
+                                            <span class="emoji-rank-count">{{ $combo['count'] }}&times;</span>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <span class="emoji-rank-count">{{ $item['count'] }}&times;</span>
-                            </div>
-                        @endforeach
+                            @endif
+                        @endif
                     </div>
-                </div>
-            @endif
+                @endforeach
+            </div>
         @endif
     </div>
 </x-app-layout>

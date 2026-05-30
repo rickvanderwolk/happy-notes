@@ -11,6 +11,10 @@
   @media (max-width: $breakpoint-sm) {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  &.stats-grid--head {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .stat-card {
@@ -58,12 +62,82 @@
   color: $text-primary;
   margin-bottom: $space-4;
   text-align: center;
+}
 
-  .stats-section-note {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-normal;
-    color: $text-tertiary;
+// Smaller heading used inside toggle panels to separate stacked charts
+.stats-subsection-title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-secondary;
+  text-align: center;
+  margin: $space-6 0 $space-3;
+
+  &:first-child {
+    margin-top: 0;
   }
+}
+
+.stats-section-note {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-normal;
+  color: $text-tertiary;
+}
+
+// Total vs trend / weeks vs months: CSS-only toggle (hidden radios, no JS)
+.stats-toggle {
+  text-align: center;
+}
+
+.stats-toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stats-toggle-bar {
+  display: inline-flex;
+  gap: $space-1;
+  padding: 4px;
+  margin-bottom: $space-5;
+  background: rgba($surface, 0.6);
+  border: 1px solid $border;
+  border-radius: $radius-full;
+}
+
+.stats-toggle-btn {
+  margin: 0;
+  padding: 6px 16px;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-secondary;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all $transition-fast;
+
+  &:hover {
+    color: $text-primary;
+  }
+}
+
+.stats-toggle-panel {
+  display: none;
+  text-align: left;
+}
+
+#period-all:checked ~ .stats-toggle-panel[data-panel="all"],
+#period-quarter:checked ~ .stats-toggle-panel[data-panel="quarter"],
+#period-month:checked ~ .stats-toggle-panel[data-panel="month"] {
+  display: block;
+}
+
+#period-all:checked ~ .stats-toggle-bar label[for="period-all"],
+#period-quarter:checked ~ .stats-toggle-bar label[for="period-quarter"],
+#period-month:checked ~ .stats-toggle-bar label[for="period-month"] {
+  background: $primary;
+  color: $text-primary;
 }
 
 // Beta tag next to the page title
@@ -117,6 +191,14 @@
   margin-bottom: 0;
 }
 
+.stat-note-strong {
+  text-align: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  margin-bottom: $space-2;
+}
+
 // Per-week bar chart
 .stat-chart {
   display: flex;
@@ -168,6 +250,24 @@
   }
 }
 
+// Dense variant: many bars (e.g. 30 days). Drop the per-bar number and tighten
+// the spacing so it stays within the screen on mobile.
+.stat-chart--dense {
+  gap: 2px;
+
+  .stat-chart-count {
+    display: none;
+  }
+
+  .stat-chart-bar-track {
+    max-width: none;
+  }
+
+  .stat-chart-label {
+    font-size: 9px;
+  }
+}
+
 // Emoji ranking
 .emoji-rank-list {
   display: flex;
@@ -193,6 +293,13 @@
     width: 84px;
     font-size: $font-size-sm;
     color: $text-secondary;
+  }
+
+  .combo-label {
+    flex-shrink: 0;
+    width: 84px;
+    font-size: $font-size-base;
+    white-space: nowrap;
   }
 
   .emoji-rank-bar-track {
@@ -229,15 +336,33 @@
   }
 
   .stat-card .stat-value,
-  .stats-section-title {
+  .stats-section-title,
+  .stat-note-strong {
     color: $dark-text;
   }
 
   .stat-card .stat-label,
   .stat-note,
+  .stats-subsection-title,
+  .stats-toggle-btn,
   .emoji-rank .emoji-rank-count,
   .emoji-rank .daypart-label {
     color: $dark-text-secondary;
+  }
+
+  .stats-toggle-bar {
+    background: rgba($dark-surface, 0.3);
+    border-color: $dark-border;
+  }
+
+  .stats-toggle-btn:hover {
+    color: $dark-text;
+  }
+
+  #period-all:checked ~ .stats-toggle-bar label[for="period-all"],
+  #period-quarter:checked ~ .stats-toggle-bar label[for="period-quarter"],
+  #period-month:checked ~ .stats-toggle-bar label[for="period-month"] {
+    color: $text-primary;
   }
 
   .emoji-rank .emoji-rank-bar-track {
