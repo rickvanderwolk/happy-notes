@@ -90,7 +90,7 @@ final class Note extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getEmojisAttribute($value)
+    protected function getEmojisAttribute($value)
     {
         return json_decode($value, true);
     }
