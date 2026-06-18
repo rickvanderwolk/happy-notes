@@ -1,14 +1,14 @@
 <x-app-layout>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
-            <h2 class="section-title"><i class="fa fa-chart-simple me-2"></i>Stats <span class="beta-badge">beta</span></h2>
+            <h2 class="section-title"><i class="fa fa-lightbulb me-2"></i>Insights <span class="beta-badge">beta</span></h2>
             <p class="section-description-text">A look at your note-taking habits</p>
         </div>
 
         @if ($totalNotes === 0)
             <div class="empty-state">
                 <div class="empty-state-icon">📊</div>
-                <div class="empty-state-title">No stats yet</div>
+                <div class="empty-state-title">No insights yet</div>
                 <div class="empty-state-subtitle">Create your first note and come back here!</div>
             </div>
         @else

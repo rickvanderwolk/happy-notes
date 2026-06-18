@@ -19,12 +19,12 @@
                 <i class="fa fa-user menu-item-icon"></i>
             </a>
 
-            <a href="{{ route('stats.show') }}" class="menu-item-modern">
+            <a href="{{ route('insights.show') }}" class="menu-item-modern">
                 <div class="menu-item-content">
-                    <span class="menu-item-title">Stats</span>
-                    <span class="menu-item-subtitle">Your notes in numbers</span>
+                    <span class="menu-item-title">Insights</span>
+                    <span class="menu-item-subtitle">Patterns in your notes</span>
                 </div>
-                <i class="fa fa-chart-simple menu-item-icon"></i>
+                <i class="fa fa-lightbulb menu-item-icon"></i>
             </a>
 
             <a href="{{ route('shortcuts.show') }}" data-turbolinks="false" class="menu-item-modern menu-item-desktop-only">

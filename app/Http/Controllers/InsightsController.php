@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use Carbon\Carbon;
 
-final class StatsController extends Controller
+final class InsightsController extends Controller
 {
     public function index(): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
@@ -21,7 +21,7 @@ final class StatsController extends Controller
         $totalNotes = $timestamps->count();
 
         if ($totalNotes === 0) {
-            return view('stats', ['totalNotes' => 0]);
+            return view('insights', ['totalNotes' => 0]);
         }
 
         // Three periods for the breakdown tabs; the headline grid stays lifetime.
@@ -199,7 +199,7 @@ final class StatsController extends Controller
             ];
         }
 
-        return view('stats', compact(
+        return view('insights', compact(
             'totalNotes',
             'newThisWeek',
             'newThisMonth',
