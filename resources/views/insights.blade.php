@@ -42,13 +42,13 @@
 
             {{-- Period tabs: breakdowns per period --}}
             <div class="stats-toggle">
-                <input class="stats-toggle-input" type="radio" name="stats-period" id="period-all" checked>
+                <input class="stats-toggle-input" type="radio" name="stats-period" id="period-month" checked>
                 <input class="stats-toggle-input" type="radio" name="stats-period" id="period-quarter">
-                <input class="stats-toggle-input" type="radio" name="stats-period" id="period-month">
+                <input class="stats-toggle-input" type="radio" name="stats-period" id="period-all">
                 <div class="stats-toggle-bar">
-                    <label class="stats-toggle-btn" for="period-all">All time</label>
-                    <label class="stats-toggle-btn" for="period-quarter">3 months</label>
                     <label class="stats-toggle-btn" for="period-month">30 days</label>
+                    <label class="stats-toggle-btn" for="period-quarter">3 months</label>
+                    <label class="stats-toggle-btn" for="period-all">All time</label>
                 </div>
 
                 @foreach ($periods as $p)

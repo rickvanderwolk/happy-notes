@@ -25,7 +25,7 @@ final class InsightsController extends Controller
         }
 
         // Three periods for the breakdown tabs; the headline grid stays lifetime.
-        $keys = ['all', 'quarter', 'month'];
+        $keys = ['month', 'quarter', 'all'];
         $cutoffs = [
             'all' => null,
             'quarter' => $now->copy()->subMonths(3)->toDateTimeString(),
