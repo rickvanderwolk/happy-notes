@@ -1,7 +1,7 @@
 describe("Notes Tests", () => {
     beforeEach(() => {
         cy.request('POST', `${Cypress.config('baseUrl')}/api/test/reset-filters`);
-        const user = Cypress.env("users").user1;
+        const user = Cypress.expose("users").user1;
         cy.login(user.email, user.password);
     });
 
