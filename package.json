@@ -32,6 +32,7 @@
     },
     "overrides": {
         "glob": "^11.0.4",
+        "rollup": "npm:@rollup/wasm-node@^4.62.3",
         "shell-quote": "^1.8.4"
     }
 }
