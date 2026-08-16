@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class ProfileExportController extends Controller
 {
     public function export(Request $request): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
     {
         $format = $request->query('format', 'json');
-        $notes = Note::all();
+
+        // OwnNotesScope already limits this to the current user, but that scope silently
+        // does nothing when there is no authenticated user. An export is the last place
+        // you want to depend on that, so the owner filter is repeated explicitly here.
+        $notes = Note::query()->where('user_id', Auth::id())->get();
 
         $exportData = [];
         foreach ($notes as $note) {

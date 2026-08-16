@@ -28,16 +28,17 @@ final class NoteSeeder extends Seeder
                 $noteEmojis = array_rand(array_flip($emojis), rand(2, 7));
                 $progress = rand(1, 7) <= 5 ? null : rand(1, 100);
 
-                Note::create([
-                    'uuid' => $noteUuid,
-                    'user_id' => $user['id'],
-                    'title' => "Note {$i} - user {$user['id']}",
-                    'body' => "Dit is de body van note {$i}.",
-                    'emojis' => json_encode($noteEmojis),
-                    'progress' => $progress,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                // user_id is no longer fillable, so it is set on the instance.
+                // The timestamps were explicitly set to now(), which is what Eloquent
+                // does by itself, so they are simply left out.
+                $note = new Note();
+                $note->uuid = $noteUuid;
+                $note->user_id = $user['id'];
+                $note->title = "Note {$i} - user {$user['id']}";
+                $note->body = "Dit is de body van note {$i}.";
+                $note->emojis = json_encode($noteEmojis);
+                $note->progress = $progress;
+                $note->save();
             }
         }
     }

@@ -16,14 +16,16 @@ final class Note extends Model
     protected $table = 'notes';
     protected $primaryKey = 'id';
     public $incrementing = true;
+    /**
+     * Deliberately without 'user_id' and the timestamps: those decide who owns a note and
+     * when it was written, and neither should ever be settable from request data. Set them
+     * on the instance instead, as NoteController does.
+     */
     protected $fillable = [
         'uuid',
-        'user_id',
         'title',
         'body',
         'emojis',
-        'created_at',
-        'updated_at',
         'progress',
     ];
     public $timestamps = true;

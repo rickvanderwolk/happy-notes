@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 final class NoteController extends Controller
 {
+    /**
+     * A single emoji never comes close to this. It only exists so the emojis column
+     * cannot be used to store arbitrary blobs.
+     */
+    private const MAX_EMOJI_BYTES = 64;
+
     public function index(): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
         $user = Auth::user();
@@ -64,13 +70,12 @@ final class NoteController extends Controller
             'selectedEmojis' => 'nullable|string',
         ]);
 
-        $selectedEmojis = json_decode($request->input('selectedEmojis', '[]'), true);
-        $selectedEmojis = collect($selectedEmojis)->flatten()->unique()->values()->toArray();
+        $selectedEmojis = $this->sanitizeEmojis($request->input('selectedEmojis'));
 
         $emojisInTitle = EmojiHelper::getEmojisFromString($data['title']);
         $selectedEmojis = array_merge($selectedEmojis, $emojisInTitle);
 
-        $selectedEmojis = array_unique($selectedEmojis);
+        $selectedEmojis = array_values(array_unique($selectedEmojis));
 
         $note = new Note();
         $note->user_id = Auth::id();
@@ -104,7 +109,7 @@ final class NoteController extends Controller
         $selectedEmojis = collect($selectedEmojis)->flatten()->unique()->values()->toArray();
         $emojisInTitle = EmojiHelper::getEmojisFromString($data['title']);
         $selectedEmojis = array_merge($selectedEmojis, $emojisInTitle);
-        $selectedEmojis = array_unique($selectedEmojis);
+        $selectedEmojis = array_values(array_unique($selectedEmojis));
 
         $note->title = EmojiHelper::getStringWithoutEmojis($data['title']);
         $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
@@ -122,8 +127,11 @@ final class NoteController extends Controller
 
     public function storeEmojis(Request $request, Note $note): \Illuminate\Http\RedirectResponse
     {
-        $selectedEmojis = json_decode($request->input('selectedEmojis', '[]'), true);
-        $selectedEmojis = collect($selectedEmojis)->flatten()->unique()->values()->toArray();
+        $request->validate([
+            'selectedEmojis' => 'nullable|string',
+        ]);
+
+        $selectedEmojis = $this->sanitizeEmojis($request->input('selectedEmojis'));
         $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
         $note->save();
         return redirect()->route('note.show', ['note' => $note->uuid]);
@@ -131,6 +139,13 @@ final class NoteController extends Controller
 
     public function storeBody(Request $request, Note $note): \Illuminate\Http\RedirectResponse
     {
+        // A type check, not a size limit: the editor always posts an object here, so this
+        // can never reject a real save. No byte or block ceiling until editor.js can
+        // actually report a rejected save back to the user.
+        $request->validate([
+            'body' => 'nullable|array',
+        ]);
+
         $body = $request->input('body');
 
         if (empty($body)) {
@@ -145,7 +160,7 @@ final class NoteController extends Controller
                 $emojisInBody = EmojiHelper::getEmojisFromString($bodyContent);
                 $selectedEmojis = array_merge($selectedEmojis, $emojisInBody);
             }
-            $selectedEmojis = array_unique($selectedEmojis);
+            $selectedEmojis = array_values(array_unique($selectedEmojis));
 
             $note->body = json_encode($body, JSON_UNESCAPED_UNICODE);
             $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
@@ -155,5 +170,31 @@ final class NoteController extends Controller
         $note->save();
 
         return redirect()->route('note.show', ['note' => $note->uuid]);
+    }
+
+    /**
+     * The emoji list arrives as a hidden input, so it is user input like any other and
+     * cannot be trusted to contain emojis at all. This only ever drops values that are
+     * not emojis, so it can never throw away something a user actually picked, and there
+     * is deliberately no cap on how many emojis a note may carry.
+     *
+     * @return list<string>
+     */
+    private function sanitizeEmojis(mixed $value): array
+    {
+        $emojis = is_string($value) ? json_decode($value, true) : $value;
+
+        if (!is_array($emojis)) {
+            return [];
+        }
+
+        return collect($emojis)
+            ->flatten()
+            ->filter(fn ($emoji): bool => is_string($emoji)
+                && strlen($emoji) <= self::MAX_EMOJI_BYTES
+                && EmojiHelper::getEmojisFromString($emoji) !== [])
+            ->unique()
+            ->values()
+            ->toArray();
     }
 }
