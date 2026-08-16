@@ -9,6 +9,8 @@
         tracksOther: @js($this->tracksOtherList()),
         persist: @js($this->updateUser),
         storageKey: @js($this->storageKey),
+        saveUrl: @js(route('filter.emojis.store')),
+        csrfToken: @js(csrf_token()),
         saveTimer: null,
 
         init() {
@@ -61,7 +63,25 @@
             if (!this.persist || !this.saveTimer) return
             clearTimeout(this.saveTimer)
             this.saveTimer = null
-            this.$wire.persist(this.picked, this.other)
+            this.save()
+        },
+
+        /* keepalive so the request still completes if the page is going away. */
+        save() {
+            fetch(this.saveUrl, {
+                method: 'POST',
+                keepalive: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': this.csrfToken,
+                },
+                body: JSON.stringify({
+                    storageKey: this.storageKey,
+                    emojis: this.picked,
+                    otherEmojis: this.other,
+                }),
+            })
         },
     }"
     @turbolinks:before-visit.window="flush()"

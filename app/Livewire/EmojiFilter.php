@@ -8,9 +8,14 @@ use Livewire\Component;
 
 /**
  * Picking emojis from a fixed list is a client side interaction, so Alpine owns it and
- * the server only hears about the end result. Before, every single click cost a full
+ * this component only renders the starting state. Before, every single click cost a full
  * component re-render: with a few hundred emojis that is tens of kilobytes back over the
  * wire to move one emoji between two rows.
+ *
+ * Saving deliberately does not go through Livewire. Calling a Livewire method twice in
+ * quick succession while navigating away made it lose track of its own component ("Could
+ * not find Livewire component in DOM tree"), silently dropping the second change. The
+ * Alpine side posts to filter.emojis.store instead.
  */
 final class EmojiFilter extends Component
 {
@@ -53,36 +58,6 @@ final class EmojiFilter extends Component
     }
 
     /**
-     * Called debounced from Alpine, so only on a pause in clicking rather than per click.
-     *
-     * @param  list<string>  $emojis
-     * @param  list<string>  $otherEmojis
-     */
-    public function persist(array $emojis, array $otherEmojis): void
-    {
-        // The browser already shows the new state, so there is nothing to send back.
-        // Without this Livewire would re-render the whole grid on every save.
-        $this->skipRender();
-
-        if (!$this->updateUser || $this->storageKey === null) {
-            return;
-        }
-
-        // The selection now arrives from the client, so it is untrusted input: keep only
-        // emojis this user actually has.
-        $known = $this->allEmojis();
-        $this->emojis = $this->onlyKnown($emojis, $known);
-        $this->otherEmojis = $this->onlyKnown($otherEmojis, $known);
-
-        $otherKey = $this->storageKey === 'selected_emojis' ? 'excluded_emojis' : 'selected_emojis';
-
-        $user = Auth::user();
-        $user->{$this->storageKey} = $this->emojis;
-        $user->{$otherKey} = $this->otherEmojis;
-        $user->save();
-    }
-
-    /**
      * Deliberately computed rather than a public property: with a few hundred emojis this
      * list dominates the component snapshot, which travels along on every roundtrip. As a
      * computed value it is rendered once and never serialised.
@@ -112,19 +87,6 @@ final class EmojiFilter extends Component
     public function tracksOtherList(): bool
     {
         return in_array($this->storageKey, ['selected_emojis', 'excluded_emojis'], true);
-    }
-
-    /**
-     * @param  array<int, mixed>  $emojis
-     * @param  list<string>  $known
-     * @return list<string>
-     */
-    private function onlyKnown(array $emojis, array $known): array
-    {
-        return array_values(array_unique(array_filter(
-            $emojis,
-            fn ($emoji): bool => is_string($emoji) && in_array($emoji, $known, true)
-        )));
     }
 
     public function render(): \Illuminate\View\View|\Illuminate\Contracts\View\View
