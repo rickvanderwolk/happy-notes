@@ -4,10 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 final class InsightsController extends Controller
 {
     public function index(): \Illuminate\View\View|\Illuminate\Contracts\View\View
+    {
+        // Fingerprint the user's notes with two aggregates that the (user_id, updated_at)
+        // index already covers. Any note that is added, changed or removed moves the key,
+        // so the cached figures can never be stale; the TTL is only there to stop old
+        // entries piling up.
+        $noteCount = Note::query()->count();
+        $lastChange = Note::query()->max('updated_at') ?? 'never';
+
+        $cacheKey = 'insights:' . Auth::id() . ':' . sha1($noteCount . '|' . $lastChange);
+
+        $data = Cache::remember($cacheKey, now()->addDay(), fn (): array => $this->buildInsights());
+
+        return view('insights', $data);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildInsights(): array
     {
         // Own-notes are scoped automatically via OwnNotesScope on every query below.
         $now = Carbon::now();
@@ -21,7 +42,7 @@ final class InsightsController extends Controller
         $totalNotes = $timestamps->count();
 
         if ($totalNotes === 0) {
-            return view('insights', ['totalNotes' => 0]);
+            return ['totalNotes' => 0];
         }
 
         // Three periods for the breakdown tabs; the headline grid stays lifetime.
@@ -199,7 +220,7 @@ final class InsightsController extends Controller
             ];
         }
 
-        return view('insights', compact(
+        return compact(
             'totalNotes',
             'newThisWeek',
             'newThisMonth',
@@ -207,7 +228,7 @@ final class InsightsController extends Controller
             'totalEmojis',
             'notingSince',
             'periods',
-        ));
+        );
     }
 
     /**

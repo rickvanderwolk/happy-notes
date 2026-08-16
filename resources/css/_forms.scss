@@ -234,6 +234,13 @@ input[type="radio"] {
   75% { transform: translateX(4px); }
 }
 
+// Validation message under a field
+.input-error-message {
+  margin-top: $space-2;
+  font-size: $font-size-sm;
+  color: $danger;
+}
+
 // Dark mode
 @media (prefers-color-scheme: dark) {
   input:not([type="checkbox"]):not([type="radio"]),

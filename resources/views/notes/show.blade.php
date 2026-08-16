@@ -3,32 +3,27 @@
 
     <div>
         @if($note)
-            <!-- Skeleton loader - shown initially -->
-            <div id="note-skeleton-container">
-                <x-note-detail-skeleton />
-            </div>
-
-            <!-- Real note content - hidden initially -->
-            <div id="note-content" style="display: none;">
+            <div id="note-content">
                 <div class="note-detail-header mb-4">
-                    <h1
-                        data-cy="note-title"
-                        onclick="window.location.href='{{ route('note.title.show', ['note' => $note->uuid]) }}'"
-                        class="note-detail-title cursor-pointer hover-scale-sm transition"
-                    >
-                        {{ $note->title }}
+                    <h1 class="note-detail-title">
+                        <a
+                            href="{{ route('note.title.show', ['note' => $note->uuid]) }}"
+                            data-cy="note-title"
+                            class="plain-link cursor-pointer hover-scale-sm transition"
+                        >{{ $note->title }}</a>
                     </h1>
 
                     <div data-cy="note-progress-bar" class="my-3">
-                        <livewire:progress-bar :idNote="$note->id" />
+                        <livewire:progress-bar :idNote="$note->id" :progress="$note->progress" />
                     </div>
 
-                    <div
+                    <a
+                        href="{{ route('note.emojis.show', ['note' => $note->uuid]) }}"
                         data-cy="note-emoji-wrapper"
-                        onclick="window.location.href='{{ route('note.emojis.show', ['note' => $note->uuid]) }}'"
+                        class="plain-link"
                     >
                         <x-emoji-list :emojis="$note->emojis" class="emoji-wrapper-left cursor-pointer" />
-                    </div>
+                    </a>
                 </div>
 
                 <div class="col-12">
@@ -48,7 +43,4 @@
             </div>
         @endif
     </div>
-
-    @livewireScripts
-
 </x-app-layout>

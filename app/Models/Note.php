@@ -67,21 +67,28 @@ final class Note extends Model
         $userId = $this->user_id;
         $user = User::find($userId);
 
-        if ($user) {
-            $allNotes = $this->where('user_id', $userId)
-                ->orderBy('updated_at', 'desc')
-                ->get();
-            $allEmojis = [];
-
-            foreach ($allNotes as $note) {
-                $noteEmojis = $note->emojis ?? [];
-                $noteEmojis = array_reverse($noteEmojis);
-                $allEmojis = array_merge($allEmojis, $noteEmojis);
-            }
-
-            $user->all_emojis = array_values(array_unique($allEmojis));
-            $user->save();
+        if (!$user) {
+            return;
         }
+
+        // This runs on every save and every delete, so it must stay cheap. Only the
+        // emojis column is read: hydrating full models here meant dragging every note
+        // body through PHP just to recount emojis. Ordering is unchanged, because it
+        // decides the order emojis appear in the filter picker.
+        // pluck() runs the values through getEmojisAttribute(), so these are decoded
+        // arrays rather than the raw JSON strings the analyser assumes.
+        /** @var iterable<int, list<string>|null> $emojisPerNote */
+        $emojisPerNote = $this->where('user_id', $userId)
+            ->orderBy('updated_at', 'desc')
+            ->pluck('emojis');
+
+        $allEmojis = [];
+        foreach ($emojisPerNote as $noteEmojis) {
+            $allEmojis = array_merge($allEmojis, array_reverse($noteEmojis ?? []));
+        }
+
+        $user->all_emojis = array_values(array_unique($allEmojis));
+        $user->save();
     }
 
     /**

@@ -1,31 +1,21 @@
 <x-app-layout>
     <x-slot name="header"></x-slot>
 
-    <meta name="notes-url" content="{{ url('/') }}">
-
     <div>
         @if(isset($notes) && $notes->count() > 0)
-            <!-- Skeleton loaders - shown initially, hidden by JavaScript after page load -->
-            <div id="skeleton-container" class="notes-list">
-                @for($i = 0; $i < 5; $i++)
-                    <x-note-skeleton />
-                @endfor
-            </div>
-
-            <!-- Real notes - hidden initially, shown by JavaScript after page load -->
-            <div id="note-list" data-cy="note-list" class="notes-list" style="display: none;">
+            <div id="note-list" data-cy="note-list" class="notes-list">
                 @foreach($notes as $note)
-                    <div
+                    <a
                         id="note-{{ $note->uuid }}"
+                        href="{{ route('note.show', $note->uuid) }}"
                         data-cy="note-list-item"
                         class="note-card"
-                        onclick="window.location.href='{{ route('note.show', $note->uuid) }}'"
                     >
                         <div class="note-title">{{ $note->title }}</div>
 
                         @if($note->progress)
                             <div class="note-progress">
-                                <livewire:progress-bar :idNote="$note->id" :progress="$note->progress" />
+                                <x-progress-bar :progress="$note->progress" />
                             </div>
                         @endif
 
@@ -34,7 +24,7 @@
                                 <x-emoji-list :emojis="$note->emojis" size="small" />
                             </div>
                         @endif
-                    </div>
+                    </a>
                 @endforeach
             </div>
 

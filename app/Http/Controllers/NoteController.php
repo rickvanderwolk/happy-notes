@@ -137,8 +137,10 @@ final class NoteController extends Controller
         return redirect()->route('note.show', ['note' => $note->uuid]);
     }
 
-    public function storeBody(Request $request, Note $note): \Illuminate\Http\RedirectResponse
-    {
+    public function storeBody(
+        Request $request,
+        Note $note
+    ): \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response {
         // A type check, not a size limit: the editor always posts an object here, so this
         // can never reject a real save. No byte or block ceiling until editor.js can
         // actually report a rejected save back to the user.
@@ -168,6 +170,12 @@ final class NoteController extends Controller
         }
 
         $note->save();
+
+        // The editor autosaves in the background. Redirecting made it render and download
+        // the whole note page on every keystroke pause, only to throw it away.
+        if ($request->expectsJson()) {
+            return response()->noContent();
+        }
 
         return redirect()->route('note.show', ['note' => $note->uuid]);
     }

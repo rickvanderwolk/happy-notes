@@ -17,11 +17,14 @@ final class Cleanup extends Component
 
     public function loadStats(): void
     {
-        $notes = Note::where('user_id', Auth::id())->get();
+        // Only the emojis column: counting emojis never needed the note bodies. pluck()
+        // runs the values through getEmojisAttribute(), so these are decoded arrays.
+        /** @var iterable<int, list<string>|null> $emojisPerNote */
+        $emojisPerNote = Note::where('user_id', Auth::id())->pluck('emojis');
 
         $stats = [];
-        foreach ($notes as $note) {
-            $emojis = $note->emojis ?? [];
+        foreach ($emojisPerNote as $noteEmojis) {
+            $emojis = $noteEmojis ?? [];
             foreach ($emojis as $emoji) {
                 if (!isset($stats[$emoji])) {
                     $stats[$emoji] = [
@@ -58,14 +61,25 @@ final class Cleanup extends Component
             ->whereJsonContains('emojis', $emoji)
             ->get();
 
-        foreach ($notes as $note) {
-            $emojis = $note->emojis ?? [];
-            if (count($emojis) > 1) {
-                $emojis = array_values(array_filter($emojis, fn ($e) => $e !== $emoji));
-                $note->emojis = json_encode($emojis, JSON_UNESCAPED_UNICODE);
-                $note->save();
+        $lastChanged = null;
+
+        // Every save fires Note::updateUserEmojis(), which walks the user's entire note
+        // list. Doing that once per note made removing a widely used emoji quadratic, so
+        // the model events are suppressed here and the emoji list is rebuilt once at the
+        // end instead.
+        Note::withoutEvents(function () use ($notes, $emoji, &$lastChanged) {
+            foreach ($notes as $note) {
+                $emojis = $note->emojis ?? [];
+                if (count($emojis) > 1) {
+                    $emojis = array_values(array_filter($emojis, fn ($e) => $e !== $emoji));
+                    $note->emojis = json_encode($emojis, JSON_UNESCAPED_UNICODE);
+                    $note->save();
+                    $lastChanged = $note;
+                }
             }
-        }
+        });
+
+        $lastChanged?->updateUserEmojis();
 
         $this->loadStats();
     }
