@@ -68,7 +68,7 @@
     @pagehide.window="flush()"
     @keydown.window.backspace="if (!['INPUT', 'TEXTAREA', 'SELECT'].includes($event.target.tagName)) deselectAll()"
 >
-    <div class="selected-emojis-container" x-show="picked.length" style="display: {{ empty($this->emojis) ? 'none' : '' }};">
+    <div class="selected-emojis-container" x-show="picked.length" @style(['display: none' => empty($this->emojis)])>
         <div class="emoji-chips-wrapper">
             <template x-for="emoji in picked" :key="emoji">
                 <div class="emoji-chip" @click="deselect(emoji)">
@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <div class="text-center mb-4" x-show="picked.length" style="display: {{ empty($this->emojis) ? 'none' : '' }};">
+    <div class="text-center mb-4" x-show="picked.length" @style(['display: none' => empty($this->emojis)])>
         <button type="button" @click="deselectAll()" class="btn btn-outline">
             <i class="fa fa-times-circle"></i>Clear (Backspace)
         </button>

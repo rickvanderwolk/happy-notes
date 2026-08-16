@@ -1,7 +1,10 @@
 // HappyNotes - Button Styles
 @use 'variables' as *;
 
-.btn, button[type="submit"], button[type="button"] {
+// The attribute selectors are wrapped in :where() so they add no specificity. Without
+// that, `button[type="button"]` (0,1,1) outranks variant classes like `.btn-outline`
+// (0,1,0) and silently overrides their border-color with the transparent default here.
+.btn, :where(button[type="submit"], button[type="button"]) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
