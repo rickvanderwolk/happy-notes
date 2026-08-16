@@ -23,3 +23,20 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+<IfModule mod_headers.c>
+<IfModule mod_setenvif.c>
+    # Vite fingerprints every filename under /build, so a given URL can never change
+    # content. Cache those for a year instead of revalidating on each visit; a new build
+    # produces new filenames anyway.
+    #
+    # Scoped twice on purpose: the path must be under /build, and the request must have
+    # resolved to a real static file. Anything rewritten to index.php - which is every
+    # page that renders notes - falls through and keeps the headers Laravel sends, which
+    # are "no-cache, private" for any response carrying a session.
+    SetEnvIf Request_URI "^/build/" IMMUTABLE_ASSET
+    <FilesMatch "\.(css|js|mjs|woff2?|ttf|eot|svg|png|jpe?g|webp|avif)$">
+        Header set Cache-Control "public, max-age=31536000, immutable" env=IMMUTABLE_ASSET
+    </FilesMatch>
+</IfModule>
+</IfModule>

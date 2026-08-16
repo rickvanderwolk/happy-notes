@@ -37,9 +37,17 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
-            'synchronous' => null,
+            // Only applies when running on SQLite (local development and self-hosted
+            // installs); it has no effect on the MySQL connection.
+            // SQLite's default journal locks the whole file on every write, so the
+            // editor autosaving while other requests come in turns into waiting. WAL
+            // lets readers and writers pass each other, and busy_timeout makes a request
+            // wait its turn rather than fail outright on a lock.
+            // WAL needs a local filesystem and creates -wal/-shm files next to the
+            // database, so set DB_JOURNAL_MODE=DELETE if that is a problem.
+            'busy_timeout' => env('DB_BUSY_TIMEOUT', 5000),
+            'journal_mode' => env('DB_JOURNAL_MODE', 'WAL'),
+            'synchronous' => env('DB_SYNCHRONOUS', 'NORMAL'),
         ],
 
         'mysql' => [

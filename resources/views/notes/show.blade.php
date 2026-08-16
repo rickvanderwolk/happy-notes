@@ -36,6 +36,17 @@
                     <form id="postForm" action="{{ route('note.body.store', ['note' => $note->uuid]) }}" method="POST">
                         @csrf
                         <input type="hidden" id="body" name="body">
+
+                        {{-- Unlike the note list, the body genuinely is not here yet: the
+                             editor builds it client side. This holds the space until
+                             EditorJS reports ready, and removes itself then. --}}
+                        <div id="editor-placeholder" class="editor-placeholder" aria-hidden="true">
+                            <div class="editor-placeholder-line" style="width: 95%;"></div>
+                            <div class="editor-placeholder-line" style="width: 88%;"></div>
+                            <div class="editor-placeholder-line" style="width: 92%;"></div>
+                            <div class="editor-placeholder-line" style="width: 70%;"></div>
+                        </div>
+
                         <div id="editorjs" data-cy="note-body" data-note-uuid="{{ $note->uuid }}" data-save-body-url="{{ route('note.body.store', ['note' => $note->uuid]) }}" data-initial-data="{{ json_encode($note->body) }}"></div>
                         @vite('resources/js/editor.js')
                     </form>

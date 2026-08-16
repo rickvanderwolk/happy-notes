@@ -390,3 +390,37 @@
     border-color: rgba(255, 255, 255, 0.15);
   }
 }
+
+// Placeholder for the note body while EditorJS builds it. Unlike a skeleton over
+// server-rendered content, this stands in for something that genuinely is not there yet;
+// editor.js removes it on the editor's onReady.
+.editor-placeholder {
+  padding: $space-6 $space-3 0 $space-3;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+
+  .editor-placeholder-line {
+    height: 14px;
+    border-radius: $radius-sm;
+    background: rgba(0, 0, 0, 0.06);
+    animation: editor-placeholder-pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes editor-placeholder-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor-placeholder .editor-placeholder-line {
+    animation: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .editor-placeholder .editor-placeholder-line {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}

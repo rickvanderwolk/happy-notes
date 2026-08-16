@@ -6,13 +6,29 @@ import Code from '@editorjs/code'
 import Delimiter from '@editorjs/delimiter'
 import Table from '@editorjs/table'
 
-const editorContainer = document.getElementById('editorjs')
+/**
+ * This module is evaluated only once per browser session, because that is how ES modules
+ * work: Turbolinks re-inserts the script tag on every visit, but the browser will not run
+ * it again. So the editor is built from a turbolinks:load listener rather than at module
+ * scope, otherwise opening a second note leaves an empty body until a hard refresh.
+ */
 
-// This module is loaded deferred, so a navigation can complete before it runs. In that
-// case we are already on another page and there is nothing to attach the editor to.
-if (editorContainer) {
-    const saveBodyUrl = editorContainer.dataset.saveBodyUrl
-    const initialData = JSON.parse(editorContainer.dataset.initialData)
+let editor = null
+let attachedTo = null
+
+const destroyEditor = () => {
+    try {
+        editor?.destroy?.()
+    } catch {
+        // The old DOM is already gone after a Turbolinks swap; nothing to clean up.
+    }
+    editor = null
+    attachedTo = null
+}
+
+const buildEditor = (container, placeholder) => {
+    const saveBodyUrl = container.dataset.saveBodyUrl
+    const initialData = JSON.parse(container.dataset.initialData)
 
     const autoSave = () => {
         editor.save().then((outputData) => {
@@ -26,14 +42,14 @@ if (editorContainer) {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({ body: outputData })
-            }).then(response => {
-                Livewire.dispatch('noteUpdated');
+            }).then(() => {
+                Livewire.dispatch('noteUpdated')
             })
         })
     }
 
-    const editor = new EditorJS({
-        holder: 'editorjs',
+    return new EditorJS({
+        holder: container,
         data: initialData,
         tools: {
             header: {
@@ -80,8 +96,39 @@ if (editorContainer) {
                 inlineToolbar: true
             }
         },
+        onReady: () => {
+            // The body does not exist until this fires, so the placeholder stays up until
+            // here instead of leaving the reader staring at an empty note.
+            placeholder?.remove()
+        },
         onChange: () => {
             autoSave()
         }
     })
 }
+
+const initEditor = () => {
+    const container = document.getElementById('editorjs')
+
+    if (!container) {
+        destroyEditor()
+        return
+    }
+
+    // Turbolinks swaps in a fresh node on every visit. Same node means the editor we
+    // already built is still live.
+    if (container === attachedTo) {
+        return
+    }
+
+    destroyEditor()
+    attachedTo = container
+    editor = buildEditor(container, document.getElementById('editor-placeholder'))
+}
+
+// Covers the visit during which this module is first fetched: turbolinks:load has usually
+// already fired by the time the module finishes loading.
+initEditor()
+
+// Covers every visit after that.
+document.addEventListener('turbolinks:load', initEditor)

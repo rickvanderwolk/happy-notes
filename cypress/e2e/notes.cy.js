@@ -56,6 +56,21 @@ describe("Notes Tests", () => {
         cy.get('[data-cy="note-body"]').should("contain.text", bodyText);
     });
 
+    it("Loads the editor on a second note without a page reload", () => {
+        // Regression: editor.js is an ES module, so the browser evaluates it once. With
+        // client side navigation the script tag is re-inserted but not re-run, which left
+        // the body empty on every note after the first until a hard refresh.
+        cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').eq(0).click();
+        cy.get('[data-cy="note-body"] [contenteditable="true"]').should("exist");
+
+        cy.get('[aria-label="Close"]').click();
+        cy.get('[data-cy="note-list"]').should("be.visible");
+
+        cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').eq(1).click();
+        cy.get('[data-cy="note-body"] [contenteditable="true"]').should("exist");
+        cy.get('#editor-placeholder').should("not.exist");
+    });
+
     it("Delete note", () => {
         cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().as("firstNote");
         cy.get("@firstNote").invoke("text").then((deletedNoteText) => {
