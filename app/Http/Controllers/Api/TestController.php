@@ -40,4 +40,19 @@ final class TestController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    /**
+     * Lets the infinite scroll test assert against the real total instead of a number
+     * hard-coded to whatever the seeder happens to produce.
+     */
+    public function noteCount(): JsonResponse
+    {
+        if (!app()->environment(['local', 'testing'])) {
+            abort(404);
+        }
+
+        return response()->json([
+            'count' => \App\Models\Note::where('user_id', 1)->count(),
+        ]);
+    }
 }

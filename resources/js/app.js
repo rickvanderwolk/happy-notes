@@ -248,12 +248,14 @@ function loadMoreDataForAnchor(targetId) {
     page++;
     loadingEl.style.display = 'block';
 
-    fetch(`${appBaseUrl}/notes?page=${page}`)
+    fetch(`${appBaseUrl}/notes?page=${page}&partial=1`)
         .then(response => response.text())
         .then(data => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(data, 'text/html');
-            const newNotes = htmlDoc.querySelectorAll('#note-list .note-card');
+            // The endpoint returns just the cards, so parse a fragment instead of a
+            // whole document.
+            const fragment = document.createElement('div');
+            fragment.innerHTML = data;
+            const newNotes = fragment.querySelectorAll('.note-card');
 
             newNotes.forEach(note => noteList.appendChild(note));
             loadingEl.style.display = 'none';
@@ -295,12 +297,14 @@ function loadMoreData() {
     page++;
     loadingEl.style.display = 'block';
 
-    fetch(`${appBaseUrl}/notes?page=${page}`)
+    fetch(`${appBaseUrl}/notes?page=${page}&partial=1`)
         .then(response => response.text())
         .then(data => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(data, 'text/html');
-            const newNotes = htmlDoc.querySelectorAll('#note-list .note-card');
+            // The endpoint returns just the cards, so parse a fragment instead of a
+            // whole document.
+            const fragment = document.createElement('div');
+            fragment.innerHTML = data;
+            const newNotes = fragment.querySelectorAll('.note-card');
 
             newNotes.forEach(note => noteList.appendChild(note));
             loadingEl.style.display = 'none';

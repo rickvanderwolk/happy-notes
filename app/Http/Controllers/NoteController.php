@@ -16,7 +16,7 @@ final class NoteController extends Controller
      */
     private const MAX_EMOJI_BYTES = 64;
 
-    public function index(): \Illuminate\View\View|\Illuminate\Contracts\View\View
+    public function index(Request $request): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
         $user = Auth::user();
         $selectedEmojis = $user->selected_emojis ?? [];
@@ -47,7 +47,24 @@ final class NoteController extends Controller
             }
         }
 
-        $notes = $notes->orderBy('updated_at', 'DESC')->paginate(15);
+        // Only the columns a note card actually renders. 'progress' is its own column and
+        // drives the progress bar, so it has to be listed explicitly. Leaving 'body' out
+        // is the point: it is by far the largest column and the card never shows it.
+        //
+        // simplePaginate instead of paginate because the list uses infinite scroll and
+        // hides the page links entirely. paginate() ran a COUNT(*) over the whole filtered
+        // set on every load and then threw the result away, which with an emoji filter or
+        // a search term means a second full scan for nothing.
+        $notes = $notes
+            ->orderBy('updated_at', 'DESC')
+            ->simplePaginate(15, ['id', 'uuid', 'title', 'emojis', 'progress']);
+
+        // Infinite scroll asks for the cards on their own. Same query, same partial as the
+        // full page uses, so a scroll batch can never show a different set of notes than a
+        // normal page load would.
+        if ($request->boolean('partial')) {
+            return view('notes.partials.cards', compact('notes'));
+        }
 
         return view('notes', compact('notes'));
     }

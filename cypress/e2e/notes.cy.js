@@ -71,6 +71,45 @@ describe("Notes Tests", () => {
         cy.get('#editor-placeholder').should("not.exist");
     });
 
+    // The list query selects specific columns, so a note card losing its progress bar is
+    // a silent failure mode. The seeder gives a share of the notes a progress value.
+    it("Shows progress bars on the note list", () => {
+        cy.get('[data-cy="note-list"]').should('be.visible');
+        cy.get('[data-cy="note-list"] .note-progress .progress-bar')
+            .should('have.length.greaterThan', 0)
+            .first()
+            .should('have.attr', 'aria-valuenow');
+    });
+
+    // Infinite scroll fetches pages of cards separately, so the thing that must hold is
+    // that scrolling to the end shows every note exactly once: nothing skipped, nothing
+    // duplicated.
+    it("Scrolls through every note without skipping or repeating one", () => {
+        cy.request({ url: '/api/test/note-count', failOnStatusCode: false }).then((res) => {
+            const expected = res.body.count;
+
+            const scrollToEnd = () => {
+                cy.scrollTo('bottom');
+                cy.get('#loading').then(($el) => {
+                    if ($el.text().includes("That's all!")) {
+                        return;
+                    }
+                    cy.wait(300);
+                    scrollToEnd();
+                });
+            };
+
+            cy.get('[data-cy="note-list-item"]').should('have.length', 15);
+            scrollToEnd();
+
+            cy.get('[data-cy="note-list-item"]').should('have.length', expected);
+            cy.get('[data-cy="note-list-item"]').then(($cards) => {
+                const ids = [...$cards].map((c) => c.id);
+                expect(new Set(ids).size, 'every rendered note is unique').to.eq(expected);
+            });
+        });
+    });
+
     it("Delete note", () => {
         cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().as("firstNote");
         cy.get("@firstNote").invoke("text").then((deletedNoteText) => {

@@ -18,4 +18,5 @@ Route::get('/user', function (Request $request) {
  */
 if (App::environment(['local', 'testing'])) {
     Route::post('/test/reset-filters', [TestController::class, 'resetFilters']);
+    Route::get('/test/note-count', [TestController::class, 'noteCount']);
 }
