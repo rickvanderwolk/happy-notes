@@ -5,27 +5,29 @@
 
     <x-slot name="header"></x-slot>
 
-    <meta name="notes-url" content="{{ url('/') }}">
-
     <div class="container form-page-container">
         <div class="text-center mb-4">
             <h2 class="section-title">New ✨</h2>
         </div>
 
-        <form action="{{ route('note.store') }}" method="POST" class="new-note-form">
+        <form id="new-note-form" action="{{ route('note.store') }}" method="POST" class="new-note-form">
             @csrf
 
             <div class="mb-4">
                 <textarea
                     name="title"
                     data-cy="new-note-title"
-                    class="form-control elegant-input input-large"
+                    class="form-control elegant-input input-large @error('title') is-invalid @enderror"
                     placeholder="💭 Write anything..."
                     rows="3"
                     autofocus
                     required
                     onkeydown="if(event.key === 'Enter') event.preventDefault();"
-                ></textarea>
+                >{{ old('title') }}</textarea>
+
+                @error('title')
+                    <div data-cy="new-note-title-error" class="input-error-message">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-4">
@@ -40,12 +42,10 @@
 
         <div class="fixed-button-wrapper">
             <div class="fixed-button-inner">
-                <button data-cy="save-new-note" type="submit" form="note.store" onclick="document.querySelector('form').submit()" class="btn btn-success btn-block btn-lg">
+                <button data-cy="save-new-note" type="submit" form="new-note-form" class="btn btn-success btn-block btn-lg">
                     <i class="fa fa-check"></i>Save Note
                 </button>
             </div>
         </div>
     </div>
-
-    @livewireScripts
 </x-app-layout>

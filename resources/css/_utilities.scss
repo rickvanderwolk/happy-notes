@@ -85,6 +85,20 @@
 .cursor-pointer { cursor: pointer; }
 .cursor-not-allowed { cursor: not-allowed; }
 
+// For elements that used to be a div with an onclick and are now real links: keeps the
+// surrounding text styling instead of picking up the default anchor colour.
+.plain-link {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
 // Overflow
 .overflow-hidden { overflow: hidden; }
 .overflow-auto { overflow: auto; }

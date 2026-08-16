@@ -48,8 +48,9 @@ describe("Notes Tests", () => {
         const bodyText = `Note body text - ${Date.now()}`;
         cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().as("firstNote");
         cy.get("@firstNote").click();
-        cy.get('[data-cy="note-body"]').click();
-        cy.get('[data-cy="note-body"]').type(bodyText);
+        // Target the contenteditable EditorJS builds, not the wrapper. Cypress retries
+        // this until the editor has initialised, instead of racing it.
+        cy.get('[data-cy="note-body"] [contenteditable="true"]').first().click().type(bodyText);
         cy.wait(1000);
         cy.reload();
         cy.get('[data-cy="note-body"]').should("contain.text", bodyText);

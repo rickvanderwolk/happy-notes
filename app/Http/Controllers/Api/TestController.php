@@ -10,7 +10,9 @@ final class TestController extends Controller
 {
     public function resetFilters(): JsonResponse
     {
-        if (app()->environment('production')) {
+        // The route itself is only registered outside production (see routes/api.php).
+        // This second allowlist is here so the controller is never reachable on its own.
+        if (!app()->environment(['local', 'testing'])) {
             abort(404);
         }
 
