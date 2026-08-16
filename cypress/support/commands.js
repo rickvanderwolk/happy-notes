@@ -7,9 +7,11 @@ Cypress.Commands.add('login', (email, password) => {
 });
 
 Cypress.Commands.add('selectFirstSelectableEmoji', () => {
-    return cy.get('[data-cy="emoji-filter-emoji-selector"] span')
-        .should('be.visible')
+    // The grid now renders every emoji and hides the picked ones client side, so filter
+    // down to what is actually on screen instead of asserting the whole set is visible.
+    return cy.get('[data-cy="emoji-filter-emoji-selector"] span:visible')
         .first()
+        .should('be.visible')
         .then(($emoji) => {
             const emojiText = $emoji.text().trim();
             cy.wrap($emoji).click();

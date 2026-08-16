@@ -65,13 +65,32 @@
                     {{-- Filter views --}}
                     <div class="row">
                         <div class="col-12 d-flex justify-content-between">
-                            <h3 class="emoji-wrapper">
+                            {{-- The emoji filter reports its selection client side, so these
+                                 badges follow along without costing a server roundtrip per
+                                 click. --}}
+                            <h3
+                                class="emoji-wrapper"
+                                x-data="{
+                                    selected: @js(count($selectedEmojis ?? [])),
+                                    excluded: @js(count($excludedEmojis ?? [])),
+                                }"
+                                @emoji-filter-changed.window="
+                                    if ($event.detail.storageKey === 'selected_emojis') {
+                                        selected = $event.detail.picked.length
+                                        excluded = $event.detail.other.length
+                                    } else if ($event.detail.storageKey === 'excluded_emojis') {
+                                        excluded = $event.detail.picked.length
+                                        selected = $event.detail.other.length
+                                    }
+                                "
+                            >
                                 <x-navbar-link-with-badge
                                     :route="route('filter.show')"
                                     :active="$currentRouteName === 'filter.show'"
                                     icon="filter"
                                     label="Filter - include emojis"
                                     :showBadge="count($selectedEmojis ?? []) > 0"
+                                    badgeShow="selected > 0"
                                 />
                                 <x-navbar-link-with-badge
                                     :route="route('filter.exclude.show')"
@@ -79,6 +98,7 @@
                                     icon="ban"
                                     label="Filter - exclude emojis"
                                     :showBadge="count($excludedEmojis ?? []) > 0"
+                                    badgeShow="excluded > 0"
                                 />
                                 <x-navbar-link-with-badge
                                     :route="route('filter.search.show')"

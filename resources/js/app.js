@@ -34,13 +34,6 @@ const getUuidFromRoute = () => {
     return null;
 }
 
-Livewire.on('emojisChanged', (emojis) => {
-    const inputField = document.getElementById('selectedEmojis');
-    if (inputField) {
-        inputField.value = JSON.stringify(emojis);
-    }
-});
-
 const keydownListener = (event) => {
         const ignoreTags = ['INPUT', 'TEXTAREA', 'SELECT'];
         if (
