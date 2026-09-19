@@ -17,6 +17,10 @@ import Undo from 'editorjs-undo'
 let editor = null
 let attachedTo = null
 
+// Same check EditorJS uses; iPads report themselves as a Mac with a touch screen.
+const isIOS = /iP(ad|hone|od)/.test(navigator.platform)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+
 const destroyEditor = () => {
     try {
         editor?.destroy?.()
@@ -47,6 +51,22 @@ const buildEditor = (container, placeholder) => {
                 Livewire.dispatch('noteUpdated')
             })
         })
+    }
+
+    /**
+     * After "? " (or ". ", "! ") the iOS keyboard turns Shift on to capitalize the next sentence,
+     * and the Enter that follows arrives with shiftKey set. The list plugin reads that as
+     * Shift+Enter and puts a line break in the item instead of starting a new one. EditorJS
+     * ignores this fake Shift on iOS itself, the list plugin does not, so drop it before the
+     * plugin sees the event.
+     * @see https://github.com/codex-team/editor.js/pull/2696
+     */
+    if (isIOS) {
+        container.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && event.shiftKey) {
+                Object.defineProperty(event, 'shiftKey', { value: false })
+            }
+        }, true)
     }
 
     return new EditorJS({
