@@ -5,6 +5,7 @@ import List from '@editorjs/list'
 import Code from '@editorjs/code'
 import Delimiter from '@editorjs/delimiter'
 import Table from '@editorjs/table'
+import Undo from 'editorjs-undo'
 
 /**
  * This module is evaluated only once per browser session, because that is how ES modules
@@ -100,6 +101,15 @@ const buildEditor = (container, placeholder) => {
             // The body does not exist until this fires, so the placeholder stays up until
             // here instead of leaving the reader staring at an empty note.
             placeholder?.remove()
+
+            // EditorJS has no undo of its own; Ctrl+Z is the browser's, which cannot reverse
+            // block changes such as a checklist item turning into a paragraph on backspace.
+            const undo = new Undo({ editor })
+
+            // Without this the first undo step would be an empty note. A new note has no body yet.
+            if (initialData) {
+                undo.initialize(initialData)
+            }
         },
         onChange: () => {
             autoSave()
