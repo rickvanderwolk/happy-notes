@@ -15,6 +15,7 @@ import Undo from 'editorjs-undo'
  */
 
 let editor = null
+let undo = null
 let attachedTo = null
 
 // Same check EditorJS uses; iPads report themselves as a Mac with a touch screen.
@@ -23,11 +24,13 @@ const isIOS = /iP(ad|hone|od)/.test(navigator.platform)
 
 const destroyEditor = () => {
     try {
+        undo?.onDestroy()
         editor?.destroy?.()
     } catch {
         // The old DOM is already gone after a Turbolinks swap; nothing to clean up.
     }
     editor = null
+    undo = null
     attachedTo = null
 }
 
@@ -69,7 +72,7 @@ const buildEditor = (container, placeholder) => {
         }, true)
     }
 
-    return new EditorJS({
+    const instance = new EditorJS({
         holder: container,
         data: initialData,
         tools: {
@@ -122,9 +125,15 @@ const buildEditor = (container, placeholder) => {
             // here instead of leaving the reader staring at an empty note.
             placeholder?.remove()
 
+            // Leaving the note before the editor is ready destroys it first; there is nothing
+            // left to attach undo to then.
+            if (instance !== editor) {
+                return
+            }
+
             // EditorJS has no undo of its own; Ctrl+Z is the browser's, which cannot reverse
             // block changes such as a checklist item turning into a paragraph on backspace.
-            const undo = new Undo({ editor })
+            undo = new Undo({ editor: instance })
 
             // Without this the first undo step would be an empty note. A new note has no body yet.
             if (initialData) {
@@ -135,6 +144,8 @@ const buildEditor = (container, placeholder) => {
             autoSave()
         }
     })
+
+    return instance
 }
 
 const initEditor = () => {
