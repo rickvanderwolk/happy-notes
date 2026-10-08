@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
-            <h2 class="section-title"><i class="fa fa-lightbulb me-2"></i>Insights <span class="beta-badge">beta</span></h2>
+            <h2 class="section-title"><i class="fa fa-lightbulb me-2"></i>Insights</h2>
             <p class="section-description-text">A look at your note-taking habits</p>
         </div>
 

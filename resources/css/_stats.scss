@@ -140,22 +140,6 @@
   color: $text-primary;
 }
 
-// Beta tag next to the page title
-.beta-badge {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: $space-2;
-  padding: 2px 8px;
-  font-size: 11px;
-  font-weight: $font-weight-semibold;
-  line-height: 1.5;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: $radius-full;
-  background: rgba($info, 0.15);
-  color: $info;
-}
-
 // Timeframe badge: muted = all time, accent = recent / trending window
 .period-badge {
   display: inline-block;
