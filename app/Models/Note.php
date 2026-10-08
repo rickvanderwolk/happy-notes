@@ -46,8 +46,12 @@ final class Note extends Model
             }
         });
 
+        // The editor autosaves the body on every typing pause. Rebuilding the emoji order
+        // walks every note of the user, so only do it when the order can actually change.
         static::saved(function ($note) {
-            $note->updateUserEmojis();
+            if ($note->wasRecentlyCreated || $note->wasChanged('emojis')) {
+                $note->updateUserEmojis();
+            }
         });
 
         static::deleted(function ($note) {

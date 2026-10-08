@@ -44,15 +44,20 @@ const buildEditor = (container, placeholder) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Asks the controller for a 204 instead of a redirect to the note page,
+                    // Asks the controller for JSON instead of a redirect to the note page,
                     // which the browser would otherwise follow and download on every save.
                     'Accept': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({ body: outputData })
-            }).then(() => {
-                Livewire.dispatch('noteUpdated')
             })
+                .then((response) => response.ok ? response.json() : null)
+                .then((data) => {
+                    if (!data) return
+                    window.dispatchEvent(new CustomEvent('note-progress-updated', {
+                        detail: { progress: data.progress }
+                    }))
+                })
         })
     }
 

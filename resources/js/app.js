@@ -245,34 +245,32 @@ function loadMoreDataForAnchor(targetId) {
     }
 
     isLoadingForAnchor = true;
-    page++;
     loadingEl.style.display = 'block';
 
-    fetch(`${appBaseUrl}/notes?page=${page}&partial=1`)
-        .then(response => response.text())
+    // One request for every page up to the note; the server says which page that ended
+    // on, so infinite scroll picks up after it.
+    const uuid = targetId.substring('note-'.length);
+    fetch(`${appBaseUrl}/notes?page=${page + 1}&partial=1&until=${encodeURIComponent(uuid)}`)
+        .then(response => {
+            const lastPage = parseInt(response.headers.get('X-Last-Page'), 10);
+            if (!Number.isNaN(lastPage)) {
+                page = Math.max(page, lastPage);
+            }
+            return response.text();
+        })
         .then(data => {
             // The endpoint returns just the cards, so parse a fragment instead of a
             // whole document.
             const fragment = document.createElement('div');
             fragment.innerHTML = data;
-            const newNotes = fragment.querySelectorAll('.note-card');
-
-            newNotes.forEach(note => noteList.appendChild(note));
+            fragment.querySelectorAll('.note-card').forEach(note => noteList.appendChild(note));
             loadingEl.style.display = 'none';
             isLoadingForAnchor = false;
 
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
                 targetElement.scrollIntoView({ behavior: 'smooth' });
-                return;
             }
-
-            if (newNotes.length === 0) {
-                console.log('Note with anchor not found and no more notes to load');
-                return;
-            }
-
-            setTimeout(() => loadMoreDataForAnchor(targetId), 100);
         })
         .catch(error => {
             console.error('Error loading more notes for anchor:', error);

@@ -16,7 +16,9 @@ final class NoteController extends Controller
      */
     private const MAX_EMOJI_BYTES = 64;
 
-    public function index(Request $request): \Illuminate\View\View|\Illuminate\Contracts\View\View
+    private const NOTES_PER_PAGE = 15;
+
+    public function index(Request $request): \Illuminate\View\View|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
     {
         $user = Auth::user();
         $selectedEmojis = $user->selected_emojis ?? [];
@@ -55,9 +57,39 @@ final class NoteController extends Controller
         // hides the page links entirely. paginate() ran a COUNT(*) over the whole filtered
         // set on every load and then threw the result away, which with an emoji filter or
         // a search term means a second full scan for nothing.
+        $columns = ['id', 'uuid', 'title', 'emojis', 'progress'];
+
+        // id breaks ties, so notes saved within the same second cannot swap places between
+        // two page requests and show up twice or not at all.
         $notes = $notes
             ->orderBy('updated_at', 'DESC')
-            ->simplePaginate(15, ['id', 'uuid', 'title', 'emojis', 'progress']);
+            ->orderBy('id', 'DESC');
+
+        // Closing a note returns to the list at that note. Rather than the browser fetching
+        // page after page until it shows up, return every page up to and including the one
+        // holding it in one go, and say which page that was so infinite scroll continues
+        // from there.
+        if ($request->boolean('partial') && $request->filled('until')) {
+            $page = max(1, $request->integer('page', 1));
+            $position = (clone $notes)->pluck('uuid')->search($request->string('until')->toString());
+
+            if ($position === false) {
+                return response()->view('notes.partials.cards', ['notes' => []])
+                    ->header('X-Last-Page', (string) ($page - 1));
+            }
+
+            $lastPage = max($page, intdiv($position, self::NOTES_PER_PAGE) + 1);
+
+            $notes = $notes
+                ->offset(($page - 1) * self::NOTES_PER_PAGE)
+                ->limit(($lastPage - $page + 1) * self::NOTES_PER_PAGE)
+                ->get($columns);
+
+            return response()->view('notes.partials.cards', compact('notes'))
+                ->header('X-Last-Page', (string) $lastPage);
+        }
+
+        $notes = $notes->simplePaginate(self::NOTES_PER_PAGE, $columns);
 
         // Infinite scroll asks for the cards on their own. Same query, same partial as the
         // full page uses, so a scroll batch can never show a different set of notes than a
@@ -157,7 +189,7 @@ final class NoteController extends Controller
     public function storeBody(
         Request $request,
         Note $note
-    ): \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response {
+    ): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse {
         // A type check, not a size limit: the editor always posts an object here, so this
         // can never reject a real save. No byte or block ceiling until editor.js can
         // actually report a rejected save back to the user.
@@ -189,9 +221,10 @@ final class NoteController extends Controller
         $note->save();
 
         // The editor autosaves in the background. Redirecting made it render and download
-        // the whole note page on every keystroke pause, only to throw it away.
+        // the whole note page on every keystroke pause, only to throw it away. The progress
+        // goes along so the editor can update the progress bar without a second request.
         if ($request->expectsJson()) {
-            return response()->noContent();
+            return response()->json(['progress' => $note->progress]);
         }
 
         return redirect()->route('note.show', ['note' => $note->uuid]);

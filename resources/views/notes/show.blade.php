@@ -13,8 +13,27 @@
                         >{{ $note->title }}</a>
                     </h1>
 
-                    <div data-cy="note-progress-bar" class="my-3">
-                        <livewire:progress-bar :idNote="$note->id" :progress="$note->progress" />
+                    {{-- The editor reports the new progress after every autosave, so the bar
+                         updates without asking the server again. --}}
+                    <div
+                        data-cy="note-progress-bar"
+                        class="my-3"
+                        x-data="{ progress: @js($note->progress) }"
+                        @note-progress-updated.window="progress = $event.detail.progress"
+                    >
+                        <div class="progress" x-show="progress > 0" @style(['display: none' => !($note->progress > 0)])>
+                            <div class="progress-bar bg-success"
+                                 role="progressbar"
+                                 :style="`width: ${progress}%`"
+                                 style="width: {{ $note->progress ?? 0 }}%"
+                                 :aria-valuenow="progress"
+                                 aria-valuenow="{{ $note->progress ?? 0 }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 :aria-label="`Progress: ${progress}%`"
+                                 aria-label="Progress: {{ $note->progress ?? 0 }}%">
+                            </div>
+                        </div>
                     </div>
 
                     <a
