@@ -18,8 +18,9 @@ final class NoteController extends Controller
 
     private const NOTES_PER_PAGE = 15;
 
-    public function index(Request $request): \Illuminate\View\View|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
-    {
+    public function index(
+        Request $request
+    ): \Illuminate\View\View|\Illuminate\Contracts\View\View|\Illuminate\Http\Response {
         $user = Auth::user();
         $selectedEmojis = $user->selected_emojis ?? [];
         $excludedEmojis = $user->excluded_emojis ?? [];

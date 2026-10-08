@@ -6,6 +6,7 @@ use App\Scopes\OwnNotesScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -96,7 +97,8 @@ final class Note extends Model
         $now = now()->getTimestamp();
         $scores = [];
         foreach ($notes as $note) {
-            $ageInDays = max(0, $now - ($note->created_at?->getTimestamp() ?? $now)) / 86400;
+            $createdAt = $note->created_at ? Carbon::parse($note->created_at)->getTimestamp() : $now;
+            $ageInDays = max(0, $now - $createdAt) / 86400;
             $weight = 1 / (1 + $ageInDays / self::EMOJI_RECENCY_HALF_LIFE_DAYS);
 
             // Reversed so the emoji added last comes first among equal scores.
