@@ -30,6 +30,11 @@ final class Note extends Model
     ];
     public $timestamps = true;
 
+    /**
+     * After this many days a note counts for half in the emoji order.
+     */
+    private const EMOJI_RECENCY_HALF_LIFE_DAYS = 30;
+
     #[\Override]
     protected static function boot()
     {
@@ -72,22 +77,34 @@ final class Note extends Model
         }
 
         // This runs on every save and every delete, so it must stay cheap. Only the
-        // emojis column is read: hydrating full models here meant dragging every note
-        // body through PHP just to recount emojis. Ordering is unchanged, because it
-        // decides the order emojis appear in the filter picker.
-        // pluck() runs the values through getEmojisAttribute(), so these are decoded
-        // arrays rather than the raw JSON strings the analyser assumes.
-        /** @var iterable<int, list<string>|null> $emojisPerNote */
-        $emojisPerNote = $this->where('user_id', $userId)
-            ->orderBy('updated_at', 'desc')
-            ->pluck('emojis');
+        // emojis and created_at columns are read: hydrating full models here meant
+        // dragging every note body through PHP just to recount emojis.
+        //
+        // The order decides how emojis appear in the filter picker, so it ranks by
+        // frecency: every note an emoji appears in adds a weight that fades with the
+        // note's age. Emojis used often stay near the top, emojis used recently rise.
+        // created_at rather than updated_at, so editing an old note does not drag its
+        // emojis to the front.
+        $notes = $this->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get(['emojis', 'created_at']);
 
-        $allEmojis = [];
-        foreach ($emojisPerNote as $noteEmojis) {
-            $allEmojis = array_merge($allEmojis, array_reverse($noteEmojis ?? []));
+        $now = now()->getTimestamp();
+        $scores = [];
+        foreach ($notes as $note) {
+            $ageInDays = max(0, $now - ($note->created_at?->getTimestamp() ?? $now)) / 86400;
+            $weight = 1 / (1 + $ageInDays / self::EMOJI_RECENCY_HALF_LIFE_DAYS);
+
+            // Reversed so the emoji added last comes first among equal scores.
+            foreach (array_reverse(array_unique($note->emojis ?? [])) as $emoji) {
+                $scores[$emoji] = ($scores[$emoji] ?? 0) + $weight;
+            }
         }
 
-        $user->all_emojis = array_values(array_unique($allEmojis));
+        // arsort() is stable, so ties keep the most recent first order built above.
+        arsort($scores);
+
+        $user->all_emojis = array_map('strval', array_keys($scores));
         $user->save();
     }
 
