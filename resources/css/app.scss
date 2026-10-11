@@ -1,8 +1,10 @@
 // Bootstrap & FontAwesome
 @use "bootstrap/dist/css/bootstrap.min.css";
 @use "@fortawesome/fontawesome-free/css/all.min.css";
+@use "@fontsource-variable/nunito/index.css";
 
 // HappyNotes Design System
+@use 'theme';
 @use 'variables' as *;
 @use 'utilities' as *;
 @use 'buttons' as *;
@@ -98,7 +100,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: $font-weight-extrabold;
+    font-weight: $font-weight-black;
     line-height: $line-height-tight;
     color: $text-primary;
     margin-bottom: $space-4;
@@ -109,6 +111,11 @@ h2 { font-size: $font-size-2xl; }
 h3 { font-size: $font-size-xl; }
 h4 { font-size: $font-size-lg; }
 h5, h6 { font-size: $font-size-base; }
+
+hr {
+    border-color: $border;
+    opacity: 1;
+}
 
 p {
     font-size: $font-size-base;
@@ -191,6 +198,8 @@ p {
     display: flex;
     flex-direction: column;
     gap: 0;
+    // Room for the floating new note button below the last card
+    padding-bottom: 110px;
 }
 
 // Empty state
@@ -248,15 +257,17 @@ p {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(255, 254, 249, 1) 70%, transparent);
+    background: linear-gradient(to top, $background 70%, transparent);
     padding: 16px 0 20px;
     z-index: 100;
 }
 
 // Note detail header
 .note-detail-title {
-    font-size: $font-size-2xl; // 24px - smaller but still larger than body headings
-    font-weight: $font-weight-bold;
+    font-size: 34px;
+    font-weight: $font-weight-black;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
     margin-bottom: $space-4;
     transition: transform $transition-fast;
 }
@@ -267,13 +278,56 @@ p {
     .emoji {
         font-size: 30px; // Smaller than default 36px
     }
+
+    .progress {
+        height: 16px;
+        border-width: $sticker-border-width;
+    }
 }
 
 // Ensure editor body headings are smaller than note title
 #editorjs {
     padding: 0 $space-3; // Match note card padding for consistency
 
-    h1 { font-size: 22px; } // Smaller than note-detail-title (24px)
+    color: $text-primary;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+
+    // Checklist boxes as small stickers instead of Editor.js' blue
+    .cdx-checklist__item-checkbox-check {
+        width: 22px;
+        height: 22px;
+        border: 2px solid $text-primary;
+        border-radius: 7px;
+        background: $surface;
+    }
+
+    .cdx-checklist__item-checkbox:not(.cdx-checklist__item-checkbox--no-hover):hover .cdx-checklist__item-checkbox-check {
+        background: $primary-light;
+        border-color: $text-primary;
+    }
+
+    .cdx-checklist__item--checked .cdx-checklist__item-checkbox-check,
+    .cdx-checklist__item--checked .cdx-checklist__item-checkbox:not(.cdx-checklist__item-checkbox--no-hover):hover .cdx-checklist__item-checkbox-check {
+        background: $primary;
+        border-color: $text-primary;
+
+        &::before {
+            background-color: $primary;
+        }
+
+        svg path {
+            stroke: $on-primary;
+        }
+    }
+
+    .cdx-checklist__item--checked .cdx-checklist__item-text {
+        opacity: 0.55;
+        text-decoration: line-through;
+        text-decoration-thickness: 2px;
+    }
+
+    h1 { font-size: 22px; } // Smaller than note-detail-title
     h2 { font-size: 20px; }
     h3 { font-size: 18px; }
     h4 { font-size: 16px; }
@@ -297,13 +351,13 @@ p {
     }
 
     i, a, .emoji {
-        font-size: 32px;
+        font-size: 28px;
         margin: 0;
         transition: all $transition-spring;
     }
 
     a, button {
-        color: $text-tertiary;
+        color: $text-primary;
         cursor: pointer;
         text-decoration: none;
         padding: 10px;
@@ -358,8 +412,20 @@ p {
             }
         }
 
+        // The current tab: a yellow sticker around the icon
         &.active {
-            color: $primary-dark;
+            color: $on-primary;
+            background: $primary;
+            border: $sticker-border;
+            border-radius: $radius-md;
+            box-shadow: $sticker-shadow;
+            width: 48px;
+            height: 48px;
+            padding: 0;
+
+            i {
+                font-size: 22px;
+            }
         }
     }
 
@@ -381,6 +447,8 @@ p {
         padding: 10px;
         background: none;
         border: none;
+        box-shadow: none;
+        transform: none;
 
         @media (min-width: $breakpoint-sm) {
             padding: 6px;
@@ -452,6 +520,41 @@ p {
     // Remove old negative margin code - now using navbar-inner padding for consistent alignment
 }
 
+// The logo as menu button: the logo itself, framed like the other sticker buttons
+#main-navbar .navbar-logo-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    box-sizing: border-box;
+    border: $sticker-border;
+    border-radius: $radius-full;
+    box-shadow: $sticker-shadow-sm;
+    background: $primary;
+    overflow: hidden;
+    transition: transform $transition-fast, box-shadow $transition-fast;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.03);
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            transform: translateY(-1px) rotate(-6deg);
+            box-shadow: 0 3px 0 $text-primary;
+        }
+    }
+
+    &:active {
+        transform: translateY(2px);
+        box-shadow: 0 0 0 $text-primary;
+    }
+}
+
 // List group modernization
 .list-group {
     display: flex;
@@ -462,20 +565,17 @@ p {
 }
 
 .list-group-item {
-    background: rgba($surface, 0.3);
-    border: 1px solid $border;
-    border-radius: $radius-md;
+    background: $surface;
+    color: $text-primary;
+    @include sticker(3px, $radius-md);
     padding: $space-4;
     font-weight: $font-weight-bold;
-    transition: all $transition-base;
     cursor: pointer;
+    @include sticker-press(3px);
 
-    &:hover {
-        transform: translateY(-3px) scale(1.015);
-    }
-
-    &:active {
-        transform: translateY(0) scale(1);
+    // Bootstrap squares off and overlaps neighbouring items; these are separate stickers
+    & + & {
+        border-top-width: $sticker-border-width;
     }
 }
 
@@ -523,7 +623,7 @@ a {
     transition: color $transition-fast;
 
     &:hover {
-        color: $primary-dark;
+        color: $text-primary;
     }
 }
 
@@ -531,10 +631,11 @@ a {
     text-decoration: none;
 }
 
-// Progress bar (modern)
+// Progress bar
 .progress {
-    height: 6px;
-    background: $border;
+    height: 12px;
+    background: $surface;
+    border: 2px solid $text-primary;
     border-radius: $radius-full;
     overflow: hidden;
     margin-top: $space-2;
@@ -543,9 +644,15 @@ a {
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
-    border-radius: $radius-full;
+    background: $primary;
+    border-right: 2px solid $text-primary;
+    box-sizing: border-box;
     transition: width $transition-slow;
+
+    &.is-complete {
+        background: $success;
+        border-right: 0;
+    }
 }
 
 // Table of Contents
@@ -579,8 +686,9 @@ a {
         transition: color $transition-fast;
 
         &:hover {
-            color: $primary-dark;
+            color: $text-primary;
             text-decoration: underline;
+            text-decoration-thickness: 2px;
         }
     }
 }
@@ -588,8 +696,9 @@ a {
 // Notification badge
 .notifiation-badge {
     top: 5px !important;
-    left: 28px !important;
+    left: 26px !important;
     background: $secondary !important;
+    border: 2px solid $text-primary !important;
 }
 
 // Cleanup page
@@ -604,15 +713,8 @@ a {
     align-items: center;
     justify-content: space-between;
     padding: $space-4;
-    background: rgba($surface, 0.3);
-    border: 1px solid $border;
-    border-radius: $radius-md;
-    transition: all $transition-base;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: $shadow-sm;
-    }
+    background: $surface;
+    @include sticker(3px, $radius-md);
 }
 
 .cleanup-emoji-info {
@@ -633,114 +735,4 @@ a {
 .cleanup-actions {
     display: flex;
     gap: $space-2;
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-    html,
-    body,
-    #app {
-        background-color: $dark-bg;
-        color: $dark-text;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-        color: $dark-text;
-    }
-
-    #main-navbar {
-        background: transparent;
-
-        a, button {
-            color: $dark-text-secondary;
-
-            @media (hover: hover) {
-                &:hover {
-                    color: $dark-text;
-                }
-            }
-
-            &.active {
-                color: $primary;
-            }
-        }
-    }
-
-    .list-group-item {
-        background: rgba($dark-surface, 0.3);
-        color: $dark-text;
-        border-color: $dark-border;
-    }
-
-    #editorjs {
-        background-color: transparent;
-        color: $dark-text;
-    }
-
-    hr {
-        border-color: $dark-border;
-    }
-
-    .emoji-wrapper {
-        background-color: transparent;
-    }
-
-    .empty-state {
-        .empty-state-title {
-            color: $dark-text;
-        }
-
-        .empty-state-subtitle {
-            color: $dark-text-secondary;
-        }
-    }
-
-    a {
-        color: $dark-text-secondary;
-
-        &:hover,
-        &:active,
-        &.active {
-            color: $primary !important;
-        }
-    }
-
-    #menu {
-        .fa {
-            color: $dark-text-secondary;
-        }
-
-        .list-group-item {
-            color: $dark-text;
-
-            form button {
-                color: $dark-text;
-            }
-        }
-    }
-
-    .progress {
-        background-color: $dark-border;
-    }
-
-    #toc-container #toc a {
-        color: $dark-text;
-
-        &:hover {
-            color: $primary;
-        }
-    }
-
-    .fixed-button-wrapper {
-        background: linear-gradient(to top, rgba(10, 10, 10, 1) 70%, transparent);
-    }
-
-    .cleanup-item {
-        background: rgba($dark-surface, 0.3);
-        border-color: $dark-border;
-    }
-
-    .cleanup-count {
-        color: $dark-text-secondary;
-    }
 }

@@ -41,8 +41,11 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-between align-items-center">
                             <h3 class="emoji-wrapper">
-                                <x-navbar-link :route="route('menu.show')" :active="request()->is('menu')" icon="bars" label="Menu" />
-                                <x-navbar-link :route="route('note.create')" :active="request()->is('new')" icon="plus" label="New note" data-cy="create-new-note" />
+                                {{-- The logo doubles as the menu button; new notes have their own
+                                     button at the bottom of the list. --}}
+                                <a href="{{ route('menu.show') }}" class="navbar-logo-button" aria-label="Menu">
+                                    <img src="/logo-no-margin.png" alt="">
+                                </a>
                             </h3>
                             <h3 class="emoji-wrapper">
                                 @if(count($selectedEmojis ?? []) > 0)

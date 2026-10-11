@@ -1,10 +1,10 @@
 <x-app-layout>
     <div class="container max-w-md mx-auto">
-        <div class="text-center mb-6">
-            <a href="{{ route('notes.show') }}">
-                <img src="/logo.png" alt="HappyNotes" class="logo logo-menu">
+        <div class="menu-header">
+            <a href="{{ route('notes.show') }}" class="menu-logo" aria-label="Back to notes">
+                <img src="/logo-no-margin.png" alt="">
             </a>
-            <h2 class="section-title">Menu</h2>
+            <h2 class="section-title">HappyNotes</h2>
         </div>
 
         <div class="menu-card-modern">
@@ -45,19 +45,16 @@
                 </div>
                 <i class="fa fa-info-circle menu-item-icon"></i>
             </a>
-
-            <form id="logout-button" method="POST" action="{{ route('logout') }}" class="menu-item-modern" style="cursor: pointer;" onclick="this.submit()">
-                @csrf
-                <div class="menu-item-content">
-                    <span class="menu-item-title">
-                        Logout
-                        <x-keyboard-hint key="L" />
-                    </span>
-                    <span class="menu-item-subtitle">Sign out of your account</span>
-                </div>
-                <i class="fa fa-sign-out menu-item-icon"></i>
-            </form>
         </div>
+
+        <form method="POST" action="{{ route('logout') }}" class="menu-logout">
+            @csrf
+            {{-- The L shortcut clicks this button --}}
+            <button id="logout-button" type="submit" class="btn btn-outline btn-block btn-lg">
+                <i class="fa fa-sign-out"></i>Log out
+                <x-keyboard-hint key="L" />
+            </button>
+        </form>
 
         <div class="app-version-text">
             {{ config('app.name') }} {{ config('app.version') }}

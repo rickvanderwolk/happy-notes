@@ -1,0 +1,38 @@
+// HappyNotes - Theme tokens
+// Every colour derives from the logo: its brown is the only ink, its yellow the accent.
+// Components read these custom properties (through the Sass variables in _variables), so
+// dark mode is just a second set of values here instead of overrides per component.
+
+:root {
+  --hn-bg: #FFF6DC;
+  --hn-bg-alt: #FBEFCB;
+  --hn-surface: #FFFFFF;
+  --hn-surface-hover: #FFFBEF;
+  --hn-ink: #4A2C0A;
+  --hn-muted: #7A5A30;
+  --hn-faint: #A68A5E;
+  --hn-divider: #F1E6C8;
+  --hn-yellow: #FFCD2E;
+  --hn-yellow-strong: #FFC107;
+  --hn-yellow-soft: #FFE38A;
+  --hn-on-yellow: #4A2C0A;
+  --hn-green: #5CC46E;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hn-bg: #1B140B;
+    --hn-bg-alt: #221A0F;
+    --hn-surface: #2A2012;
+    --hn-surface-hover: #33281A;
+    --hn-ink: #FFEFC7;
+    --hn-muted: #C9B48A;
+    --hn-faint: #8F7D5C;
+    --hn-divider: #3A2D1A;
+    --hn-on-yellow: #2B1A06;
+
+    color-scheme: dark;
+  }
+}

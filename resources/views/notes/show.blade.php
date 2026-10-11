@@ -22,7 +22,8 @@
                         @note-progress-updated.window="progress = $event.detail.progress"
                     >
                         <div class="progress" x-show="progress > 0" @style(['display: none' => !($note->progress > 0)])>
-                            <div class="progress-bar bg-success"
+                            <div class="progress-bar"
+                                 :class="{ 'is-complete': progress >= 100 }"
                                  role="progressbar"
                                  :style="`width: ${progress}%`"
                                  style="width: {{ $note->progress ?? 0 }}%"

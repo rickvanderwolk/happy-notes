@@ -2,6 +2,7 @@
 // This file is kept minimal, most styling is in app.scss
 
 @use 'variables' as *;
+@use 'theme';
 @use 'utilities' as *;
 @use 'buttons' as *;
 @use 'cards' as *;

@@ -1,4 +1,6 @@
 // HappyNotes Design System
+@use "@fontsource-variable/nunito/index.css";
+@use 'theme';
 @use 'variables' as *;
 @use 'utilities' as *;
 @use 'buttons' as *;
@@ -67,7 +69,7 @@ a {
     transition: color $transition-fast;
 
     &:hover {
-        color: $primary-dark;
+        color: $text-primary;
     }
 }
 
@@ -85,7 +87,7 @@ a {
     align-items: center;
     justify-content: center;
     padding: $space-8;
-    background: linear-gradient(180deg, $background 0%, darken($background, 2%) 100%);
+    background: linear-gradient(180deg, $background 0%, $background-alt 100%);
 }
 
 .landing-content {
@@ -100,7 +102,7 @@ a {
 
 .landing-title {
     font-size: 3.5rem;
-    font-weight: 800;
+    font-weight: $font-weight-black;
     color: $text-primary;
     margin-bottom: $space-4;
     letter-spacing: -0.02em;
@@ -188,59 +190,19 @@ a {
     color: $text-tertiary;
 
     &:hover {
-        color: $primary;
+        color: $text-primary;
     }
 }
 
-// Dark mode
-@media (prefers-color-scheme: dark) {
-    body {
-        color: $dark-text;
-        background: $dark-bg;
-    }
+// Jetstream's auth views use fixed Tailwind greys; map them onto the theme so they
+// follow dark mode like everything else.
+.text-gray-500,
+.text-gray-600 {
+    color: $text-secondary;
+}
 
-    a {
-        color: $dark-text-secondary;
-
-        &:hover {
-            color: $primary;
-        }
-    }
-
-    .version-text {
-        color: $dark-text-secondary;
-    }
-
-    .landing-title {
-        color: $dark-text;
-    }
-
-    .landing-container {
-        background: linear-gradient(180deg, $dark-bg 0%, lighten($dark-bg, 2%) 100%);
-    }
-
-    .landing-tagline {
-        color: $dark-text-secondary;
-    }
-
-    .landing-strikethrough {
-        color: $dark-text-secondary;
-        text-decoration-color: $primary;
-    }
-
-    .landing-description {
-        color: $dark-text-secondary;
-    }
-
-    .landing-opensource {
-        color: $dark-text-secondary;
-    }
-
-    .landing-github {
-        color: $dark-text-secondary;
-
-        &:hover {
-            color: $primary;
-        }
-    }
+.text-gray-900,
+.hover\:text-gray-600:hover,
+.hover\:text-gray-900:hover {
+    color: $text-primary;
 }

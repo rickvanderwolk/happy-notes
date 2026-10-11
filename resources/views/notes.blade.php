@@ -22,4 +22,8 @@
             </div>
         @endif
     </div>
+
+    <a href="{{ route('note.create') }}" class="btn-fab" aria-label="New note" data-cy="create-new-note">
+        <i class="fa fa-plus"></i>
+    </a>
 </x-app-layout>

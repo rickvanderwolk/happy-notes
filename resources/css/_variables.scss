@@ -1,39 +1,78 @@
 // HappyNotes Design System - Variables
 
-// Colors - Light Mode
-$primary: #FFD93D;
-$primary-dark: #FFC107;
-$primary-light: #FFE682;
+@use 'sass:math';
+
+// Colors
+// These point at the custom properties in _theme, which switch for dark mode. Sass colour
+// functions cannot work on them, so use alpha() below instead of rgba($color, ...).
+$primary: var(--hn-yellow);
+$primary-dark: var(--hn-yellow-strong);
+$primary-light: var(--hn-yellow-soft);
 $secondary: #FFAA33;
 $secondary-dark: #FF9800;
+$on-primary: var(--hn-on-yellow);
 
-$background: #FFFEF9;
-$background-alt: #FAFAF8;
-$surface: #FFFFFF;
-$surface-hover: #F8F8F8;
+$background: var(--hn-bg);
+$background-alt: var(--hn-bg-alt);
+$surface: var(--hn-surface);
+$surface-hover: var(--hn-surface-hover);
 
-$text-primary: #333333;
-$text-secondary: #666666;
-$text-tertiary: #999999;
+$text-primary: var(--hn-ink);
+$text-secondary: var(--hn-muted);
+$text-tertiary: var(--hn-faint);
 
-$border: #F0F0F0;
-$border-dark: #E0E0E0;
+$border: var(--hn-divider);
+$border-dark: var(--hn-ink);
 
-$success: #4CAF50;
-$success-light: #81C784;
-$danger: #FF6B6B;
-$danger-light: #FF8787;
+$success: var(--hn-green);
+$success-light: var(--hn-green);
+$danger: #E5484D;
+$danger-light: #F06B6F;
 $warning: #FFA726;
 $info: #29B6F6;
 
-// Colors - Dark Mode
-$dark-bg: #0A0A0A;
-$dark-bg-alt: #141414;
-$dark-surface: #1A1A1A;
-$dark-surface-hover: #242424;
-$dark-text: #E0E0E0;
-$dark-text-secondary: #A0A0A0;
-$dark-border: #2A2A2A;
+// Kept so older dark mode rules keep working; the tokens already switch on their own.
+$dark-bg: $background;
+$dark-bg-alt: $background-alt;
+$dark-surface: $surface;
+$dark-surface-hover: $surface-hover;
+$dark-text: $text-primary;
+$dark-text-secondary: $text-secondary;
+$dark-border: $border;
+
+@function alpha($color, $amount) {
+  @return color-mix(in srgb, #{$color} #{math.percentage($amount)}, transparent);
+}
+
+// Sticker look: a thick ink outline with a hard, unblurred shadow underneath
+$sticker-border-width: 2.5px;
+$sticker-border: $sticker-border-width solid $text-primary;
+$sticker-shadow-sm: 0 2px 0 $text-primary;
+$sticker-shadow: 0 3px 0 $text-primary;
+$sticker-shadow-lg: 0 4px 0 $text-primary;
+
+// A sticker: outlined, with a hard shadow it lifts off on hover and sinks onto when pressed
+@mixin sticker($shadow: 3px, $radius: $radius-lg) {
+  border: $sticker-border;
+  border-radius: $radius;
+  box-shadow: 0 $shadow 0 $text-primary;
+}
+
+@mixin sticker-press($shadow: 3px) {
+  transition: transform $transition-fast, box-shadow $transition-fast, background-color $transition-fast;
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 ($shadow + 1px) 0 $text-primary;
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY($shadow - 1px);
+    box-shadow: 0 1px 0 $text-primary;
+  }
+}
 
 // Spacing (4px grid)
 $space-1: 4px;
@@ -63,7 +102,7 @@ $shadow-primary: 0 4px 12px rgba(255, 217, 61, 0.4);
 $shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
 
 // Typography
-$font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-family: 'Nunito Variable', 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
 $font-size-xs: 12px;
 $font-size-sm: 14px;
 $font-size-base: 16px;
@@ -78,6 +117,7 @@ $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 $font-weight-extrabold: 800;
+$font-weight-black: 900;
 
 $line-height-tight: 1.2;
 $line-height-base: 1.5;
@@ -112,7 +152,7 @@ $button-height-sm: 36px;
 $button-height-lg: 52px;
 $card-padding: $space-6;
 $navbar-height: 60px;
-$fab-size: 72px;
+$fab-size: 66px;
 $emoji-size: 36px;
 $emoji-size-sm: 26px;
 $emoji-size-lg: 42px;

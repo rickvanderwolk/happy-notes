@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-        <meta name="theme-color" content="#0A0A0A" media="(prefers-color-scheme: dark)">
-        <meta name="theme-color" content="#FFFEF9" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#1B140B" media="(prefers-color-scheme: dark)">
+        <meta name="theme-color" content="#FFF6DC" media="(prefers-color-scheme: light)">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -24,7 +24,7 @@
         @livewireStyles
     </head>
     <body>
-        <div class="font-sans text-gray-900 antialiased">
+        <div class="antialiased">
             {{ $slot }}
         </div>
 

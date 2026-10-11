@@ -135,11 +135,6 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    &::-webkit-scrollbar-track {
-      background: $dark-border;
-    }
-  }
 }
 
 // Smooth scroll
@@ -149,15 +144,17 @@ html.smooth-scroll {
 
 // Section styling
 .section-title {
-  font-size: $font-size-2xl;
-  font-weight: $font-weight-bold;
+  font-size: 30px;
+  font-weight: $font-weight-black;
+  letter-spacing: -0.02em;
   text-align: center;
   color: $text-primary;
   margin-bottom: $space-2;
 }
 
 .section-description-text {
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
   color: $text-secondary;
   text-align: center;
 }
@@ -188,8 +185,9 @@ html.smooth-scroll {
   }
 
   .remove-badge {
-    font-size: 18px;
-    color: $text-tertiary;
+    font-size: 22px;
+    font-weight: $font-weight-black;
+    color: $text-primary;
     line-height: 1;
     transition: all $transition-spring;
   }
@@ -238,7 +236,7 @@ html.smooth-scroll {
 .result-count-indicator {
   text-align: center;
   padding: $space-3;
-  background: rgba($border, 0.3);
+  background: $background-alt;
   border-radius: $radius-md;
 
   .result-count-text {
@@ -255,9 +253,10 @@ html.smooth-scroll {
 // App version text
 .app-version-text {
   text-align: center;
-  font-size: $font-size-xs;
-  color: $text-tertiary;
-  margin-top: $space-12 + $space-8;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $text-secondary;
+  margin-top: $space-8;
 }
 
 // Form page container
@@ -279,6 +278,47 @@ html.smooth-scroll {
   display: block;
 }
 
+// Menu: the logo as a sticker on top, the brand name below it
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-6;
+
+  .section-title {
+    margin: 0;
+  }
+}
+
+.menu-logo {
+  display: block;
+  width: 112px;
+  height: 112px;
+  box-sizing: border-box;
+  border: 3px solid $text-primary;
+  border-radius: $radius-full;
+  box-shadow: $sticker-shadow-lg;
+  background: $primary;
+  overflow: hidden;
+  transition: transform $transition-spring;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.03);
+  }
+
+  &:hover {
+    transform: rotate(-8deg) scale(1.04);
+  }
+}
+
+.menu-logout {
+  margin-top: $space-6;
+}
+
 // Fixed button wrapper inner
 .fixed-button-inner {
   max-width: 500px;
@@ -297,9 +337,9 @@ html.smooth-scroll {
   font-family: 'Monaco', 'Courier New', monospace;
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  color: $text-tertiary;
-  background: rgba($border, 0.5);
-  border: 1px solid $border-dark;
+  color: $text-secondary;
+  background: $background-alt;
+  border: 2px solid $border;
   border-radius: $radius-sm;
   text-transform: uppercase;
   line-height: 1;
@@ -324,7 +364,7 @@ html.smooth-scroll {
   font-weight: $font-weight-bold;
   color: $text-primary;
   background: $surface;
-  border: 2px solid $border-dark;
+  border: 2px solid $text-primary;
   border-bottom-width: 4px;
   border-radius: $radius-md;
   text-transform: uppercase;
@@ -347,6 +387,7 @@ html.smooth-scroll {
     color: $text-primary;
     margin-bottom: $space-4;
     padding-bottom: $space-2;
+    font-weight: $font-weight-black;
     border-bottom: 2px solid $border;
   }
 
@@ -355,10 +396,9 @@ html.smooth-scroll {
     align-items: center;
     justify-content: space-between;
     padding: $space-3 $space-4;
-    margin-bottom: $space-2;
-    background: rgba($surface, 0.5);
-    border: 1px solid $border;
-    border-radius: $radius-md;
+    margin-bottom: $space-3;
+    background: $surface;
+    @include sticker(3px, $radius-md);
     transition: all $transition-spring;
 
     &:hover {
@@ -387,66 +427,6 @@ html.smooth-scroll {
       display: flex;
       gap: $space-2;
       align-items: center;
-    }
-  }
-}
-
-// Dark mode utilities
-@media (prefers-color-scheme: dark) {
-  .section-title {
-    color: $dark-text;
-  }
-
-  .section-description-text {
-    color: $dark-text-secondary;
-  }
-
-
-  .result-count-indicator {
-    background: rgba($dark-border, 0.5);
-
-    .result-count-text {
-      color: $dark-text-secondary;
-
-      strong {
-        color: $dark-text;
-      }
-    }
-  }
-
-  .app-version-text {
-    color: $dark-text-secondary;
-  }
-
-  .keyboard-hint {
-    color: $dark-text-secondary;
-    background: rgba($dark-border, 0.5);
-    border-color: $dark-border;
-  }
-
-  .keyboard-key {
-    color: $dark-text;
-    background: $dark-surface;
-    border-color: $dark-border;
-  }
-
-  .shortcuts-section {
-    .shortcuts-section-title {
-      color: $dark-text;
-      border-bottom-color: $dark-border;
-    }
-
-    .shortcut-item {
-      background: rgba($dark-surface, 0.3);
-      border-color: $dark-border;
-
-      .shortcut-description {
-        color: $dark-text;
-      }
-
-      .shortcut-context {
-        color: $dark-text-secondary;
-      }
     }
   }
 }
