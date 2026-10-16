@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CelebrationHelper;
 use App\Helpers\EmojiHelper;
 use app\Helpers\ProgressHelper;
 use App\Models\Note;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -99,6 +101,8 @@ final class NoteController extends Controller
             return view('notes.partials.cards', compact('notes'));
         }
 
+        $this->celebrateAnniversary();
+
         return view('notes', compact('notes'));
     }
 
@@ -133,7 +137,11 @@ final class NoteController extends Controller
         $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
         $note->save();
 
-        return redirect()->route('dashboard');
+        $this->celebrateMilestone();
+
+        // Straight to the list rather than via 'dashboard': that redirects again, and the
+        // flashed celebration would be gone before the list renders.
+        return redirect()->route('notes.show');
     }
 
     public function destroy(Note $note): \Illuminate\Http\RedirectResponse
@@ -255,5 +263,90 @@ final class NoteController extends Controller
             ->unique()
             ->values()
             ->toArray();
+    }
+
+    /**
+     * Only a milestone above the last celebrated one counts, so deleting a note and
+     * writing a new one cannot trigger the same celebration twice.
+     */
+    private function celebrateMilestone(): void
+    {
+        $user = Auth::user();
+        $count = Note::query()->count();
+
+        if (!CelebrationHelper::isMilestone($count) || $count <= $user->celebrated_milestone) {
+            return;
+        }
+
+        $user->celebrated_milestone = $count;
+        $user->save();
+
+        session()->flash('celebration', [
+            'title' => "{$count} notes",
+            'text' => CelebrationHelper::milestoneMessage($count),
+            'emojis' => $this->celebrationEmojis(),
+        ]);
+    }
+
+    private function celebrateAnniversary(): void
+    {
+        $user = Auth::user();
+
+        if (session()->has('celebration') || !$user->created_at) {
+            return;
+        }
+
+        $years = (int) floor($user->created_at->diffInYears(now()));
+
+        if ($years <= $user->celebrated_anniversary) {
+            return;
+        }
+
+        $user->celebrated_anniversary = $years;
+        $user->save();
+
+        // Every account starts with a welcome note, which says nothing about the user.
+        $firstTitle = Note::query()
+            ->where('title', '!=', User::welcomeNoteTitle())
+            ->where('title', '!=', '')
+            ->orderBy('created_at')
+            ->orderBy('id')
+            ->value('title');
+
+        session()->now('celebration', [
+            'title' => $years === 1 ? '1 year' : "{$years} years",
+            'text' => $firstTitle
+                ? "It all started with: “{$firstTitle}”"
+                : 'Thanks for writing happy notes.',
+            'emojis' => $this->celebrationEmojis(),
+        ]);
+    }
+
+    /**
+     * The confetti is made of the emojis the user picked most in their recent notes.
+     * Not all_emojis: that also holds the ones from the welcome note, which the user
+     * never chose themselves.
+     *
+     * @return list<string>
+     */
+    private function celebrationEmojis(): array
+    {
+        $counts = [];
+
+        $notes = Note::query()
+            ->where('title', '!=', User::welcomeNoteTitle())
+            ->latest('id')
+            ->limit(500)
+            ->get(['emojis']);
+
+        foreach ($notes as $note) {
+            foreach (array_unique($note->emojis ?? []) as $emoji) {
+                $counts[$emoji] = ($counts[$emoji] ?? 0) + 1;
+            }
+        }
+
+        arsort($counts);
+
+        return array_map('strval', array_slice(array_keys($counts), 0, 8));
     }
 }

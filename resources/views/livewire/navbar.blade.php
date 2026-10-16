@@ -25,7 +25,9 @@
                                     @csrf
                                     @method('DELETE')
                                     <button data-cy="delete-note" type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this note?')">
+                                            data-confirm="Delete this note?"
+                                            data-confirm-label="Delete"
+                                            data-confirm-danger>
                                         <i class="fa fa-trash-can"></i>
                                     </button>
                                 </form>

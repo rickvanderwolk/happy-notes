@@ -1,0 +1,79 @@
+// HappyNotes - Celebrations
+@use 'variables' as *;
+
+.celebration-title {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-extrabold;
+  line-height: $line-height-tight;
+  color: $text-primary;
+  margin-bottom: $space-3;
+}
+
+.celebration-text {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  margin-bottom: $space-6;
+}
+
+.celebration-close {
+  font-size: $font-size-2xl;
+  min-width: 72px;
+}
+
+.celebration-confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: $z-popover;
+  pointer-events: none;
+}
+
+// Ticking off the last checklist item: a rainbow pops in over the bar and slowly fades
+// back into its normal colour. A layer on top, because a gradient cannot fade. It keeps
+// moving while it fades, otherwise it freezes the moment the class goes.
+.progress-bar.has-rainbow {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      #FF6B6B, #FFA726, #FFD93D, #81C784, #29B6F6, #B388FF, #FF6B6B
+    );
+    background-size: 300px 100%;
+    opacity: 0;
+    transition: opacity 1.4s ease-out;
+    animation: celebration-rainbow 1.5s linear infinite;
+    pointer-events: none;
+  }
+}
+
+.progress.is-rainbow .progress-bar.has-rainbow::after {
+  opacity: 1;
+  transition: opacity 0.15s ease-in;
+}
+
+@keyframes celebration-rainbow {
+  from { background-position: 0 0; }
+  to { background-position: 300px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar.has-rainbow::after {
+    animation: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .celebration-title {
+    color: $dark-text;
+  }
+
+  .celebration-text {
+    color: $dark-text-secondary;
+  }
+}
