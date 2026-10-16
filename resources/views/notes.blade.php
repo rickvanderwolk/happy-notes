@@ -1,6 +1,8 @@
 <x-app-layout>
     <x-slot name="header"></x-slot>
 
+    @include('notes.partials.celebration')
+
     <div>
         @if(isset($notes) && $notes->count() > 0)
             <div id="note-list" data-cy="note-list" class="notes-list">

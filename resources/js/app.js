@@ -1,5 +1,6 @@
 import './bootstrap';
 import Turbolinks from "turbolinks";
+import { dismissCelebration, startCelebration } from './celebration';
 
 const appBaseUrl = document.querySelector('meta[name="app-base-url"]').getAttribute('content');
 const appCurrentRouteName = document.querySelector('meta[name="app-current-route-name"]').getAttribute('content');
@@ -35,6 +36,14 @@ const getUuidFromRoute = () => {
 }
 
 const keydownListener = (event) => {
+        // While a celebration is showing, shortcuts would navigate away underneath it.
+        if (document.querySelector('[data-celebration]')) {
+            if (event.key === 'Escape') {
+                dismissCelebration();
+            }
+            return;
+        }
+
         const ignoreTags = ['INPUT', 'TEXTAREA', 'SELECT'];
         if (
             ignoreTags.includes(event.target.tagName)
@@ -174,6 +183,7 @@ function setupKeyboardShortcuts() {
 
 document.addEventListener('DOMContentLoaded', setupKeyboardShortcuts);
 document.addEventListener('turbolinks:load', setupKeyboardShortcuts);
+document.addEventListener('turbolinks:load', startCelebration);
 
 window.addEventListener('load', function() {
     var textarea = document.getElementById('titleTextarea');

@@ -18,11 +18,17 @@
                     <div
                         data-cy="note-progress-bar"
                         class="my-3"
-                        x-data="{ progress: @js($note->progress) }"
-                        @note-progress-updated.window="progress = $event.detail.progress"
+                        x-data="{ progress: @js($note->progress), rainbow: false }"
+                        @note-progress-updated.window="
+                            if (progress < 100 && $event.detail.progress >= 100) {
+                                rainbow = true;
+                                setTimeout(() => rainbow = false, 2000);
+                            }
+                            progress = $event.detail.progress
+                        "
                     >
-                        <div class="progress" x-show="progress > 0" @style(['display: none' => !($note->progress > 0)])>
-                            <div class="progress-bar bg-success"
+                        <div class="progress" :class="{ 'is-rainbow': rainbow }" x-show="progress > 0" @style(['display: none' => !($note->progress > 0)])>
+                            <div class="progress-bar bg-success has-rainbow"
                                  role="progressbar"
                                  :style="`width: ${progress}%`"
                                  style="width: {{ $note->progress ?? 0 }}%"
