@@ -1,29 +1,6 @@
 // HappyNotes - Celebrations
 @use 'variables' as *;
 
-.celebration {
-  position: fixed;
-  inset: 0;
-  z-index: $z-modal;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: $space-6;
-  background: rgba(0, 0, 0, 0.3);
-  animation: celebration-fade-in $transition-fast both;
-}
-
-.celebration-card {
-  max-width: 360px;
-  width: 100%;
-  padding: $space-8 $space-6;
-  text-align: center;
-  background: $surface;
-  border-radius: $radius-xl;
-  box-shadow: $shadow-xl;
-  animation: celebration-pop-in $transition-spring both;
-}
-
 .celebration-title {
   font-size: $font-size-4xl;
   font-weight: $font-weight-extrabold;
@@ -85,33 +62,13 @@
   to { background-position: 300px 0; }
 }
 
-@keyframes celebration-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes celebration-pop-in {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .celebration,
-  .celebration-card,
   .progress-bar.has-rainbow::after {
     animation: none;
   }
 }
 
 @media (prefers-color-scheme: dark) {
-  .celebration {
-    background: rgba(0, 0, 0, 0.5);
-  }
-
-  .celebration-card {
-    background: $dark-surface;
-  }
-
   .celebration-title {
     color: $dark-text;
   }

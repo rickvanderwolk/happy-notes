@@ -1,3 +1,5 @@
+import { onDialogCancel } from './dialog';
+
 const PIECE_COUNT = 70;
 const EMOJI_FONT = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
 
@@ -74,25 +76,16 @@ function rainEmojis(emojis) {
     requestAnimationFrame(frame);
 }
 
-export function dismissCelebration() {
-    const overlay = getOverlay();
-    if (!overlay) {
-        return false;
-    }
-
-    overlay.remove();
-    return true;
-}
-
 export function startCelebration() {
     const overlay = getOverlay();
     if (!overlay) {
         return;
     }
 
+    onDialogCancel(overlay, () => overlay.remove());
     overlay.addEventListener('click', (event) => {
         if (event.target === overlay || event.target.closest('[data-celebration-close]')) {
-            dismissCelebration();
+            overlay.remove();
         }
     });
     overlay.querySelector('[data-celebration-close]')?.focus();
@@ -114,9 +107,8 @@ export function startCelebration() {
     }
 }
 
-// Turbolinks would otherwise keep the overlay in its snapshot and celebrate again on
-// the back button.
+// The overlay itself is closed by dialog.js; the confetti would otherwise stay in the
+// Turbolinks snapshot and fall again on the back button.
 document.addEventListener('turbolinks:before-cache', () => {
-    dismissCelebration();
     document.querySelectorAll('.celebration-confetti').forEach(canvas => canvas.remove());
 });

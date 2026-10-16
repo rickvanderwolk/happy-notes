@@ -1,9 +1,12 @@
 import './bootstrap';
 import Turbolinks from "turbolinks";
-import { dismissCelebration, startCelebration } from './celebration';
+import { startCelebration } from './celebration';
+import { closeDialog, isDialogOpen } from './dialog';
 
 const appBaseUrl = document.querySelector('meta[name="app-base-url"]').getAttribute('content');
-const appCurrentRouteName = document.querySelector('meta[name="app-current-route-name"]').getAttribute('content');
+// Read on every key press: Turbolinks swaps the page without reloading this module, so
+// a value read once would keep pointing at the first page that was opened.
+const getCurrentRouteName = () => document.querySelector('meta[name="app-current-route-name"]')?.getAttribute('content');
 
 Turbolinks.start();
 
@@ -36,11 +39,24 @@ const getUuidFromRoute = () => {
 }
 
 const keydownListener = (event) => {
-        // While a celebration is showing, shortcuts would navigate away underneath it.
-        if (document.querySelector('[data-celebration]')) {
+        // While a dialog is open, shortcuts would navigate away underneath it.
+        if (isDialogOpen()) {
             if (event.key === 'Escape') {
-                dismissCelebration();
+                closeDialog();
             }
+            return;
+        }
+
+        // Cmd+F, Ctrl+S and the like belong to the browser, not to the app's shortcuts.
+        if (event.metaKey || event.ctrlKey || event.altKey) {
+            return;
+        }
+
+        const appCurrentRouteName = getCurrentRouteName();
+
+        // A half-written new note is lost on any navigation, so there only Escape
+        // (an explicit cancel) does anything.
+        if (appCurrentRouteName === 'note.create' && event.key !== 'Escape') {
             return;
         }
 

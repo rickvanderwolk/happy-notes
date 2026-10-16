@@ -18,6 +18,15 @@ describe("Notes Tests", () => {
         selectedEmojis.forEach((emoji) => { cy.get("@firstNote").find('[data-cy="emoji-wrapper"]').should("contain.text", emoji); });
     });
 
+    it("Keeps typing in the title after picking an emoji on a new note", () => {
+        cy.get('[data-cy="create-new-note"]').click();
+        cy.get('[data-cy="new-note-title"]').type("Buy coffee");
+        cy.selectFirstSelectableEmoji();
+        cy.focused().should("have.attr", "data-cy", "new-note-title").type(" for friends");
+        cy.location("pathname").should("eq", "/notes/new");
+        cy.get('[data-cy="new-note-title"]').should("have.value", "Buy coffee for friends");
+    });
+
     it("Edit note title", () => {
         const updatedTitle = `Updated Note - ${Date.now()}`;
         cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().as("firstNote");
@@ -115,7 +124,7 @@ describe("Notes Tests", () => {
         cy.get("@firstNote").invoke("text").then((deletedNoteText) => {
             cy.get("@firstNote").click();
             cy.get('[data-cy="delete-note"]').click();
-            cy.on("window:confirm", () => true);
+            cy.get('[data-cy="dialog-confirm"]').click();
             cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().invoke("text").should("not.eq", deletedNoteText);
         });
     });

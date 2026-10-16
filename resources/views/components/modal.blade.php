@@ -24,7 +24,7 @@ $maxWidth = [
     {{-- Backdrop --}}
     <div
         x-show="show"
-        class="modal-backdrop"
+        class="jet-modal-backdrop"
         x-on:click="show = false"
         x-transition:enter="transition-opacity ease-out duration-200"
         x-transition:enter-start="opacity-0"
@@ -37,7 +37,7 @@ $maxWidth = [
     {{-- Modal Content --}}
     <div
         x-show="show"
-        class="modal-content"
+        class="jet-modal-content"
         style="max-width: {{ $maxWidth }};"
         x-trap.inert.noscroll="show"
         x-transition:enter="transition-all ease-out duration-200"
@@ -51,38 +51,3 @@ $maxWidth = [
     </div>
 </div>
 
-<style>
-[x-cloak] { display: none !important; }
-
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 9998;
-}
-
-.modal-content {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: calc(100% - 2rem);
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    z-index: 9999;
-}
-
-@media (prefers-color-scheme: dark) {
-    .modal-content {
-        background: #1a1a1a;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-    }
-}
-</style>

@@ -49,6 +49,13 @@
   &:active:not(:disabled) {
     transform: scale(0.98);
   }
+
+  // Bootstrap's own focus state would otherwise turn a focused primary button blue.
+  &:focus-visible {
+    background: $primary-dark;
+    border-color: $primary-dark;
+    color: $text-primary;
+  }
 }
 
 // Secondary button

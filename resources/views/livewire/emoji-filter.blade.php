@@ -91,7 +91,7 @@
     <div class="selected-emojis-container" x-show="picked.length" @style(['display: none' => empty($this->emojis)])>
         <div class="emoji-chips-wrapper">
             <template x-for="emoji in picked" :key="emoji">
-                <div class="emoji-chip" @click="deselect(emoji)">
+                <div class="emoji-chip" @mousedown.prevent @click="deselect(emoji)">
                     <span class="emoji" x-text="emoji"></span>
                     <span class="remove-badge">×</span>
                 </div>
@@ -100,19 +100,21 @@
     </div>
 
     <div class="text-center mb-4" x-show="picked.length" @style(['display: none' => empty($this->emojis)])>
-        <button type="button" @click="deselectAll()" class="btn btn-outline">
+        <button type="button" @mousedown.prevent @click="deselectAll()" class="btn btn-outline">
             <i class="fa fa-times-circle"></i>Clear (Backspace)
         </button>
     </div>
 
     {{-- The full list is rendered once and never re-rendered; picking only toggles
-         visibility client side. --}}
+         visibility client side. mousedown.prevent keeps the focus where it was, so on the
+         new note page typing carries on in the title instead of hitting the shortcuts. --}}
     <div data-cy="emoji-filter-emoji-selector" class="emoji-grid">
         @foreach($this->allEmojis as $emoji)
             <div
                 class="emoji-selector emoji-selector-item text-center"
                 data-emoji="{{ $emoji }}"
                 x-show="!isHidden($el.dataset.emoji)"
+                @mousedown.prevent
                 @click="select($el.dataset.emoji)"
                 @style(['display: none' => in_array($emoji, $hidden, true)])
             >

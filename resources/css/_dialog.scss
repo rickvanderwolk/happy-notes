@@ -1,0 +1,153 @@
+// HappyNotes - Dialogs
+// One look for every dialog: confirmations, celebrations and the account modals.
+@use 'variables' as *;
+
+%dialog-backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+%dialog-card {
+  background: $surface;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-xl;
+}
+
+.app-dialog {
+  @extend %dialog-backdrop;
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-6;
+  animation: dialog-fade-in $transition-fast both;
+}
+
+.app-dialog-card {
+  @extend %dialog-card;
+  max-width: 360px;
+  width: 100%;
+  padding: $space-8 $space-6 $space-6;
+  text-align: center;
+  animation: dialog-pop-in $transition-spring both;
+}
+
+.app-dialog-message {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  margin-bottom: $space-6;
+}
+
+.app-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $space-3;
+
+  .btn {
+    flex: 1 1 120px;
+  }
+}
+
+// Jetstream's account modals keep their own markup and transitions, only the look is
+// shared.
+[x-cloak] {
+  display: none !important;
+}
+
+.jet-modal-backdrop {
+  @extend %dialog-backdrop;
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+}
+
+.jet-modal-content {
+  @extend %dialog-card;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 2rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  z-index: $z-modal + 1;
+
+  // Tailwind is not loaded on the account pages, so the px-6/py-4 in Jetstream's markup
+  // do nothing; the spacing comes from here.
+  > div {
+    padding: $space-6 $space-6 0;
+    text-align: left;
+  }
+
+  > div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: $space-3;
+    padding: $space-5 $space-6 $space-6;
+  }
+
+  .section-title-text {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $space-3;
+  }
+
+  .section-description-text {
+    text-align: left;
+  }
+
+  // The modal content reuses account-card for its sections; inside the modal that
+  // would draw a card within a card.
+  .account-card {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+// The account cards lift on hover with a transform, and a transformed ancestor pins a
+// fixed modal to that card instead of the screen. No lift while a modal is open.
+.account-card:has(.jet-modal-content:not([style*="display: none"])) {
+  transform: none !important;
+}
+
+@keyframes dialog-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialog-pop-in {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-dialog,
+  .app-dialog-card {
+    animation: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  %dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  %dialog-card {
+    background: $dark-surface;
+  }
+
+  .app-dialog-message {
+    color: $dark-text;
+  }
+}

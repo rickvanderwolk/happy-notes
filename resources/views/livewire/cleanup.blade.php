@@ -16,7 +16,7 @@
                             Filter
                         </button>
                         @if($data['canRemove'])
-                            <button wire:click="removeEmoji('{{ $emoji }}')" wire:confirm="Are you sure you want to remove {{ $emoji }} from all notes?" class="btn btn-sm btn-outline btn-danger">
+                            <button wire:click="removeEmoji('{{ $emoji }}')" data-confirm="Remove {{ $emoji }} from all notes?" data-confirm-label="Remove" data-confirm-danger class="btn btn-sm btn-outline btn-danger">
                                 Remove
                             </button>
                         @endif
