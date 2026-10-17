@@ -1,0 +1,52 @@
+name: analyse
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  analyse:
+    name: Static analysis and audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, sqlite3, bcmath, intl
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-8.4-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: PHP_CodeSniffer
+        run: vendor/bin/phpcs --standard=PSR12 app/
+
+      - name: PHPStan
+        run: php -d memory_limit=-1 vendor/bin/phpstan analyse --no-progress
+
+      - name: Psalm
+        run: vendor/bin/psalm --no-progress
+
+      - name: Composer audit
+        run: composer audit
+
+      - name: npm audit (production dependencies)
+        run: npm audit --omit=dev
