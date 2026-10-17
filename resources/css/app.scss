@@ -119,75 +119,6 @@ p {
     margin-bottom: $space-4;
 }
 
-// Emoji styles
-.emoji {
-    font-size: $emoji-size;
-    line-height: 1;
-    display: inline-block;
-    transition: transform $transition-fast;
-}
-
-.emoji-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $space-4;
-    align-items: center;
-
-    .emoji {
-        font-size: $emoji-size;
-        cursor: pointer;
-        transition: transform $transition-spring;
-
-        &:hover {
-            transform: scale(1.15);
-        }
-
-        &:active {
-            transform: scale(0.95);
-        }
-    }
-}
-
-.emoji-wrapper-xl .emoji {
-    font-size: $emoji-size-lg;
-}
-
-.emoji-wrapper-sm .emoji {
-    font-size: $emoji-size-sm;
-}
-
-.emoji-wrapper-left {
-    justify-content: flex-start;
-    text-align: left;
-}
-
-// Emoji grid for selector
-.emoji-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
-    gap: $space-3;
-    max-width: 100%;
-
-    @media (min-width: $breakpoint-sm) {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-        gap: $space-4;
-    }
-
-    @media (min-width: $breakpoint-md) {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        gap: $space-4;
-    }
-}
-
-.emoji-selector {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 100%;
-    overflow: hidden;
-}
-
 // Notes list
 .notes-list {
     display: flex;
@@ -533,23 +464,6 @@ a {
     text-decoration: none;
 }
 
-// Progress bar (modern)
-.progress {
-    height: 6px;
-    background: $border;
-    border-radius: $radius-full;
-    overflow: hidden;
-    margin-top: $space-2;
-    margin-bottom: $space-2;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
-    border-radius: $radius-full;
-    transition: width $transition-slow;
-}
-
 // Table of Contents
 #toc-container {
     padding: $space-6 $space-3 0 $space-3; // Add horizontal padding to match note content
@@ -719,10 +633,6 @@ a {
                 color: $dark-text;
             }
         }
-    }
-
-    .progress {
-        background-color: $dark-border;
     }
 
     #toc-container #toc a {

@@ -1,12 +1,18 @@
 {{-- Shared by the full list page and the infinite scroll endpoint, so a scroll batch
-     costs just these cards instead of a whole rendered page. --}}
+     costs just these cards instead of a whole rendered page. The landing page demo
+     passes linked => false to get the same cards without links. --}}
+@php($linked = $linked ?? true)
 @foreach($notes as $note)
-    <a
-        id="note-{{ $note->uuid }}"
-        href="{{ route('note.show', $note->uuid) }}"
-        data-cy="note-list-item"
-        class="note-card"
-    >
+    @if($linked)
+        <a
+            id="note-{{ $note->uuid }}"
+            href="{{ route('note.show', $note->uuid) }}"
+            data-cy="note-list-item"
+            class="note-card"
+        >
+    @else
+        <div class="note-card" data-emojis='@json($note->emojis ?? [])'>
+    @endif
         <div class="note-title">{{ $note->title }}</div>
 
         @if($note->progress)
@@ -20,5 +26,9 @@
                 <x-emoji-list :emojis="$note->emojis" size="small" />
             </div>
         @endif
-    </a>
+    @if($linked)
+        </a>
+    @else
+        </div>
+    @endif
 @endforeach
