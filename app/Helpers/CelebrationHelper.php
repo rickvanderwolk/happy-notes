@@ -55,7 +55,7 @@ final class CelebrationHelper
     {
         $highest = 0;
 
-        for ($length = 2; ; $length++) {
+        for ($length = 2;; $length++) {
             for ($digit = 1; $digit <= 9; $digit++) {
                 $candidate = (int) str_repeat((string) $digit, $length);
 

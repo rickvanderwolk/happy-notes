@@ -126,7 +126,7 @@
                 <div class="landing-step">
                     <div class="landing-step-emoji">🔐</div>
                     <h3>Just your notes</h3>
-                    <p>No ads, no tracking.@if (config('app.official_instance')) Hosted in the EU, on a server in the Netherlands.@endif Two-factor login if you want it.</p>
+                    <p>No ads, no tracking.@if (config('app.official_instance')) Hosted in the Netherlands (EU).@endif Two-factor login if you want it.</p>
                 </div>
             </div>
         </section>

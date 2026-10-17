@@ -23,11 +23,13 @@ class LandingTest extends TestCase
 
     public function test_only_the_official_instance_says_where_it_is_hosted(): void
     {
-        $this->get('/')->assertDontSee('Hosted in the EU');
+        config(['app.official_instance' => false]);
+
+        $this->get('/')->assertDontSee('Hosted in the Netherlands');
 
         config(['app.official_instance' => true]);
 
-        $this->get('/')->assertSee('Hosted in the EU, on a server in the Netherlands.');
+        $this->get('/')->assertSee('Hosted in the Netherlands (EU).');
     }
 
     public function test_logged_in_users_go_straight_to_their_notes(): void

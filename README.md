@@ -3,7 +3,7 @@
 # Happy Notes
 _A note-taking app for ~~chaotic~~ free-spirited minds_
 
-**No folders, no tags, just emojis 😉**
+**No folders, no tags, just emojis ✨**
 
 <p>
   <picture>

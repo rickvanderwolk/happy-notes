@@ -10,7 +10,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'happynotes') }}</title>
-        <meta name="description" content="💥🧠📝🎨🚀">
+        <meta name="description" content="A note-taking app for free-spirited minds. No folders, no tags, just emojis.">
 
         <link rel="icon" type="image/png" href="/favicon-96x96.png?v=2" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />

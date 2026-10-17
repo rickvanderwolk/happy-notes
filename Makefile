@@ -1,4 +1,4 @@
-.PHONY: install update serve fresh audit analyse test build autofix checkup bump version
+.PHONY: install update serve fresh audit analyse test build autofix checkup bump version docker-check
 
 # Version bumping -------------------------------------------------------------
 # Accept a bare argument after `bump` / `checkup`, e.g. `make bump minor`.
@@ -58,6 +58,18 @@ test:
 	vendor/bin/phpunit tests/unit --testdox
 	npx cypress run
 
+docker-check:
+	@echo "🐳 Building and starting the Docker image..."
+	docker build -t happynotes:check .
+	docker run -d --rm --name happynotes-check -p 8089:80 happynotes:check
+	@for i in $$(seq 1 30); do \
+		if curl -fs http://127.0.0.1:8089/up > /dev/null && curl -fs http://127.0.0.1:8089/login > /dev/null; then \
+			echo "✅ Docker image works"; docker stop happynotes-check > /dev/null; exit 0; \
+		fi; \
+		sleep 2; \
+	done; \
+	docker logs happynotes-check; docker stop happynotes-check > /dev/null; echo "❌ Docker image does not respond"; exit 1
+
 build:
 	@echo "📦 Building frontend..."
 	npm run build
@@ -85,13 +97,14 @@ bump:
 	fi
 
 checkup:
-	@echo "🧰 Full project checkup: update → serve (bg) → analyse → test"
+	@echo "🧰 Full project checkup: update → serve (bg) → analyse → test → docker"
 	$(MAKE) update
 	$(MAKE) fresh
 	$(MAKE) serve MODE=background
 	sleep 5
 	$(MAKE) analyse
 	$(MAKE) test
+	$(MAKE) docker-check
 	@echo ""
 	@echo "✅ All checks passed! Preparing commit..."
 	@$(MAKE) --no-print-directory bump VERSION=$(VERSION)
