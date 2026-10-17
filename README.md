@@ -20,9 +20,14 @@ _A note-taking app for ~~chaotic~~ free-spirited minds_
   </picture>
 </p>
 
+## Contents 📑
 - [What](#what-)
 - [Why](#why-)
-- [How to use](#how-to-use-): [Docker](#docker) · [Without Docker](#without-docker) · [Local development](#local-development) · [Hosted version](#hosted-version)
+- [How to use](#how-to-use-)
+  - [Docker](#docker)
+  - [Without Docker](#without-docker)
+  - [Local development](#local-development)
+  - [Hosted version](#hosted-version)
 - [Issues & PR's](#issues--prs-)
 - [Say hi](#say-hi-)
 
