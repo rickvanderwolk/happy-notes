@@ -1,0 +1,32 @@
+name: docker
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and start
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t happynotes .
+
+      - name: Start container
+        run: docker run -d --name happynotes -p 8080:80 happynotes
+
+      - name: Check that the app responds
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fs http://localhost:8080/up > /dev/null && curl -fs http://localhost:8080/login > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs happynotes
+          exit 1

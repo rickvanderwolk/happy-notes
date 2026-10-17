@@ -125,6 +125,8 @@ return [
 
     'force_email_verification' => env('FORCE_EMAIL_VERIFICATION', false),
 
+    'official_instance' => env('OFFICIAL_INSTANCE', false),
+
     'version' => (function () {
         try {
             $version = json_decode(file_get_contents(base_path('composer.json')))->version ?? null;

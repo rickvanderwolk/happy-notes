@@ -79,18 +79,21 @@ a {
 }
 
 // Landing page
-.landing-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: $space-8;
+.landing {
     background: linear-gradient(180deg, $background 0%, darken($background, 2%) 100%);
+    padding: 0 $space-6 $space-12;
 }
 
-.landing-content {
+.landing-hero {
+    min-height: min(88vh, 760px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     max-width: 540px;
+    margin: 0 auto;
+    padding: $space-12 0;
 }
 
 .landing-logo {
@@ -109,7 +112,7 @@ a {
 .landing-tagline {
     font-size: 1.25rem;
     color: $text-secondary;
-    margin-bottom: $space-4;
+    margin-bottom: $space-6;
     line-height: 1.7;
 }
 
@@ -120,44 +123,174 @@ a {
     color: $text-tertiary;
 }
 
-.landing-emojis {
-    font-size: 1.25rem;
-    letter-spacing: 0.25em;
-    margin-bottom: $space-4;
+.landing-promise {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    line-height: 1.5;
+    margin-bottom: $space-8;
 }
 
-.landing-description {
-    font-size: $font-size-base;
-    color: $text-tertiary;
-    margin-bottom: $space-6;
-    line-height: 1.6;
+.landing-demo {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: $space-8;
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+
+    .selected-emojis-container {
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $space-3;
+    }
+
+    .note-card {
+        text-align: left;
+        cursor: default;
+
+        &:hover {
+            transform: none;
+        }
+    }
 }
 
-.landing-opensource {
+.landing-demo-hint {
     font-size: $font-size-sm;
     color: $text-tertiary;
-    margin-bottom: $space-2;
+    margin: 0;
+}
+
+.landing-demo-picker {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: $space-1;
+
+    .emoji-selector-item .emoji {
+        font-size: 28px;
+    }
+}
+
+.landing-demo-notes {
+    height: 360px;
+    overflow: hidden;
+
+    &.is-stacked {
+        mask-image: linear-gradient(to bottom, #000 70%, transparent);
+    }
 }
 
 .landing-buttons {
     display: flex;
     gap: $space-3;
     justify-content: center;
-    margin-bottom: $space-8;
 
     .btn {
         min-width: 120px;
     }
 }
 
+.landing-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: $space-12 0;
+    border-top: 1px solid $border-dark;
+}
+
+.landing-heading {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-extrabold;
+    color: $text-primary;
+    text-align: center;
+    margin-bottom: $space-8;
+}
+
+.landing-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-6;
+    text-align: center;
+
+    h3 {
+        font-size: $font-size-lg;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin-bottom: $space-2;
+    }
+
+    p {
+        color: $text-secondary;
+        line-height: $line-height-relaxed;
+    }
+}
+
+.landing-step-emoji {
+    font-size: 2.5rem;
+    margin-bottom: $space-3;
+}
+
+.landing-screenshots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-4;
+
+    img {
+        width: 100%;
+        height: auto;
+        border: 1px solid $border-dark;
+        border-radius: $radius-lg;
+        box-shadow: $shadow-lg;
+    }
+}
+
+.landing-story {
+    max-width: 540px;
+    margin: 0 auto;
+    font-size: $font-size-lg;
+    color: $text-secondary;
+    line-height: 1.7;
+
+    p {
+        margin-bottom: $space-4;
+    }
+}
+
+.landing-signature {
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+
+    &::before {
+        content: '— ';
+    }
+}
+
 .landing-footer {
-    margin-top: $space-4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-6;
+    max-width: 720px;
+    margin: 0 auto;
+    padding-top: $space-12;
+    border-top: 1px solid $border-dark;
+}
+
+.landing-github {
+    font-size: $font-size-sm;
+    color: $text-tertiary;
+
+    &:hover {
+        color: $primary;
+    }
 }
 
 // Mobile responsive
-@media (max-width: 480px) {
-    .landing-container {
-        padding: $space-6;
+@media (max-width: 640px) {
+    .landing {
+        padding: 0 $space-5 $space-10;
     }
 
     .landing-title {
@@ -168,27 +301,43 @@ a {
         font-size: 1.1rem;
     }
 
-    .landing-emojis {
-        font-size: 1.1rem;
-        letter-spacing: 0.15em;
+    .landing-promise {
+        font-size: $font-size-lg;
     }
 
     .landing-buttons {
         flex-direction: column;
         gap: $space-2;
+        width: 100%;
 
         .btn {
             width: 100%;
         }
     }
-}
 
-.landing-github {
-    font-size: $font-size-sm;
-    color: $text-tertiary;
+    .landing-section {
+        padding: $space-10 0;
+    }
 
-    &:hover {
-        color: $primary;
+    .landing-heading {
+        font-size: $font-size-2xl;
+    }
+
+    .landing-steps {
+        grid-template-columns: 1fr;
+        gap: $space-8;
+    }
+
+    .landing-screenshots {
+        grid-template-columns: 1fr;
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+        gap: $space-6;
+    }
+
+    .landing-story {
+        font-size: $font-size-base;
     }
 }
 
@@ -211,15 +360,23 @@ a {
         color: $dark-text-secondary;
     }
 
-    .landing-title {
-        color: $dark-text;
-    }
-
-    .landing-container {
+    .landing {
         background: linear-gradient(180deg, $dark-bg 0%, lighten($dark-bg, 2%) 100%);
     }
 
-    .landing-tagline {
+    .landing-title,
+    .landing-promise,
+    .landing-heading,
+    .landing-steps h3,
+    .landing-signature {
+        color: $dark-text;
+    }
+
+    .landing-tagline,
+    .landing-demo-hint,
+    .landing-steps p,
+    .landing-story,
+    .landing-github {
         color: $dark-text-secondary;
     }
 
@@ -228,19 +385,16 @@ a {
         text-decoration-color: $primary;
     }
 
-    .landing-description {
-        color: $dark-text-secondary;
+    .landing-section,
+    .landing-footer {
+        border-top-color: $dark-border;
     }
 
-    .landing-opensource {
-        color: $dark-text-secondary;
+    .landing-screenshots img {
+        border-color: $dark-border;
     }
 
-    .landing-github {
-        color: $dark-text-secondary;
-
-        &:hover {
-            color: $primary;
-        }
+    .landing-github:hover {
+        color: $primary;
     }
 }
