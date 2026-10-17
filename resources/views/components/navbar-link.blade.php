@@ -7,7 +7,7 @@
     @if($dataCy) data-cy="{{ $dataCy }}" @endif
 >
     @if($icon)
-        <i class="fa fa-{{ $icon }}"></i>
+        <x-icon :name="$icon" />
     @endif
     {{ $slot }}
 </a>

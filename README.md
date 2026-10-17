@@ -1,4 +1,4 @@
-![Happy Notes logo](public/favicon-96x96.png)
+<img src="public/images/logo-animated.svg" width="104" alt="Happy Notes logo" />
 
 # Happy Notes
 _A note-taking app for ~~chaotic~~ free-spirited minds_

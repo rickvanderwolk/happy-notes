@@ -2,7 +2,7 @@
     <div class="container max-w-md mx-auto">
         {{-- Page header --}}
         <div class="text-center mb-6">
-            <h2 class="section-title"><i class="fa fa-gear me-2"></i>Account</h2>
+            <h2 class="section-title"><x-icon name="gear" class="me-2" />Account</h2>
             <p class="section-description-text">Manage your profile and settings</p>
         </div>
 

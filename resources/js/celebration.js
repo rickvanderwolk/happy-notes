@@ -108,7 +108,7 @@ export function startCelebration() {
 }
 
 // The overlay itself is closed by dialog.js; the confetti would otherwise stay in the
-// Turbolinks snapshot and fall again on the back button.
-document.addEventListener('turbolinks:before-cache', () => {
+// snapshot of the page and fall again on the back button.
+document.addEventListener('livewire:navigating', () => {
     document.querySelectorAll('.celebration-confetti').forEach(canvas => canvas.remove());
 });

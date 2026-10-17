@@ -1,6 +1,6 @@
 <x-app-layout>
     @push('head')
-        <meta name="turbolinks-cache-control" content="no-cache">
+        <meta name="navigate-cache-control" content="no-cache">
     @endpush
 
     @php
@@ -9,8 +9,8 @@
     @endphp
 
     <div x-data
-         @apply-filter.window="window.Turbolinks.visit('{{ route('notes.show') }}')"
-         @keydown.window.enter="window.Turbolinks.visit('{{ route('notes.show') }}')">
+         @apply-filter.window="Livewire.navigate('{{ route('notes.show') }}')"
+         @keydown.window.enter="Livewire.navigate('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
             <h2 class="section-title">
                 @if($isInclude)

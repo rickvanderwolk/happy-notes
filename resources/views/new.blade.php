@@ -1,6 +1,6 @@
 <x-app-layout>
     @push('head')
-        <meta name="turbolinks-cache-control" content="no-cache">
+        <meta name="navigate-cache-control" content="no-cache">
     @endpush
 
     <x-slot name="header"></x-slot>
@@ -43,7 +43,7 @@
         <div class="fixed-button-wrapper">
             <div class="fixed-button-inner">
                 <button data-cy="save-new-note" type="submit" form="new-note-form" class="btn btn-success btn-block btn-lg">
-                    <i class="fa fa-check"></i>Save Note
+                    <x-icon name="check" />Save Note
                 </button>
             </div>
         </div>

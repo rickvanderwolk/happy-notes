@@ -84,7 +84,7 @@
             })
         },
     }"
-    @turbolinks:before-visit.window="flush()"
+    x-on:livewire:navigate.window="flush()"
     @pagehide.window="flush()"
     @keydown.window.backspace="if (!['INPUT', 'TEXTAREA', 'SELECT'].includes($event.target.tagName)) deselectAll()"
 >
@@ -101,7 +101,7 @@
 
     <div class="text-center mb-4" x-show="picked.length" @style(['display: none' => empty($this->emojis)])>
         <button type="button" @mousedown.prevent @click="deselectAll()" class="btn btn-outline">
-            <i class="fa fa-times-circle"></i>Clear (Backspace)
+            <x-icon name="times-circle" />Clear (Backspace)
         </button>
     </div>
 

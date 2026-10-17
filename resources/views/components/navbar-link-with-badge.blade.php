@@ -12,7 +12,7 @@
 <a href="{{ $route }}" class="{{ $active ? 'active' : '' }}" aria-label="{{ $label }}">
     <div class="position-relative d-inline-block">
         @if($icon)
-            <i class="fa fa-{{ $icon }}"></i>
+            <x-icon :name="$icon" />
         @endif
         {{ $slot }}
         @if($showBadge || $badgeShow)

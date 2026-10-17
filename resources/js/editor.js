@@ -9,8 +9,8 @@ import Undo from 'editorjs-undo'
 
 /**
  * This module is evaluated only once per browser session, because that is how ES modules
- * work: Turbolinks re-inserts the script tag on every visit, but the browser will not run
- * it again. So the editor is built from a turbolinks:load listener rather than at module
+ * work: page navigation re-inserts the script tag on every visit, but the browser will not
+ * run it again. So the editor is built from a livewire:navigated listener rather than at module
  * scope, otherwise opening a second note leaves an empty body until a hard refresh.
  */
 
@@ -27,7 +27,7 @@ const destroyEditor = () => {
         undo?.onDestroy()
         editor?.destroy?.()
     } catch {
-        // The old DOM is already gone after a Turbolinks swap; nothing to clean up.
+        // The old DOM is already gone after a page swap; nothing to clean up.
     }
     editor = null
     undo = null
@@ -161,7 +161,7 @@ const initEditor = () => {
         return
     }
 
-    // Turbolinks swaps in a fresh node on every visit. Same node means the editor we
+    // Navigation swaps in a fresh node on every visit. Same node means the editor we
     // already built is still live.
     if (container === attachedTo) {
         return
@@ -172,9 +172,9 @@ const initEditor = () => {
     editor = buildEditor(container, document.getElementById('editor-placeholder'))
 }
 
-// Covers the visit during which this module is first fetched: turbolinks:load has usually
+// Covers the visit during which this module is first fetched: livewire:navigated has usually
 // already fired by the time the module finishes loading.
 initEditor()
 
 // Covers every visit after that.
-document.addEventListener('turbolinks:load', initEditor)
+document.addEventListener('livewire:navigated', initEditor)

@@ -8,7 +8,7 @@
         </div>
 
         <div class="menu-card-modern">
-            <a href="{{ route('profile.show') }}" data-turbolinks="false" class="menu-item-modern">
+            <a href="{{ route('profile.show') }}" data-no-navigate class="menu-item-modern">
                 <div class="menu-item-content">
                     <span class="menu-item-title">
                         Account
@@ -16,7 +16,7 @@
                     </span>
                     <span class="menu-item-subtitle">Manage your profile & settings</span>
                 </div>
-                <i class="fa fa-user menu-item-icon"></i>
+                <x-icon name="user" class="menu-item-icon" />
             </a>
 
             <a href="{{ route('insights.show') }}" class="menu-item-modern">
@@ -24,10 +24,10 @@
                     <span class="menu-item-title">Insights</span>
                     <span class="menu-item-subtitle">A look at your note-taking habits</span>
                 </div>
-                <i class="fa fa-lightbulb menu-item-icon"></i>
+                <x-icon name="lightbulb" class="menu-item-icon" />
             </a>
 
-            <a href="{{ route('shortcuts.show') }}" data-turbolinks="false" class="menu-item-modern menu-item-desktop-only">
+            <a href="{{ route('shortcuts.show') }}" data-no-navigate class="menu-item-modern menu-item-desktop-only">
                 <div class="menu-item-content">
                     <span class="menu-item-title">
                         Keyboard Shortcuts
@@ -35,15 +35,15 @@
                     </span>
                     <span class="menu-item-subtitle">View all available shortcuts</span>
                 </div>
-                <i class="fa fa-keyboard menu-item-icon"></i>
+                <x-icon name="keyboard" class="menu-item-icon" />
             </a>
 
-            <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer" data-turbolinks="false" class="menu-item-modern">
+            <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer" data-no-navigate class="menu-item-modern">
                 <div class="menu-item-content">
                     <span class="menu-item-title">About</span>
                     <span class="menu-item-subtitle">Learn more about HappyNotes</span>
                 </div>
-                <i class="fa fa-info-circle menu-item-icon"></i>
+                <x-icon name="info-circle" class="menu-item-icon" />
             </a>
 
             <form id="logout-button" method="POST" action="{{ route('logout') }}" class="menu-item-modern" style="cursor: pointer;" onclick="this.submit()">
@@ -55,7 +55,7 @@
                     </span>
                     <span class="menu-item-subtitle">Sign out of your account</span>
                 </div>
-                <i class="fa fa-sign-out menu-item-icon"></i>
+                <x-icon name="sign-out" class="menu-item-icon" />
             </form>
         </div>
 

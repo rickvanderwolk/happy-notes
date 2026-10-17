@@ -152,7 +152,7 @@ document.addEventListener('click', (event) => {
     });
 }, true);
 
-document.addEventListener('turbolinks:before-cache', () => {
+document.addEventListener('livewire:navigating', () => {
     document.querySelectorAll('.app-dialog').forEach((overlay) => {
         overlay.dispatchEvent(new CustomEvent(CANCEL_EVENT));
     });

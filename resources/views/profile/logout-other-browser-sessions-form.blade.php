@@ -18,7 +18,7 @@
                 @foreach ($this->sessions as $session)
                     <div class="browser-session-item">
                         <div style="flex-shrink: 0; width: 20px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fa {{ $session->agent->isDesktop() ? 'fa-desktop' : 'fa-mobile' }} section-description-text" style="font-size: 16px;"></i>
+                            <x-icon :name="$session->agent->isDesktop() ? 'desktop' : 'mobile'" class="section-description-text" style="font-size: 16px;" />
                         </div>
                         <div style="flex: 1; min-width: 0; text-align: left;">
                             <div class="text-sm section-description-text" style="font-weight: 500; margin-bottom: 4px;">

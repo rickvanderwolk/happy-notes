@@ -1,14 +1,59 @@
 import './bootstrap';
-import Turbolinks from "turbolinks";
 import { startCelebration } from './celebration';
 import { closeDialog, isDialogOpen } from './dialog';
 
 const appBaseUrl = document.querySelector('meta[name="app-base-url"]').getAttribute('content');
-// Read on every key press: Turbolinks swaps the page without reloading this module, so
-// a value read once would keep pointing at the first page that was opened.
+// Read on every key press: page navigation swaps the page without reloading this module,
+// so a value read once would keep pointing at the first page that was opened.
 const getCurrentRouteName = () => document.querySelector('meta[name="app-current-route-name"]')?.getAttribute('content');
 
-Turbolinks.start();
+const visit = (url) => window.Livewire.navigate(url);
+
+// Every internal link swaps the page instead of reloading it, without having to mark each
+// link with wire:navigate. data-no-navigate opts a link out, for pages with another layout.
+document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+    if (
+        !link
+        || event.defaultPrevented
+        || event.button !== 0
+        || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+        || link.target
+        || link.hasAttribute('download')
+        || link.hasAttribute('data-no-navigate')
+    ) {
+        return;
+    }
+
+    const url = new URL(link.href);
+    if (url.origin !== window.location.origin) {
+        return;
+    }
+    if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) {
+        return;
+    }
+
+    event.preventDefault();
+    visit(url.href);
+});
+
+// Back and forward restore a page from a snapshot taken when it was left. Forms and filters
+// would then show what they held back then, so pages that opt out are fetched again.
+const pagesNotToRestore = new Set();
+
+document.addEventListener('livewire:navigated', () => {
+    if (document.querySelector('meta[name="navigate-cache-control"][content="no-cache"]')) {
+        pagesNotToRestore.add(window.location.pathname);
+    }
+});
+
+document.addEventListener('livewire:navigate', (event) => {
+    const { history, cached, url } = event.detail;
+    if (history && cached && pagesNotToRestore.has(url.pathname)) {
+        event.preventDefault();
+        window.location.reload();
+    }
+});
 
 function getRouteUrl(routeName, params = {}) {
     routeName = routeName.split(".").join("-");
@@ -79,11 +124,11 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('note.show', {note: getUuidFromRoute()}));
+                visit(getRouteUrl('note.show', {note: getUuidFromRoute()}));
             } else if ([
                 'note.show',
             ].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('notes.show') + '#note-' + getUuidFromRoute());
+                visit(getRouteUrl('notes.show') + '#note-' + getUuidFromRoute());
             } else if ([
                 'profile.show',
                 'user-profile-information.update',
@@ -91,9 +136,9 @@ const keydownListener = (event) => {
                 'two-factor.enable',
                 'current-user-photo.destroy',
             ].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('notes.show'));
+                visit(getRouteUrl('notes.show'));
             } else {
-                Turbolinks.visit(getRouteUrl('notes.show'));
+                visit(getRouteUrl('notes.show'));
             }
         }
 
@@ -103,13 +148,13 @@ const keydownListener = (event) => {
                     'filter.exclude.show',
                     'filter.search.show',
                 ].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('notes.show'))
+                visit(getRouteUrl('notes.show'))
             }
         }
 
         if (event.key === 'a') {
             if (appCurrentRouteName === 'menu.show') {
-                Turbolinks.visit(getRouteUrl('profile.show'))
+                visit(getRouteUrl('profile.show'))
             }
         }
 
@@ -125,18 +170,18 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('note.emojis.show', {note: getUuidFromRoute()}));
+                visit(getRouteUrl('note.emojis.show', {note: getUuidFromRoute()}));
             } else {
-                Turbolinks.visit(getRouteUrl('filter.exclude.show'));
+                visit(getRouteUrl('filter.exclude.show'));
             }
         }
 
         if (event.key === 'f') {
-            Turbolinks.visit(getRouteUrl('filter.show'));
+            visit(getRouteUrl('filter.show'));
         }
 
         if (event.key === 's') {
-            Turbolinks.visit(getRouteUrl('filter.search.show'));
+            visit(getRouteUrl('filter.search.show'));
         }
 
         if (event.key === 'l') {
@@ -147,13 +192,13 @@ const keydownListener = (event) => {
 
         if (event.key === 'm') {
             if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('menu.show'));
+                visit(getRouteUrl('menu.show'));
             }
         }
 
         if (event.key === 'n') {
             if (['notes.show', 'shortcuts.show'].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('note.create'));
+                visit(getRouteUrl('note.create'));
             }
         }
 
@@ -163,12 +208,12 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                Turbolinks.visit(getRouteUrl('note.title.show', {uuid: getUuidFromRoute()}));
+                visit(getRouteUrl('note.title.show', {uuid: getUuidFromRoute()}));
             }
         }
 
         if (event.key === '?' || event.key === '/') {
-            Turbolinks.visit(getRouteUrl('shortcuts.show'));
+            visit(getRouteUrl('shortcuts.show'));
         }
 
         if (
@@ -198,8 +243,8 @@ function setupKeyboardShortcuts() {
 }
 
 document.addEventListener('DOMContentLoaded', setupKeyboardShortcuts);
-document.addEventListener('turbolinks:load', setupKeyboardShortcuts);
-document.addEventListener('turbolinks:load', startCelebration);
+document.addEventListener('livewire:navigated', setupKeyboardShortcuts);
+document.addEventListener('livewire:navigated', startCelebration);
 
 window.addEventListener('load', function() {
     var textarea = document.getElementById('titleTextarea');
@@ -217,7 +262,7 @@ let isLoading = false;
 let isLoadingForAnchor = false;
 let scrollListener = null;
 
-document.addEventListener('turbolinks:load', function() {
+document.addEventListener('livewire:navigated', function() {
     page = 1;
     isLoading = false;
     isLoadingForAnchor = false;

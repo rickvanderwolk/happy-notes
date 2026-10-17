@@ -33,7 +33,7 @@
 
             <div class="text-center mt-6">
                 <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                    <i class="fa fa-arrow-left"></i> {{ __('Back to login') }}
+                    <x-icon name="arrow-left" /> {{ __('Back to login') }}
                 </a>
             </div>
         </form>

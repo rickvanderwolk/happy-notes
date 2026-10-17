@@ -9,7 +9,6 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="turbolinks-cache-control" content="no-preview">
 
         <title>{{ config('app.name', 'happynotes') }}</title>
         <meta name="description" content="💥🧠📝🎨🚀">

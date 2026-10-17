@@ -28,7 +28,7 @@
                                             data-confirm="Delete this note?"
                                             data-confirm-label="Delete"
                                             data-confirm-danger>
-                                        <i class="fa fa-trash-can"></i>
+                                        <x-icon name="trash-can" />
                                     </button>
                                 </form>
                             </h3>
@@ -53,7 +53,7 @@
                                             <span class="emoji">{{ $emoji }}</span>
                                         @endforeach
                                         @if(count($selectedEmojis) > 3)
-                                            <i class="fa fa-ellipsis"></i>
+                                            <x-icon name="ellipsis" />
                                         @endif
                                     </a>
                                 @else

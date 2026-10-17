@@ -1,6 +1,5 @@
 // Bootstrap & FontAwesome
 @use "bootstrap/dist/css/bootstrap.min.css";
-@use "@fortawesome/fontawesome-free/css/all.min.css";
 
 // HappyNotes Design System
 @use 'variables' as *;
@@ -264,22 +263,22 @@ p {
                 }
 
                 // Plus icon - rotate
-                .fa-plus {
+                .icon-plus {
                     transform: rotate(90deg) scale(1.15);
                 }
 
                 // Close icons - pulse
-                .fa-close, .fa-times, .fa-xmark {
+                .icon-close {
                     animation: pulse 0.6s ease-in-out;
                 }
 
                 // Trash icons - shake
-                .fa-trash, .fa-trash-can {
+                .icon-trash-can {
                     animation: shake 0.5s ease-in-out;
                 }
 
                 // Filter icon - pulse
-                .fa-filter {
+                .icon-filter {
                     animation: pulse 0.6s ease-in-out;
                 }
             }
@@ -431,7 +430,7 @@ a .list-group-item {
 
 // Menu styles
 #menu {
-    .fa {
+    .icon {
         color: $text-tertiary;
         transition: color $transition-fast;
     }
@@ -443,7 +442,7 @@ a .list-group-item {
         text-align: center;
         gap: $space-2;
 
-        &:hover .fa {
+        &:hover .icon {
             color: $text-primary;
         }
     }
@@ -622,7 +621,7 @@ a {
     }
 
     #menu {
-        .fa {
+        .icon {
             color: $dark-text-secondary;
         }
 
