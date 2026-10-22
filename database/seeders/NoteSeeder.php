@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use App\Models\Note;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,7 @@ final class NoteSeeder extends Seeder
                 if ($i === 1) {
                     $noteUuid = $user['first_note_uuid'];
                 } else {
-                    $noteUuid = null;
+                    $noteUuid = Str::uuid()->toString();
                 }
                 $noteEmojis = array_rand(array_flip($emojis), rand(2, 7));
                 $progress = rand(1, 7) <= 5 ? null : rand(1, 100);
@@ -36,7 +37,7 @@ final class NoteSeeder extends Seeder
                 $note->user_id = $user['id'];
                 $note->title = "Note {$i} - user {$user['id']}";
                 $note->body = "Dit is de body van note {$i}.";
-                $note->emojis = json_encode($noteEmojis);
+                $note->emojis = $noteEmojis;
                 $note->progress = $progress;
                 $note->save();
             }

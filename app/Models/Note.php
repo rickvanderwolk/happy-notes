@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use App\Casts\EmojiArrayCast;
 use App\Scopes\OwnNotesScope;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
+/**
+ * @property list<string>|null $emojis
+ */
 final class Note extends Model
 {
-    use HasFactory;
-
     protected $table = 'notes';
     protected $primaryKey = 'id';
     public $incrementing = true;
@@ -30,6 +31,17 @@ final class Note extends Model
         'progress',
     ];
     public $timestamps = true;
+
+    /**
+     * @return array<string, string>
+     */
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'emojis' => EmojiArrayCast::class,
+        ];
+    }
 
     /**
      * After this many days a note counts for half in the emoji order.
@@ -120,10 +132,5 @@ final class Note extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    protected function getEmojisAttribute($value)
-    {
-        return json_decode($value, true);
     }
 }

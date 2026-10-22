@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\EmojiHelper;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -23,7 +25,7 @@ final class FilterController extends Controller
      * the change. A plain endpoint also lets the browser use a keepalive fetch, so a save
      * still lands when the tab is closed mid-click.
      */
-    public function storeEmojis(Request $request): Response
+    public function storeEmojis(Request $request, #[CurrentUser] User $user): Response
     {
         $data = $request->validate([
             'storageKey' => 'required|in:selected_emojis,excluded_emojis',
@@ -33,7 +35,6 @@ final class FilterController extends Controller
 
         $otherKey = $data['storageKey'] === 'selected_emojis' ? 'excluded_emojis' : 'selected_emojis';
 
-        $user = auth()->user();
         $user->{$data['storageKey']} = $this->sanitizeEmojis($data['emojis']);
         $user->{$otherKey} = $this->sanitizeEmojis($data['otherEmojis']);
         $user->save();
@@ -69,20 +70,18 @@ final class FilterController extends Controller
         return view('search');
     }
 
-    public function clear(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
+    public function clear(Request $request, #[CurrentUser] User $user): \Illuminate\Http\RedirectResponse
     {
         $filterType = $request->input('filter_type', 'selected_emojis');
 
-        $user = auth()->user();
         $user->$filterType = [];
         $user->save();
 
         return redirect()->back()->with('success', 'Filter cleared successfully');
     }
 
-    public function clearSearch(): \Illuminate\Http\RedirectResponse
+    public function clearSearch(#[CurrentUser] User $user): \Illuminate\Http\RedirectResponse
     {
-        $user = auth()->user();
         $user->search_query = null;
         $user->search_query_only = false;
         $user->save();

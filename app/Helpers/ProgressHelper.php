@@ -1,9 +1,12 @@
 <?php
 
-namespace app\Helpers;
+namespace App\Helpers;
 
 final class ProgressHelper
 {
+    /**
+     * @param array<string, mixed> $body
+     */
     public static function getProgressFromNoteBody(array $body): ?float
     {
         $progress = null;

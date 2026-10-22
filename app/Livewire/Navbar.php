@@ -1,22 +1,25 @@
 <?php
 
-namespace app\Livewire;
+namespace App\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 final class Navbar extends Component
 {
-    public $selectedEmojis = [];
-    public $excludedEmojis = [];
-    public $searchQuery = null;
-    public $originalRoute = null;
+    /** @var list<string> */
+    public array $selectedEmojis = [];
+    /** @var list<string> */
+    public array $excludedEmojis = [];
+    public ?string $searchQuery = null;
+    public ?string $originalRoute = null;
 
+    /** @var array<string, string> */
     protected $listeners = ['filterUpdated' => 'updateFilter'];
 
     public function mount(): void
     {
-        $this->originalRoute = session('original_route_name', request()->route()->getName());
+        $this->originalRoute = session('original_route_name', request()->route()?->getName());
         $this->updateFilter();
     }
 

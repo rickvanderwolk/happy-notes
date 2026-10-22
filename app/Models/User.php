@@ -25,6 +25,7 @@ final class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
 
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
@@ -84,7 +85,7 @@ final class User extends Authenticatable implements MustVerifyEmail
             $note->user_id = $user->id;
             $note->title = self::welcomeNoteTitle();
             $note->body = $body;
-            $note->emojis = json_encode(['🎉', '👋', '✨', '🫶'], JSON_UNESCAPED_UNICODE);
+            $note->emojis = ['🎉', '👋', '✨', '🫶'];
             $note->progress = 50;
             $note->save();
         });

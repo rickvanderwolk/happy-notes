@@ -16,6 +16,8 @@ final class EmojiHelper
     /**
      * Scans for keycap emojis (e.g. "10️⃣"), or standard emojis (🍏, 😊),
      * and ignores plain digits ("10", "3").
+     *
+     * @return list<string>
      */
     public static function getEmojisFromString(string $string): array
     {

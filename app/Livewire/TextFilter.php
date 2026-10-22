@@ -10,10 +10,6 @@ final class TextFilter extends Component
     public ?string $search_query = null;
     public bool $search_query_only = false;
 
-    protected $casts = [
-        'search_query_only' => 'boolean',
-    ];
-
     public function mount(): void
     {
         $user = Auth::user();

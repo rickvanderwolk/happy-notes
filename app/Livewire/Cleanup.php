@@ -8,6 +8,7 @@ use Livewire\Component;
 
 final class Cleanup extends Component
 {
+    /** @var array<string, array{count: int, canRemove: bool}> */
     public array $emojiStats = [];
 
     public function mount(): void
@@ -18,7 +19,7 @@ final class Cleanup extends Component
     public function loadStats(): void
     {
         // Only the emojis column: counting emojis never needed the note bodies. pluck()
-        // runs the values through getEmojisAttribute(), so these are decoded arrays.
+        // runs the values through the emojis cast, so these are decoded arrays.
         /** @var iterable<int, list<string>|null> $emojisPerNote */
         $emojisPerNote = Note::where('user_id', Auth::id())->pluck('emojis');
 
@@ -48,6 +49,7 @@ final class Cleanup extends Component
     public function filterByEmoji(string $emoji): mixed
     {
         $user = Auth::user();
+        abort_unless($user !== null, 401);
         $user->selected_emojis = [$emoji];
         $user->excluded_emojis = [];
         $user->save();
@@ -72,7 +74,7 @@ final class Cleanup extends Component
                 $emojis = $note->emojis ?? [];
                 if (count($emojis) > 1) {
                     $emojis = array_values(array_filter($emojis, fn ($e) => $e !== $emoji));
-                    $note->emojis = json_encode($emojis, JSON_UNESCAPED_UNICODE);
+                    $note->emojis = $emojis;
                     $note->save();
                     $lastChanged = $note;
                 }

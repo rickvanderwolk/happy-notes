@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CelebrationHelper;
 use App\Helpers\EmojiHelper;
-use app\Helpers\ProgressHelper;
+use App\Helpers\ProgressHelper;
 use App\Models\Note;
 use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
 
 final class NoteController extends Controller
 {
@@ -21,9 +22,9 @@ final class NoteController extends Controller
     private const NOTES_PER_PAGE = 15;
 
     public function index(
-        Request $request
+        Request $request,
+        #[CurrentUser] User $user
     ): \Illuminate\View\View|\Illuminate\Contracts\View\View|\Illuminate\Http\Response {
-        $user = Auth::user();
         $selectedEmojis = $user->selected_emojis ?? [];
         $excludedEmojis = $user->excluded_emojis ?? [];
 
@@ -74,7 +75,7 @@ final class NoteController extends Controller
         // from there.
         if ($request->boolean('partial') && $request->filled('until')) {
             $page = max(1, $request->integer('page', 1));
-            $position = (clone $notes)->pluck('uuid')->search($request->string('until')->toString());
+            $position = (clone $notes)->pluck('uuid')->values()->search($request->string('until')->toString());
 
             if ($position === false) {
                 return response()->view('notes.partials.cards', ['notes' => []])
@@ -101,14 +102,14 @@ final class NoteController extends Controller
             return view('notes.partials.cards', compact('notes'));
         }
 
-        $this->celebrateAnniversary();
+        $this->celebrateAnniversary($user);
 
         return view('notes', compact('notes'));
     }
 
     public function show(Note $note): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
-        $note->body = json_decode($note->body, true);
+        $note->body = $note->body === null ? null : json_decode($note->body, true);
         return view('notes.show', compact('note'));
     }
 
@@ -117,7 +118,7 @@ final class NoteController extends Controller
         return view('new');
     }
 
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request, #[CurrentUser] User $user): \Illuminate\Http\RedirectResponse
     {
         $data = $request->validate([
             'title' => 'required|string',
@@ -132,12 +133,12 @@ final class NoteController extends Controller
         $selectedEmojis = array_values(array_unique($selectedEmojis));
 
         $note = new Note();
-        $note->user_id = Auth::id();
+        $note->user()->associate($user);
         $note->title = EmojiHelper::getStringWithoutEmojis($data['title']);
-        $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
+        $note->emojis = $selectedEmojis;
         $note->save();
 
-        $this->celebrateMilestone();
+        $this->celebrateMilestone($user);
 
         // Straight to the list rather than via 'dashboard': that redirects again, and the
         // flashed celebration would be gone before the list renders.
@@ -170,7 +171,7 @@ final class NoteController extends Controller
         $selectedEmojis = array_values(array_unique($selectedEmojis));
 
         $note->title = EmojiHelper::getStringWithoutEmojis($data['title']);
-        $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
+        $note->emojis = $selectedEmojis;
         $note->save();
 
         return redirect()->route('note.show', ['note' => $note->uuid]);
@@ -190,7 +191,7 @@ final class NoteController extends Controller
         ]);
 
         $selectedEmojis = $this->sanitizeEmojis($request->input('selectedEmojis'));
-        $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
+        $note->emojis = $selectedEmojis;
         $note->save();
         return redirect()->route('note.show', ['note' => $note->uuid]);
     }
@@ -222,8 +223,8 @@ final class NoteController extends Controller
             }
             $selectedEmojis = array_values(array_unique($selectedEmojis));
 
-            $note->body = json_encode($body, JSON_UNESCAPED_UNICODE);
-            $note->emojis = json_encode($selectedEmojis, JSON_UNESCAPED_UNICODE);
+            $note->body = json_encode($body, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+            $note->emojis = $selectedEmojis;
             $note->progress = ProgressHelper::getProgressFromNoteBody($body);
         }
 
@@ -255,23 +256,26 @@ final class NoteController extends Controller
             return [];
         }
 
-        return collect($emojis)
-            ->flatten()
-            ->filter(fn ($emoji): bool => is_string($emoji)
+        $sanitized = [];
+        foreach (Arr::flatten($emojis) as $emoji) {
+            if (
+                is_string($emoji)
                 && strlen($emoji) <= self::MAX_EMOJI_BYTES
-                && EmojiHelper::getEmojisFromString($emoji) !== [])
-            ->unique()
-            ->values()
-            ->toArray();
+                && EmojiHelper::getEmojisFromString($emoji) !== []
+            ) {
+                $sanitized[] = $emoji;
+            }
+        }
+
+        return array_values(array_unique($sanitized));
     }
 
     /**
      * Only a milestone above the last celebrated one counts, so deleting a note and
      * writing a new one cannot trigger the same celebration twice.
      */
-    private function celebrateMilestone(): void
+    private function celebrateMilestone(User $user): void
     {
-        $user = Auth::user();
         $count = Note::query()->count();
 
         if (!CelebrationHelper::isMilestone($count) || $count <= $user->celebrated_milestone) {
@@ -288,9 +292,8 @@ final class NoteController extends Controller
         ]);
     }
 
-    private function celebrateAnniversary(): void
+    private function celebrateAnniversary(User $user): void
     {
-        $user = Auth::user();
 
         if (session()->has('celebration') || !$user->created_at) {
             return;

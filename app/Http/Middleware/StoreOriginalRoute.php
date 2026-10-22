@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Support\Facades\Route;
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * We use current route name to highlight menu items for example.
@@ -13,14 +14,14 @@ use Illuminate\Http\Request;
  */
 final class StoreOriginalRoute
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         $route = Route::current();
 
         if ($route) {
             $routeName = $route->getName();
 
-            if ($routeName && !str_starts_with($routeName, 'livewire.updattt')) {
+            if ($routeName) {
                 session(['original_route_name' => $routeName]);
             }
         }

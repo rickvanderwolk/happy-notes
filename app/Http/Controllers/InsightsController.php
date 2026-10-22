@@ -244,7 +244,7 @@ final class InsightsController extends Controller
             $list[] = ['label' => $label, 'count' => $totals[$iso]];
         }
 
-        return ['list' => $list, 'max' => max(max($totals), 1)];
+        return ['list' => $list, 'max' => max([1, ...$totals])];
     }
 
     /**
@@ -260,7 +260,7 @@ final class InsightsController extends Controller
             $list[] = ['label' => $label, 'count' => $counts[$i]];
         }
 
-        return ['list' => $list, 'max' => max(max($counts), 1)];
+        return ['list' => $list, 'max' => max([1, ...$counts])];
     }
 
     /**

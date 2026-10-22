@@ -24,7 +24,7 @@ final class ProfileExportController extends Controller
             $exportData[] = [
                 'uuid' => $note->uuid,
                 'title' => $note->title,
-                'body' => json_decode($note->body, true),
+                'body' => $note->body === null ? null : json_decode($note->body, true),
                 'emojis' => $note->emojis,
                 'created_at' => $note->created_at,
                 'updated_at' => $note->updated_at,
@@ -33,7 +33,10 @@ final class ProfileExportController extends Controller
 
         if ($format === 'json') {
             $filename = 'happynotes_export_' . date('Y-m-d_His') . '.json';
-            $content = json_encode($exportData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            $content = json_encode(
+                $exportData,
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
+            );
 
             return Response::make($content, 200, [
                 'Content-Type' => 'application/json',
@@ -62,6 +65,9 @@ final class ProfileExportController extends Controller
         return response()->json(['error' => 'Invalid format'], 400);
     }
 
+    /**
+     * @param list<array<string, mixed>> $data
+     */
     private function convertToCsv(array $data): string
     {
         $csv = fopen('php://temp', 'r+');
