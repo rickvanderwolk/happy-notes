@@ -7,7 +7,7 @@
             </a>
         </x-slot>
 
-        <h2 class="auth-title">Join {{ config('app.name') }}! 🎉</h2>
+        <h1 class="auth-title">Join {{ config('app.name') }}! 🎉</h1>
         <p class="auth-subtitle mb-6">Create your account to get started</p>
 
         <x-validation-errors class="mb-4" />

@@ -13,13 +13,13 @@
          @apply-filter.window="Livewire.navigate('{{ route('notes.show') }}')"
          @keydown.window.enter="Livewire.navigate('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
-            <h2 class="section-title">
+            <h1 class="section-title">
                 @if($isInclude)
                     Filter ✨
                 @else
                     Exclude 🚫
                 @endif
-            </h2>
+            </h1>
             <p class="section-description-text mt-2">
                 @if($isInclude)
                     Only show notes with these emojis

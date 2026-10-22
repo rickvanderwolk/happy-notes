@@ -8,7 +8,7 @@
 
     <div class="container form-page-container">
         <div class="text-center mb-4">
-            <h2 class="section-title">New ✨</h2>
+            <h1 class="section-title">New ✨</h1>
         </div>
 
         <form id="new-note-form" action="{{ route('note.store') }}" method="POST" class="new-note-form">

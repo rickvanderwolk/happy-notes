@@ -7,7 +7,7 @@
     <div x-data
          @apply-filter.window="Livewire.navigate('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
-            <h2 class="section-title">Search 🔍</h2>
+            <h1 class="section-title">Search 🔍</h1>
             <p class="section-description-text mt-2">Find notes containing specific text</p>
         </div>
 

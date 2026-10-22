@@ -7,7 +7,7 @@
             </a>
         </x-slot>
 
-        <h2 class="auth-title">Forgot your password? 🔑</h2>
+        <h1 class="auth-title">Forgot your password? 🔑</h1>
         <p class="auth-subtitle mb-6">No worries! We'll send you reset instructions</p>
 
         @session('status')

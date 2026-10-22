@@ -33,24 +33,24 @@
             <div class="row">
                 <div class="col-12 col-sm-11 col-md-10 col-lg-9 col-xl-6 ms-auto me-auto">
                     {{-- Simple navbar for account pages --}}
-                    <div id="main-navbar" class="main-navbar">
+                    <nav id="main-navbar" class="main-navbar" aria-label="Main">
                         <div class="navbar-inner">
                             <div class="row g-0">
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-12 d-flex justify-content-between">
-                                            <h3 class="emoji-wrapper"></h3>
-                                            <h3 class="emoji-wrapper">
+                                            <div class="emoji-wrapper"></div>
+                                            <div class="emoji-wrapper">
                                                 <a href="{{ route('notes.show') }}" aria-label="Close">
                                                     <x-icon name="close" />
                                                 </a>
-                                            </h3>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </nav>
 
                     <main>
                         {{ $slot }}

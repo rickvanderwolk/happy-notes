@@ -355,8 +355,13 @@ a {
         }
     }
 
-    .version-text {
+    .version-text,
+    .text-gray-600 {
         color: $dark-text-secondary;
+    }
+
+    .hover\:text-gray-900:hover {
+        color: $dark-text;
     }
 
     .landing {

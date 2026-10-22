@@ -4,7 +4,7 @@
 
     <div class="container form-page-container">
         <div class="text-center mb-4">
-            <h2 class="section-title">Title ✏️</h2>
+            <h1 class="section-title">Title ✏️</h1>
         </div>
 
         <form id="title-form" action="{{ route('note.title.store', ['note' => $item->uuid]) }}" method="POST">

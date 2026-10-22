@@ -5,7 +5,7 @@
             <a href="{{ route('notes.show') }}">
                 <img src="/logo.png" alt="HappyNotes" class="logo logo-menu">
             </a>
-            <h2 class="section-title">Menu</h2>
+            <h1 class="section-title">Menu</h1>
         </div>
 
         <div class="menu-card-modern">

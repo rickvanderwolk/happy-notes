@@ -8,7 +8,7 @@
 
     <div class="container form-page-container">
         <div class="text-center mb-4">
-            <h2 class="section-title">Emojis 🎨</h2>
+            <h1 class="section-title">Emojis 🎨</h1>
         </div>
 
         <form id="emoji-form" action="{{ route('note.emojis.store', ['note' => $item->uuid]) }}" method="POST">

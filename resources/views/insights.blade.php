@@ -2,7 +2,7 @@
     <x-slot name="title">Insights</x-slot>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
-            <h2 class="section-title"><x-icon name="lightbulb" class="me-2" />Insights</h2>
+            <h1 class="section-title"><x-icon name="lightbulb" class="me-2" />Insights</h1>
             <p class="section-description-text">A look at your note-taking habits</p>
         </div>
 
@@ -67,7 +67,7 @@
                             </p>
 
                             {{-- Trend over time --}}
-                            <h4 class="stats-subsection-title">{{ $p['trend']['title'] }}</h4>
+                            <h2 class="stats-subsection-title">{{ $p['trend']['title'] }}</h2>
                             <div class="stat-chart{{ $p['trend']['dense'] ? ' stat-chart--dense' : '' }}">
                                 @foreach ($p['trend']['list'] as $bar)
                                     <div class="stat-chart-col">
@@ -81,7 +81,7 @@
                             </div>
 
                             {{-- Day of the week --}}
-                            <h4 class="stats-subsection-title">Day of the week <span class="stats-section-note">(UTC)</span></h4>
+                            <h2 class="stats-subsection-title">Day of the week <span class="stats-section-note">(UTC)</span></h2>
                             <div class="stat-chart">
                                 @foreach ($p['weekdays']['list'] as $weekday)
                                     <div class="stat-chart-col">
@@ -95,7 +95,7 @@
                             </div>
 
                             {{-- Time of day --}}
-                            <h4 class="stats-subsection-title">Time of day <span class="stats-section-note">(UTC)</span></h4>
+                            <h2 class="stats-subsection-title">Time of day <span class="stats-section-note">(UTC)</span></h2>
                             <div class="stat-chart">
                                 @foreach ($p['dayparts']['list'] as $part)
                                     <div class="stat-chart-col">
@@ -110,7 +110,7 @@
 
                             {{-- Top emojis --}}
                             @if (count($p['topEmojis']) > 0)
-                                <h4 class="stats-subsection-title">Most used emojis</h4>
+                                <h2 class="stats-subsection-title">Most used emojis</h2>
                                 <div class="emoji-rank-list">
                                     @foreach ($p['topEmojis'] as $item)
                                         <div class="emoji-rank">
@@ -126,7 +126,7 @@
 
                             {{-- Emoji combos --}}
                             @if (count($p['emojiCombos']) > 0)
-                                <h4 class="stats-subsection-title">Often together</h4>
+                                <h2 class="stats-subsection-title">Often together</h2>
                                 <div class="emoji-rank-list">
                                     @foreach ($p['emojiCombos'] as $combo)
                                         <div class="emoji-rank">

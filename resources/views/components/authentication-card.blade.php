@@ -10,7 +10,7 @@
     <div class="version-text text-center mt-6">
         {{ config('app.name') }} {{ config('app.version') }}
         <span class="mx-2">•</span>
-        <a class="hover:text-gray-600" href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer">
+        <a class="underline hover:text-gray-600" href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer">
             GitHub
         </a>
     </div>

@@ -3,7 +3,7 @@
     <div class="container max-w-md mx-auto">
         {{-- Page header --}}
         <div class="text-center mb-6">
-            <h2 class="section-title"><x-icon name="gear" class="me-2" />Account</h2>
+            <h1 class="section-title"><x-icon name="gear" class="me-2" />Account</h1>
             <p class="section-description-text">Manage your profile and settings</p>
         </div>
 

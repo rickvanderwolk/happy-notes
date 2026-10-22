@@ -10,7 +10,7 @@
                 </a>
             </x-slot>
 
-            <h2 class="auth-title">Welcome back! 👋</h2>
+            <h1 class="auth-title">Welcome back! 👋</h1>
             <p class="auth-subtitle mb-6">Sign in to {{ config('app.name') }}</p>
 
             <x-validation-errors class="mb-4" />

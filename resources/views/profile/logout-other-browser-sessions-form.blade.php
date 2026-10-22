@@ -24,10 +24,10 @@
                             <div class="text-sm section-description-text" style="font-weight: 500; margin-bottom: 4px;">
                                 {{ $session->agent->platform() ? $session->agent->platform() : __('Unknown') }} - {{ $session->agent->browser() ? $session->agent->browser() : __('Unknown') }}
                             </div>
-                            <div class="text-xs section-description-text" style="opacity: 0.8;">
+                            <div class="text-xs section-description-text">
                                 {{ $session->ip_address }}
                                 @if ($session->is_current_device)
-                                    • <span class="text-green-500 font-semibold">{{ __('This device') }}</span>
+                                    • <span class="font-semibold">{{ __('This device') }}</span>
                                 @else
                                     • {{ __('Last active') }} {{ $session->last_active }}
                                 @endif

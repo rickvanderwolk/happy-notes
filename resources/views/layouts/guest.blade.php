@@ -24,9 +24,9 @@
         @livewireStyles
     </head>
     <body>
-        <div class="font-sans text-gray-900">
+        <main class="font-sans text-gray-900">
             {{ $slot }}
-        </div>
+        </main>
 
         <!-- Scripts -->
         @livewireScripts

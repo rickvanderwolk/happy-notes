@@ -2,7 +2,7 @@
     <x-slot name="title">Keyboard shortcuts</x-slot>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
-            <h2 class="section-title"><x-icon name="keyboard" class="me-2" />Keyboard Shortcuts</h2>
+            <h1 class="section-title"><x-icon name="keyboard" class="me-2" />Keyboard Shortcuts</h1>
             <p class="section-description-text">Speed up your workflow with these keyboard shortcuts</p>
         </div>
 
@@ -19,7 +19,7 @@
 
         {{-- Navigation --}}
         <div class="shortcuts-section">
-            <h3 class="shortcuts-section-title">Navigation</h3>
+            <h2 class="shortcuts-section-title">Navigation</h2>
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
@@ -63,7 +63,7 @@
 
         {{-- Filters --}}
         <div class="shortcuts-section">
-            <h3 class="shortcuts-section-title">Filters & Search</h3>
+            <h2 class="shortcuts-section-title">Filters & Search</h2>
 
             <div class="shortcut-item">
                 <div class="shortcut-description">Filter by emoji</div>
@@ -109,7 +109,7 @@
 
         {{-- Note Editing --}}
         <div class="shortcuts-section">
-            <h3 class="shortcuts-section-title">Note Editing</h3>
+            <h2 class="shortcuts-section-title">Note Editing</h2>
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
@@ -144,7 +144,7 @@
 
         {{-- Menu Actions --}}
         <div class="shortcuts-section">
-            <h3 class="shortcuts-section-title">Menu Actions</h3>
+            <h2 class="shortcuts-section-title">Menu Actions</h2>
 
             <div class="shortcut-item">
                 <div class="shortcut-description">

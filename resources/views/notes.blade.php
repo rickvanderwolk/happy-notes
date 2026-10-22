@@ -2,6 +2,8 @@
     <x-slot name="title">Notes</x-slot>
     <x-slot name="header"></x-slot>
 
+    <h1 class="visually-hidden">Notes</h1>
+
     @include('notes.partials.celebration')
 
     <div>
@@ -17,7 +19,7 @@
         @else
             <div class="empty-state">
                 <img src="/logo.png" alt="HappyNotes" class="empty-state-logo" style="width: 150px; height: auto; margin: 0 auto 24px; display: block;">
-                <h3 class="empty-state-title">No notes yet</h3>
+                <h2 class="empty-state-title">No notes yet</h2>
                 <p class="empty-state-subtitle">Create your first note</p>
                 <a href="{{ route('note.create') }}" class="btn btn-primary mt-4">
                     <x-icon name="plus" />Create your first note
