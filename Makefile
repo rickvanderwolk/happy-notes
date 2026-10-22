@@ -47,6 +47,7 @@ analyse:
 	vendor/bin/phpcs --standard=PSR12 app/
 	php -d memory_limit=-1 vendor/bin/phpstan analyse
 	vendor/bin/psalm
+	npm run lint
 
 autofix:
 	@echo "🤖 Auto fix code..."
@@ -55,7 +56,7 @@ autofix:
 
 test:
 	@echo "🧪 Running tests..."
-	vendor/bin/phpunit tests/unit --testdox
+	vendor/bin/phpunit --testdox
 	npx cypress run
 
 docker-check:
