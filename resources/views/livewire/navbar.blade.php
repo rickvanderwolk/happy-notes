@@ -8,11 +8,11 @@
                     $uuidFromRoute = is_object($note) ? $note->uuid : (is_array($note) ? $note['uuid'] : null);
 
                     // Determine close URL
-                    $closeUrl = '/';
+                    $closeUrl = route('notes.show');
                     if (Str::contains($currentRouteName, 'form.') && $uuidFromRoute) {
                         $closeUrl = route('note.show', ['note' => $uuidFromRoute]);
                     } elseif ($uuidFromRoute) {
-                        $closeUrl = url("/#note-{$uuidFromRoute}");
+                        $closeUrl = route('notes.show') . "#note-{$uuidFromRoute}";
                     }
                 @endphp
 
@@ -111,7 +111,7 @@
                                 />
                             </div>
                             <div class="emoji-wrapper">
-                                <x-navbar-link :route="url('/')" :active="request()->is('/')" icon="close" label="Close" />
+                                <x-navbar-link :route="route('notes.show')" :active="false" icon="close" label="Close" />
                             </div>
                         </div>
                     </div>

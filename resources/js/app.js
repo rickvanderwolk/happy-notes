@@ -297,6 +297,10 @@ let isLoading = false;
 let isLoadingForAnchor = false;
 let scrollListener = null;
 
+// Fetch the next page while a few screens are still left, so a quick swipe on a phone
+// rarely reaches the end before the new notes are in.
+const isNearEnd = () => window.innerHeight + window.scrollY >= document.body.offsetHeight - window.innerHeight * 3;
+
 document.addEventListener('livewire:navigated', function() {
     page = 1;
     isLoading = false;
@@ -307,7 +311,7 @@ document.addEventListener('livewire:navigated', function() {
     }
 
     scrollListener = () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        if (isNearEnd()) {
             loadMoreData();
         }
     };
@@ -418,6 +422,11 @@ function loadMoreData() {
                 isLoading = true;
                 loadingEl.style.display = 'block';
                 loadingEl.textContent = "That's all!";
+                return;
+            }
+
+            if (isNearEnd()) {
+                loadMoreData();
             }
         })
         .catch(error => {
