@@ -44,6 +44,11 @@ audit:
 
 analyse:
 	@echo "🧪 Analyse code..."
+	php artisan optimize
+	php artisan config:clear
+	php artisan route:clear
+	php artisan event:clear
+	php artisan view:clear
 	vendor/bin/phpcs --standard=PSR12 app/
 	php -d memory_limit=-1 vendor/bin/phpstan analyse
 	npm run lint

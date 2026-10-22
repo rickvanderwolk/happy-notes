@@ -36,6 +36,9 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
+      - name: Cache config, routes, events and Blade views
+        run: php artisan optimize
+
       - name: PHP_CodeSniffer
         run: vendor/bin/phpcs --standard=PSR12 app/
 
