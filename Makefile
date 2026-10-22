@@ -39,8 +39,7 @@ fresh:
 audit:
 	@echo "🔒 Audit..."
 	composer audit
-	npm audit
-	vendor/bin/security-checker security:check
+	npm audit --omit=dev
 
 analyse:
 	@echo "🧪 Analyse code..."
@@ -101,11 +100,12 @@ bump:
 	fi
 
 checkup:
-	@echo "🧰 Full project checkup: update → serve (bg) → analyse → test → docker"
+	@echo "🧰 Full project checkup: update → serve (bg) → audit → analyse → test → docker"
 	$(MAKE) update
 	$(MAKE) fresh
 	$(MAKE) serve MODE=background
 	sleep 5
+	$(MAKE) audit
 	$(MAKE) analyse
 	$(MAKE) test
 	$(MAKE) docker-check
