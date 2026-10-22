@@ -1,8 +1,20 @@
 <x-app-layout>
+    <x-slot name="title">Keyboard shortcuts</x-slot>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
             <h2 class="section-title"><x-icon name="keyboard" class="me-2" />Keyboard Shortcuts</h2>
             <p class="section-description-text">Speed up your workflow with these keyboard shortcuts</p>
+        </div>
+
+        <div class="form-switch justify-content-center mb-6" x-data="{ on: window.keyboardShortcutsEnabled() }">
+            <input
+                class="form-check-input"
+                type="checkbox"
+                id="keyboard-shortcuts-toggle"
+                x-model="on"
+                @change="window.setKeyboardShortcuts(on)"
+            >
+            <label class="form-check-label" for="keyboard-shortcuts-toggle">Single-key shortcuts on this device</label>
         </div>
 
         {{-- Navigation --}}

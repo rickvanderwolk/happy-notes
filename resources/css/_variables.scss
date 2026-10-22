@@ -14,15 +14,16 @@ $surface-hover: #F8F8F8;
 
 $text-primary: #333333;
 $text-secondary: #666666;
-$text-tertiary: #999999;
+$text-tertiary: #707070;
 
 $border: #F0F0F0;
 $border-dark: #E0E0E0;
+$border-input: #8F8F8F;
 
-$success: #4CAF50;
-$success-light: #81C784;
-$danger: #FF6B6B;
-$danger-light: #FF8787;
+$success: #2E7D32;
+$success-dark: #1B5E20;
+$danger: #D32F2F;
+$danger-dark: #B71C1C;
 $warning: #FFA726;
 $info: #29B6F6;
 
@@ -34,6 +35,8 @@ $dark-surface-hover: #242424;
 $dark-text: #E0E0E0;
 $dark-text-secondary: #A0A0A0;
 $dark-border: #2A2A2A;
+$dark-border-input: #6E6E6E;
+$dark-danger: #FF8A80;
 
 // Spacing (4px grid)
 $space-1: 4px;
@@ -64,14 +67,14 @@ $shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
 
 // Typography
 $font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-$font-size-xs: 12px;
-$font-size-sm: 14px;
-$font-size-base: 16px;
-$font-size-lg: 18px;
-$font-size-xl: 20px;
-$font-size-2xl: 24px;
-$font-size-3xl: 28px;
-$font-size-4xl: 32px;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.75rem;
+$font-size-4xl: 2rem;
 
 $font-weight-normal: 400;
 $font-weight-medium: 500;

@@ -50,10 +50,10 @@
                 <div class="selected-emojis-container" x-show="picked.length" style="display: none">
                     <div class="emoji-chips-wrapper">
                         <template x-for="emoji in picked" :key="emoji">
-                            <div class="emoji-chip" @click="picked = picked.filter(e => e !== emoji)">
+                            <button type="button" class="emoji-chip" :aria-label="'Remove ' + emoji" @click="picked = picked.filter(e => e !== emoji)">
                                 <span class="emoji" x-text="emoji"></span>
-                                <span class="remove-badge">×</span>
-                            </div>
+                                <span class="remove-badge" aria-hidden="true">×</span>
+                            </button>
                         </template>
                     </div>
                     <button type="button" class="btn btn-outline btn-sm landing-demo-clear" @click="picked = []">Clear all</button>
@@ -61,13 +61,13 @@
 
                 <div class="landing-demo-picker">
                     @foreach ($demoEmojis as $emoji)
-                        <div class="emoji-selector-item" data-emoji="{{ $emoji }}" x-show="available($el.dataset.emoji)" @click="picked.push($el.dataset.emoji)">
+                        <button type="button" class="emoji-selector-item" data-emoji="{{ $emoji }}" x-show="available($el.dataset.emoji)" @click="picked.push($el.dataset.emoji)">
                             <span class="emoji">{{ $emoji }}</span>
-                        </div>
+                        </button>
                     @endforeach
                 </div>
 
-                <p class="landing-demo-hint" x-text="picked.length ? `${count} of ${notes.length} notes` + (count > 1 ? ' · tap another to narrow it down' : '') : `${notes.length} notes · tap an emoji`">{{ $demoNotes->count() }} notes · tap an emoji</p>
+                <p class="landing-demo-hint" aria-live="polite" x-text="picked.length ? `${count} of ${notes.length} notes` + (count > 1 ? ' · tap another to narrow it down' : '') : `${notes.length} notes · tap an emoji`">{{ $demoNotes->count() }} notes · tap an emoji</p>
 
                 <div class="landing-demo-notes" :class="{ 'is-stacked': count > 4 }">
                     @include('notes.partials.cards', ['notes' => $demoNotes, 'linked' => false])

@@ -16,6 +16,7 @@
             wire:model="search_query"
             class="form-control elegant-input input-large"
             placeholder="🔍 Search notes..."
+            aria-label="Search notes"
             rows="1"
             autofocus
             @keydown.enter.prevent="Livewire.navigate('{{ route('notes.show') }}')"
@@ -26,6 +27,7 @@
             wire:click="$set('search_query', '')"
             class="input-clear"
             type="button"
+            aria-label="Clear search"
         >
             ×
         </button>

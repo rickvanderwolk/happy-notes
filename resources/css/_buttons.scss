@@ -12,18 +12,18 @@
   padding: $space-3 $space-6;
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
-  line-height: 1;
+  line-height: $line-height-tight;
+  text-align: center;
   border: 2px solid transparent;
   border-radius: $radius-full;
   cursor: pointer;
   text-decoration: none;
   transition: all $transition-base;
-  white-space: nowrap;
   user-select: none;
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 217, 61, 0.3);
+  &:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
   }
 
   &:disabled {
@@ -34,7 +34,7 @@
 }
 
 // Primary button (Yellow)
-.btn-primary, button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-outline) {
+.btn-primary, button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-outline):not(.menu-item-modern) {
   background: $primary;
   color: $text-primary;
   border-color: $primary;
@@ -84,8 +84,8 @@
   border-color: $success;
 
   &:hover:not(:disabled) {
-    background: $success-light;
-    border-color: $success-light;
+    background: $success-dark;
+    border-color: $success-dark;
     color: white; // Keep text color consistent
     transform: scale(1.05);
   }
@@ -102,8 +102,8 @@
   border-color: $danger;
 
   &:hover:not(:disabled) {
-    background: $danger-light;
-    border-color: $danger-light;
+    background: $danger-dark;
+    border-color: $danger-dark;
     color: white; // Keep text color consistent
     transform: scale(1.05);
   }
@@ -141,7 +141,7 @@
   text-decoration: underline;
 
   &:hover:not(:disabled) {
-    color: $primary-dark;
+    color: $text-primary;
     background: transparent;
     transform: none;
   }
@@ -165,13 +165,13 @@
 .btn-sm {
   padding: $space-2 $space-4;
   font-size: $font-size-sm;
-  height: $button-height-sm;
+  min-height: $button-height-sm;
 }
 
 .btn-lg {
   padding: $space-4 $space-8;
   font-size: $font-size-lg;
-  height: $button-height-lg;
+  min-height: $button-height-lg;
 }
 
 .btn-block {

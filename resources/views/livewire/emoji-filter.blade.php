@@ -21,16 +21,33 @@
             return this.picked.includes(emoji) || (this.tracksOther && this.other.includes(emoji))
         },
 
-        select(emoji) {
+        select(emoji, el) {
             if (this.picked.includes(emoji)) return
+            this.keepFocus(el)
             this.other = this.other.filter(e => e !== emoji)
             this.picked.push(emoji)
             this.changed()
         },
 
-        deselect(emoji) {
+        deselect(emoji, el) {
+            this.keepFocus(el)
             this.picked = this.picked.filter(e => e !== emoji)
             this.changed()
+        },
+
+        /* A picked emoji disappears from where it was, so keyboard focus moves on to its
+           neighbour instead of falling back to the top of the page. */
+        keepFocus(el) {
+            if (!el || el !== document.activeElement) return
+            const parent = el.parentElement
+            const index = [...parent.children].indexOf(el)
+            this.$nextTick(() => {
+                const items = [...parent.children].filter(item => item !== el && item.matches('button') && item.offsetParent !== null)
+                const next = items.find(item => [...parent.children].indexOf(item) >= index)
+                    ?? items.at(-1)
+                    ?? [...this.$root.querySelectorAll('.emoji-grid button')].find(item => item.offsetParent !== null)
+                next?.focus()
+            })
         },
 
         deselectAll() {
@@ -91,10 +108,10 @@
     <div class="selected-emojis-container" x-show="picked.length" @style(['display: none' => empty($this->emojis)])>
         <div class="emoji-chips-wrapper">
             <template x-for="emoji in picked" :key="emoji">
-                <div class="emoji-chip" @mousedown.prevent @click="deselect(emoji)">
+                <button type="button" class="emoji-chip" :aria-label="'Remove ' + emoji" @mousedown.prevent @click="deselect(emoji, $el)">
                     <span class="emoji" x-text="emoji"></span>
-                    <span class="remove-badge">×</span>
-                </div>
+                    <span class="remove-badge" aria-hidden="true">×</span>
+                </button>
             </template>
         </div>
     </div>
@@ -110,16 +127,17 @@
          new note page typing carries on in the title instead of hitting the shortcuts. --}}
     <div data-cy="emoji-filter-emoji-selector" class="emoji-grid">
         @foreach($this->allEmojis as $emoji)
-            <div
+            <button
+                type="button"
                 class="emoji-selector emoji-selector-item text-center"
                 data-emoji="{{ $emoji }}"
                 x-show="!isHidden($el.dataset.emoji)"
                 @mousedown.prevent
-                @click="select($el.dataset.emoji)"
+                @click="select($el.dataset.emoji, $el)"
                 @style(['display: none' => in_array($emoji, $hidden, true)])
             >
                 <span class="emoji">{{ $emoji }}</span>
-            </div>
+            </button>
         @endforeach
     </div>
 </div>

@@ -13,7 +13,7 @@ select,
   font-family: $font-family;
   color: $text-primary;
   background: transparent;
-  border: 2px solid $border;
+  border: 2px solid $border-input;
   border-radius: $radius-lg;
   transition: all $transition-base;
 
@@ -23,8 +23,8 @@ select,
 
   &:focus {
     outline: none;
-    border-color: $primary;
-    box-shadow: 0 0 0 3px rgba($primary, 0.2);
+    border-color: $text-primary;
+    box-shadow: 0 0 0 4px rgba($primary, 0.6);
     background: transparent;
   }
 
@@ -73,15 +73,15 @@ textarea.form-control {
 input.elegant-input,
 textarea.elegant-input {
   border: none;
-  border-bottom: 2px solid $border;
+  border-bottom: 2px solid $border-input;
   border-radius: 0;
   padding: $space-3 $space-2;
   background: transparent;
   transition: all $transition-base;
 
   &:focus {
-    border-bottom-color: $primary;
-    box-shadow: none;
+    border-bottom-color: $text-primary;
+    box-shadow: 0 3px 0 0 $primary;
   }
 
   &::placeholder {
@@ -136,7 +136,7 @@ input[type="radio"] {
     width: 48px;
     height: 26px;
     margin-right: $space-3;
-    background-color: $border-dark;
+    background-color: $border-input;
     border: none;
     border-radius: $radius-full;
     position: relative;
@@ -166,8 +166,12 @@ input[type="radio"] {
     }
 
     &:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba($primary, 0.2);
+      box-shadow: none;
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
     }
   }
 
@@ -249,7 +253,7 @@ input[type="radio"] {
   .form-control {
     color: $dark-text;
     background: transparent;
-    border-color: $dark-border;
+    border-color: $dark-border-input;
 
     &::placeholder {
       color: $dark-text-secondary;
@@ -258,6 +262,8 @@ input[type="radio"] {
     &:focus {
       color: $dark-text;
       background: transparent;
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba($primary, 0.35);
     }
 
     &:disabled {
@@ -269,11 +275,19 @@ input[type="radio"] {
   input.elegant-input,
   textarea.elegant-input {
     background: transparent;
-    border-bottom-color: $dark-border;
+    border-bottom-color: $dark-border-input;
 
     &:focus {
       color: $dark-text;
+      border-bottom-color: $primary;
+      box-shadow: 0 3px 0 0 $primary;
     }
+  }
+
+  .input-error,
+  .invalid-feedback,
+  .input-error-message {
+    color: $dark-danger;
   }
 
   label,
@@ -282,7 +296,7 @@ input[type="radio"] {
   }
 
   .form-switch .form-check-input {
-    background-color: $dark-border;
+    background-color: $dark-border-input;
 
     &:checked {
       background-color: $primary;

@@ -10,6 +10,7 @@
 @use 'stats' as *;
 @use 'dialog';
 @use 'celebration';
+@use 'accessibility';
 
 // Logo styles
 img.logo {
@@ -94,8 +95,6 @@ body {
     font-size: $font-size-base;
     line-height: $line-height-base;
     color: $text-primary;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -183,6 +182,12 @@ p {
     background: linear-gradient(to top, rgba(255, 254, 249, 1) 70%, transparent);
     padding: 16px 0 20px;
     z-index: 100;
+
+    // Zoomed in far, a fixed bar would cover most of the screen.
+    @media (max-height: 30rem) {
+        position: static;
+        background: none;
+    }
 }
 
 // Note detail header
@@ -205,11 +210,11 @@ p {
 #editorjs {
     padding: 0 $space-3; // Match note card padding for consistency
 
-    h1 { font-size: 22px; } // Smaller than note-detail-title (24px)
-    h2 { font-size: 20px; }
-    h3 { font-size: 18px; }
-    h4 { font-size: 16px; }
-    h5, h6 { font-size: 16px; }
+    h1 { font-size: 1.375rem; } // Smaller than note-detail-title (1.5rem)
+    h2 { font-size: 1.25rem; }
+    h3 { font-size: 1.125rem; }
+    h4 { font-size: 1rem; }
+    h5, h6 { font-size: 1rem; }
 }
 
 // Navbar styles
@@ -291,7 +296,18 @@ p {
         }
 
         &.active {
-            color: $primary-dark;
+            color: $text-primary;
+
+            &::after {
+                content: '';
+                position: absolute;
+                left: 30%;
+                right: 30%;
+                bottom: 0;
+                height: 3px;
+                border-radius: $radius-full;
+                background: currentColor;
+            }
         }
     }
 
@@ -403,11 +419,7 @@ p {
     cursor: pointer;
 
     &:hover {
-        transform: translateY(-3px) scale(1.015);
-    }
-
-    &:active {
-        transform: translateY(0) scale(1);
+        border-color: $text-tertiary;
     }
 }
 
@@ -419,8 +431,6 @@ a .list-group-item {
 // App container
 #app {
     font-family: $font-family;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     text-align: left;
     color: $text-primary;
     padding-top: $space-2;
@@ -455,7 +465,7 @@ a {
     transition: color $transition-fast;
 
     &:hover {
-        color: $primary-dark;
+        color: $text-primary;
     }
 }
 
@@ -494,7 +504,7 @@ a {
         transition: color $transition-fast;
 
         &:hover {
-            color: $primary-dark;
+            color: $text-primary;
             text-decoration: underline;
         }
     }
@@ -525,8 +535,7 @@ a {
     transition: all $transition-base;
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: $shadow-sm;
+        border-color: $text-tertiary;
     }
 }
 

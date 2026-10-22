@@ -1,4 +1,5 @@
 <x-guest-layout>
+    <x-slot name="title">Verify email</x-slot>
     <x-authentication-card>
         <x-slot name="logo">
             <a href="{{ route('home') }}">

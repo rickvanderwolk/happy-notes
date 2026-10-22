@@ -1,3 +1,3 @@
 @props(['key'])
 
-<span class="keyboard-hint" {{ $attributes }}>{{ $key }}</span>
+<span class="keyboard-hint" aria-hidden="true" {{ $attributes }}>{{ $key }}</span>

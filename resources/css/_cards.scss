@@ -12,11 +12,7 @@
     cursor: pointer;
 
     &:hover {
-      transform: translateY(-3px) scale(1.015);
-    }
-
-    &:active {
-      transform: translateY(0) scale(0.995);
+      border-color: $text-tertiary;
     }
   }
 
@@ -55,11 +51,7 @@
   }
 
   &:hover {
-    transform: translateY(-3px) scale(1.01);
-  }
-
-  &:active {
-    transform: translateY(0) scale(0.99);
+    border-color: $text-tertiary;
   }
 
   .note-title {
@@ -100,11 +92,6 @@
     max-width: $logo-size;
     margin: 0 auto $space-6;
     display: block;
-    transition: transform $transition-slow;
-
-    &:hover {
-      transform: scale(1.05) rotate(2deg);
-    }
   }
 
   .auth-title {
@@ -150,7 +137,7 @@
     }
 
     &:hover {
-      padding-left: calc(#{$space-6} + 4px);
+      background: $surface-hover;
     }
 
     i, .emoji {
@@ -178,15 +165,15 @@
   border: 1px solid $border;
   border-radius: $radius-md;
   text-decoration: none;
-  transition: all $transition-spring;
+  transition: all $transition-fast;
   color: inherit;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 
   &:hover {
-    transform: translateX(6px) scale(1.01);
-  }
-
-  &:active {
-    transform: translateX(3px) scale(1);
+    border-color: $text-tertiary;
   }
 
   .menu-item-content {
@@ -214,7 +201,7 @@
   }
 
   &:hover .menu-item-icon {
-    color: $primary-dark;
+    color: $text-primary;
   }
 
   // Desktop only menu items (hide on mobile/touch devices)
@@ -233,14 +220,6 @@
   padding: $space-6;
   margin-bottom: $space-6;
   transition: all $transition-base;
-
-  &:hover {
-    transform: translateY(-2px) scale(1.005);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
 
   .account-card-title {
     font-size: $font-size-xl;
@@ -335,6 +314,16 @@
   .note-card {
     background: rgba($dark-surface, 0.3);
     border-color: $dark-border;
+  }
+
+  .card.card-hover:hover,
+  .note-card:hover,
+  .menu-item-modern:hover {
+    border-color: $dark-text-secondary;
+  }
+
+  .menu-card .menu-item:hover {
+    background: $dark-surface-hover;
   }
 
   .menu-card .menu-item {

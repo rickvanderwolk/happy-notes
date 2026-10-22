@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Notes</x-slot>
     <x-slot name="header"></x-slot>
 
     @include('notes.partials.celebration')
@@ -10,7 +11,7 @@
             </div>
 
             <!-- Loading indicator -->
-            <div id="loading" class="text-center py-4" style="display: none;">
+            <div id="loading" class="text-center py-4" role="status" style="display: none;">
                 <span class="text-sm text-gray-500">Loading...</span>
             </div>
         @else

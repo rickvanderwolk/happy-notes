@@ -9,7 +9,7 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'happynotes') }}</title>
+        <title>{{ isset($title) ? $title . ' – ' : '' }}{{ config('app.name', 'happynotes') }}</title>
         <meta name="description" content="A note-taking app for free-spirited minds. No folders, no tags, just emojis.">
 
         <link rel="icon" type="image/png" href="/favicon-96x96.png?v=2" sizes="96x96" />
@@ -24,7 +24,7 @@
         @livewireStyles
     </head>
     <body>
-        <div class="font-sans text-gray-900 antialiased">
+        <div class="font-sans text-gray-900">
             {{ $slot }}
         </div>
 

@@ -1,4 +1,5 @@
 <x-guest-layout>
+    <x-slot name="title">Log in</x-slot>
     <div>
 
         <x-authentication-card>

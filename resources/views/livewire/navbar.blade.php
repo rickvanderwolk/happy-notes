@@ -1,4 +1,4 @@
-<div id="main-navbar" class="main-navbar" data-cy="main-navbar">
+<nav id="main-navbar" class="main-navbar" data-cy="main-navbar" aria-label="Main">
     <div class="navbar-inner">
         <div class="row g-0">
             <div class="col-12">
@@ -20,21 +20,21 @@
                     {{-- Note detail view --}}
                     <div class="row">
                         <div class="col-12 d-flex justify-content-between">
-                            <h3 class="emoji-wrapper">
+                            <div class="emoji-wrapper">
                                 <form action="{{ route('note.destroy', ['note' => $uuidFromRoute]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button data-cy="delete-note" type="submit"
+                                    <button data-cy="delete-note" type="submit" aria-label="Delete note"
                                             data-confirm="Delete this note?"
                                             data-confirm-label="Delete"
                                             data-confirm-danger>
                                         <x-icon name="trash-can" />
                                     </button>
                                 </form>
-                            </h3>
-                            <h3 class="emoji-wrapper">
+                            </div>
+                            <div class="emoji-wrapper">
                                 <x-navbar-link :route="$closeUrl" icon="close" label="Close" />
-                            </h3>
+                            </div>
                         </div>
                     </div>
 
@@ -42,11 +42,11 @@
                     {{-- Notes list view --}}
                     <div class="row">
                         <div class="col-12 d-flex justify-content-between align-items-center">
-                            <h3 class="emoji-wrapper">
+                            <div class="emoji-wrapper">
                                 <x-navbar-link :route="route('menu.show')" :active="request()->is('menu')" icon="bars" label="Menu" />
                                 <x-navbar-link :route="route('note.create')" :active="request()->is('new')" icon="plus" label="New note" data-cy="create-new-note" />
-                            </h3>
-                            <h3 class="emoji-wrapper">
+                            </div>
+                            <div class="emoji-wrapper">
                                 @if(count($selectedEmojis ?? []) > 0)
                                     <a href="{{ route('filter.show') }}" class="{{ request()->is('filter') ? 'active' : '' }}" aria-label="Filter">
                                         @foreach(array_slice($selectedEmojis, 0, 3) as $emoji)
@@ -59,7 +59,7 @@
                                 @else
                                     <x-navbar-link-with-badge :route="route('filter.show')" :active="request()->is('filter')" icon="filter" label="Filter" />
                                 @endif
-                            </h3>
+                            </div>
                         </div>
                     </div>
 
@@ -70,7 +70,7 @@
                             {{-- The emoji filter reports its selection client side, so these
                                  badges follow along without costing a server roundtrip per
                                  click. --}}
-                            <h3
+                            <div
                                 class="emoji-wrapper"
                                 x-data="{
                                     selected: @js(count($selectedEmojis ?? [])),
@@ -109,10 +109,10 @@
                                     label="Filter - search text"
                                     :showBadge="!empty($searchQuery ?? '')"
                                 />
-                            </h3>
-                            <h3 class="emoji-wrapper">
+                            </div>
+                            <div class="emoji-wrapper">
                                 <x-navbar-link :route="url('/')" :active="request()->is('/')" icon="close" label="Close" />
-                            </h3>
+                            </div>
                         </div>
                     </div>
 
@@ -120,10 +120,10 @@
                     {{-- Other routes --}}
                     <div class="row">
                         <div class="col-12 d-flex justify-content-between">
-                            <h3 class="emoji-wrapper"></h3>
-                            <h3 class="emoji-wrapper">
+                            <div class="emoji-wrapper"></div>
+                            <div class="emoji-wrapper">
                                 <x-navbar-link :route="$closeUrl" icon="close" label="Close" />
-                            </h3>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -131,4 +131,4 @@
             </div>
         </div>
     </div>
-</div>
+</nav>

@@ -10,7 +10,7 @@
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'happynotes') }}</title>
+        <title>{{ isset($title) ? $title . ' – ' : '' }}{{ config('app.name', 'happynotes') }}</title>
         <meta name="description" content="💥🧠📝🎨🚀">
 
         <link rel="icon" type="image/png" href="/favicon-96x96.png?v=2" sizes="96x96" />

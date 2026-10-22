@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Menu</x-slot>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
             <a href="{{ route('notes.show') }}">
@@ -46,16 +47,18 @@
                 <x-icon name="info-circle" class="menu-item-icon" />
             </a>
 
-            <form id="logout-button" method="POST" action="{{ route('logout') }}" class="menu-item-modern" style="cursor: pointer;" onclick="this.submit()">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <div class="menu-item-content">
-                    <span class="menu-item-title">
-                        Logout
-                        <x-keyboard-hint key="L" />
+                <button id="logout-button" type="submit" class="menu-item-modern">
+                    <span class="menu-item-content">
+                        <span class="menu-item-title">
+                            Logout
+                            <x-keyboard-hint key="L" />
+                        </span>
+                        <span class="menu-item-subtitle">Sign out of your account</span>
                     </span>
-                    <span class="menu-item-subtitle">Sign out of your account</span>
-                </div>
-                <x-icon name="sign-out" class="menu-item-icon" />
+                    <x-icon name="sign-out" class="menu-item-icon" />
+                </button>
             </form>
         </div>
 

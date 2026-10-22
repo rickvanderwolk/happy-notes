@@ -1,4 +1,5 @@
 <x-account-layout>
+    <x-slot name="title">Account</x-slot>
     <div class="container max-w-md mx-auto">
         {{-- Page header --}}
         <div class="text-center mb-6">

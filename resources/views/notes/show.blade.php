@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ $note?->title ?? 'Note' }}</x-slot>
     <x-slot name="header"></x-slot>
 
     <div>

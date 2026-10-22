@@ -146,17 +146,17 @@
   vertical-align: middle;
   margin-left: $space-2;
   padding: 2px 8px;
-  font-size: 11px;
+  font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
   line-height: 1.5;
   border-radius: $radius-full;
   background: $border;
-  color: $text-tertiary;
+  color: $text-secondary;
   white-space: nowrap;
 
   &.period-badge--recent {
     background: rgba($secondary, 0.18);
-    color: $secondary-dark;
+    color: #9A4A00;
   }
 }
 
@@ -227,9 +227,9 @@
   }
 
   .stat-chart-label {
-    font-size: 10px;
-    line-height: 14px;
-    height: 14px;
+    font-size: $font-size-xs;
+    line-height: 1.2;
+    min-height: 1.2em;
     overflow: hidden;
     color: $text-tertiary;
     margin-top: $space-2;
@@ -251,7 +251,7 @@
   }
 
   .stat-chart-label {
-    font-size: 9px;
+    overflow: visible;
   }
 }
 

@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Insights</x-slot>
     <div class="container max-w-md mx-auto">
         <div class="text-center mb-6">
             <h2 class="section-title"><x-icon name="lightbulb" class="me-2" />Insights</h2>

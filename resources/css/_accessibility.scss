@@ -1,0 +1,132 @@
+// HappyNotes - Accessibility
+// Focus, motion and contrast rules that follow the visitor's system settings.
+@use 'variables' as *;
+
+:root {
+  --focus-ring: #{$text-primary};
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --focus-ring: #{$primary};
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  img.logo,
+  .empty-state-logo,
+  .empty-state-icon,
+  #main-navbar .icon {
+    animation: none !important;
+  }
+
+  :is(.btn, button, .emoji, .emoji-chip, .emoji-selector-item, .hover-lift, .hover-scale, .hover-scale-sm, .navbar-logo, .keyboard-key):is(:hover, :active),
+  :is(:hover, :active) :is(.icon, .emoji, .remove-badge) {
+    transform: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --focus-ring: #000;
+  }
+
+  .note-card,
+  .card,
+  .menu-item-modern,
+  .account-card,
+  .auth-card,
+  .list-group-item,
+  .cleanup-item,
+  .shortcut-item,
+  .stat-chart {
+    border-color: $text-tertiary !important;
+  }
+
+  .section-description-text,
+  .menu-item-subtitle,
+  .menu-item-icon,
+  .empty-state-subtitle,
+  .auth-subtitle,
+  .account-card-description,
+  .stat-note,
+  .stat-note-sub,
+  .stat-chart-label,
+  .stat-chart-count,
+  .result-count-text,
+  .shortcut-context,
+  .app-version-text,
+  .version-text,
+  .keyboard-hint,
+  .cleanup-count,
+  .landing-tagline,
+  .landing-story,
+  .landing-steps p,
+  .landing-demo-hint,
+  label,
+  .form-label,
+  #main-navbar :is(a, button) {
+    color: $text-primary !important;
+  }
+}
+
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root {
+    --focus-ring: #{$primary};
+  }
+
+  .note-card,
+  .card,
+  .menu-item-modern,
+  .account-card,
+  .auth-card,
+  .list-group-item,
+  .cleanup-item,
+  .shortcut-item,
+  .stat-chart {
+    border-color: $dark-text-secondary !important;
+  }
+
+  .section-description-text,
+  .menu-item-subtitle,
+  .menu-item-icon,
+  .empty-state-subtitle,
+  .auth-subtitle,
+  .account-card-description,
+  .stat-note,
+  .stat-note-sub,
+  .stat-chart-label,
+  .stat-chart-count,
+  .result-count-text,
+  .shortcut-context,
+  .app-version-text,
+  .version-text,
+  .keyboard-hint,
+  .cleanup-count,
+  .landing-tagline,
+  .landing-story,
+  .landing-steps p,
+  .landing-demo-hint,
+  label,
+  .form-label,
+  #main-navbar :is(a, button) {
+    color: $dark-text !important;
+  }
+}

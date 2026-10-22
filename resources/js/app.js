@@ -9,6 +9,37 @@ const getCurrentRouteName = () => document.querySelector('meta[name="app-current
 
 const visit = (url) => window.Livewire.navigate(url);
 
+const scrollBehavior = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
+// Single-key shortcuts can be turned off on the shortcuts page (WCAG 2.1.4), per device
+// since they only matter where there is a keyboard.
+const shortcutsStorageKey = 'keyboard-shortcuts';
+
+const shortcutsEnabled = () => {
+    try {
+        return localStorage.getItem(shortcutsStorageKey) !== 'off';
+    } catch {
+        return true;
+    }
+};
+
+const applyShortcutsPreference = () => {
+    document.documentElement.classList.toggle('shortcuts-off', !shortcutsEnabled());
+};
+
+window.setKeyboardShortcuts = (enabled) => {
+    try {
+        localStorage.setItem(shortcutsStorageKey, enabled ? 'on' : 'off');
+    } catch {
+        // Without storage the shortcuts simply stay on.
+    }
+    applyShortcutsPreference();
+};
+
+window.keyboardShortcutsEnabled = shortcutsEnabled;
+
+applyShortcutsPreference();
+
 // Every internal link swaps the page instead of reloading it, without having to mark each
 // link with wire:navigate. data-no-navigate opts a link out, for pages with another layout.
 document.addEventListener('click', (event) => {
@@ -94,6 +125,10 @@ const keydownListener = (event) => {
 
         // Cmd+F, Ctrl+S and the like belong to the browser, not to the app's shortcuts.
         if (event.metaKey || event.ctrlKey || event.altKey) {
+            return;
+        }
+
+        if (event.key.length === 1 && !shortcutsEnabled()) {
             return;
         }
 
@@ -292,7 +327,7 @@ function checkAndLoadForAnchor() {
     const targetElement = document.getElementById(targetId);
 
     if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
+        targetElement.scrollIntoView({ behavior: scrollBehavior() });
         return;
     }
 
@@ -340,7 +375,7 @@ function loadMoreDataForAnchor(targetId) {
 
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth' });
+                targetElement.scrollIntoView({ behavior: scrollBehavior() });
             }
         })
         .catch(error => {

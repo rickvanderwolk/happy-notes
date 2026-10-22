@@ -1,4 +1,5 @@
 <x-guest-layout>
+    <x-slot name="title">Two-factor authentication</x-slot>
     <x-authentication-card>
         <x-slot name="logo">
             <a href="{{ route('home') }}">

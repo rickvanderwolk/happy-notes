@@ -173,6 +173,10 @@ html.smooth-scroll {
   flex-shrink: 0;
   transition: all $transition-spring;
   cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: $radius-md;
+  color: inherit;
 
   .emoji {
     font-size: 36px;
@@ -219,6 +223,9 @@ html.smooth-scroll {
   border-radius: $radius-md;
   transition: all $transition-spring;
   cursor: pointer;
+  background: none;
+  border: 0;
+  color: inherit;
 
   &:hover {
     transform: scale(1.2);
@@ -309,6 +316,10 @@ html.smooth-scroll {
   @media (hover: none) {
     display: none;
   }
+
+  .shortcuts-off & {
+    display: none;
+  }
 }
 
 // Larger keyboard key for shortcuts overview page
@@ -359,15 +370,6 @@ html.smooth-scroll {
     background: rgba($surface, 0.5);
     border: 1px solid $border;
     border-radius: $radius-md;
-    transition: all $transition-spring;
-
-    &:hover {
-      transform: translateX(4px) scale(1.01);
-    }
-
-    &:active {
-      transform: translateX(2px);
-    }
 
     .shortcut-description {
       flex: 1;
@@ -527,6 +529,7 @@ html.smooth-scroll {
 }
 
 .emoji-selector {
+  width: 100%;
   aspect-ratio: 1;
   display: flex;
   align-items: center;

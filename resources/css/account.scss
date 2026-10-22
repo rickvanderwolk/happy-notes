@@ -6,6 +6,7 @@
 @use 'buttons' as *;
 @use 'cards' as *;
 @use 'forms' as *;
+@use 'accessibility';
 
 @tailwind base;
 @tailwind components;

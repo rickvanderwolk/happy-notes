@@ -4,6 +4,7 @@
 @use 'buttons' as *;
 @use 'cards' as *;
 @use 'forms' as *;
+@use 'accessibility';
 
 @tailwind base;
 @tailwind components;
@@ -18,8 +19,6 @@ body {
     font-family: $font-family;
     color: $text-primary;
     background: $background;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 // Logo styles
@@ -67,7 +66,7 @@ a {
     transition: color $transition-fast;
 
     &:hover {
-        color: $primary-dark;
+        color: $text-primary;
     }
 }
 
@@ -283,7 +282,7 @@ a {
     color: $text-tertiary;
 
     &:hover {
-        color: $primary;
+        color: $text-primary;
     }
 }
 

@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Search</x-slot>
     @push('head')
         <meta name="navigate-cache-control" content="no-cache">
     @endpush

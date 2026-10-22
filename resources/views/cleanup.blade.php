@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Clean up</x-slot>
     <div class="text-center mb-4">
         <h2 class="section-title">Cleanup</h2>
         <p class="section-description-text mt-2">

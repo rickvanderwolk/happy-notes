@@ -107,18 +107,7 @@
     border: 0;
     border-radius: 0;
     margin-bottom: 0;
-
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
   }
-}
-
-// The account cards lift on hover with a transform, and a transformed ancestor pins a
-// fixed modal to that card instead of the screen. No lift while a modal is open.
-.account-card:has(.jet-modal-content:not([style*="display: none"])) {
-  transform: none !important;
 }
 
 @keyframes dialog-fade-in {

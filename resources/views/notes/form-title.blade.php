@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Edit title</x-slot>
     <x-slot name="header"></x-slot>
 
     <div class="container form-page-container">
