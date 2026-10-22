@@ -1,4 +1,5 @@
 // HappyNotes Design System
+@use 'sass:color';
 @use 'variables' as *;
 @use 'utilities' as *;
 @use 'buttons' as *;
@@ -79,7 +80,7 @@ a {
 
 // Landing page
 .landing {
-    background: linear-gradient(180deg, $background 0%, darken($background, 2%) 100%);
+    background: linear-gradient(180deg, $background 0%, color.adjust($background, $lightness: -2%) 100%);
     padding: 0 $space-6 $space-12;
 }
 
@@ -365,7 +366,7 @@ a {
     }
 
     .landing {
-        background: linear-gradient(180deg, $dark-bg 0%, lighten($dark-bg, 2%) 100%);
+        background: linear-gradient(180deg, $dark-bg 0%, color.adjust($dark-bg, $lightness: 2%) 100%);
     }
 
     .landing-title,

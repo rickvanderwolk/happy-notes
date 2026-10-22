@@ -51,7 +51,7 @@ jobs:
           node-version: 'lts/*'
           cache: npm
 
-      - name: ESLint
+      - name: ESLint and Stylelint
         run: |
           npm ci
           npm run lint

@@ -113,7 +113,7 @@ h5, h6 { font-size: $font-size-base; }
 p {
     font-size: $font-size-base;
     line-height: $line-height-relaxed;
-    word-break: break-word;
+    overflow-wrap: anywhere;
     margin-bottom: $space-4;
 }
 
