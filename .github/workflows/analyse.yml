@@ -45,6 +45,17 @@ jobs:
       - name: Psalm
         run: vendor/bin/psalm --no-progress
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: npm
+
+      - name: ESLint
+        run: |
+          npm ci
+          npm run lint
+
       - name: Composer audit
         run: composer audit
 

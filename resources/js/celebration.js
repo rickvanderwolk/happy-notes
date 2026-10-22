@@ -94,7 +94,7 @@ export function startCelebration() {
         return;
     }
 
-    let emojis = [];
+    let emojis;
     try {
         emojis = JSON.parse(overlay.dataset.emojis || '[]');
     } catch {
