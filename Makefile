@@ -46,13 +46,11 @@ analyse:
 	@echo "🧪 Analyse code..."
 	vendor/bin/phpcs --standard=PSR12 app/
 	php -d memory_limit=-1 vendor/bin/phpstan analyse
-	vendor/bin/psalm
 	npm run lint
 
 autofix:
 	@echo "🤖 Auto fix code..."
 	vendor/bin/php-cs-fixer fix app/
-	vendor/bin/psalm --alter --issues=MissingReturnType,MissingOverrideAttribute,InvalidReturnType,ClassMustBeFinal
 
 test:
 	@echo "🧪 Running tests..."

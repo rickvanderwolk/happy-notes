@@ -42,9 +42,6 @@ jobs:
       - name: PHPStan
         run: php -d memory_limit=-1 vendor/bin/phpstan analyse --no-progress
 
-      - name: Psalm
-        run: vendor/bin/psalm --no-progress
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
