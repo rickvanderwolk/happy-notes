@@ -6,13 +6,9 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileExportController;
 use App\Http\Controllers\InsightsController;
 use App\Http\Middleware\StoreOriginalRoute;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -53,7 +49,9 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
 
     Route::get('/insights', [InsightsController::class, 'index'])->name('insights.show');
 
-    Route::get('/dashboard', function () { return redirect(route('notes.show')); })->name('dashboard');
+    Route::get('/dashboard', function () {
+        return redirect(route('notes.show'));
+    })->name('dashboard');
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.show');
     Route::post('/notes', [NoteController::class, 'store'])->name('note.store');
     Route::get('/notes/new', [NoteController::class, 'create'])->name('note.create');

@@ -49,13 +49,13 @@ analyse:
 	php artisan route:clear
 	php artisan event:clear
 	php artisan view:clear
-	vendor/bin/phpcs --standard=PSR12 app/
+	vendor/bin/pint --test
 	php -d memory_limit=-1 vendor/bin/phpstan analyse
 	npm run lint
 
 autofix:
 	@echo "🤖 Auto fix code..."
-	vendor/bin/php-cs-fixer fix app/
+	vendor/bin/pint
 
 test:
 	@echo "🧪 Running tests..."

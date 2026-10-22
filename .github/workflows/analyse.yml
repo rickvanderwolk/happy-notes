@@ -39,8 +39,8 @@ jobs:
       - name: Cache config, routes, events and Blade views
         run: php artisan optimize
 
-      - name: PHP_CodeSniffer
-        run: vendor/bin/phpcs --standard=PSR12 app/
+      - name: Pint
+        run: vendor/bin/pint --test
 
       - name: PHPStan
         run: php -d memory_limit=-1 vendor/bin/phpstan analyse --no-progress

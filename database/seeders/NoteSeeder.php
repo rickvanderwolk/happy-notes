@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use App\Models\Note;
-use Illuminate\Support\Facades\DB;
 
 final class NoteSeeder extends Seeder
 {
