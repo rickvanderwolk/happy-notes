@@ -1,0 +1,29 @@
+name: audit
+
+# New advisories are published every day, also for dependencies that did not change, so
+# this checks the locked versions daily instead of only on a push.
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: Security audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Composer audit
+        run: composer audit --locked
+
+      - name: npm audit (production dependencies)
+        run: npm audit --omit=dev

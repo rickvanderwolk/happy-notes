@@ -20,7 +20,7 @@
                     rows="3"
                     autofocus
                     required
-                    onkeydown="if(event.key === 'Enter') event.preventDefault();"
+                    data-single-line
                 >{{ $item->title }}</textarea>
             </div>
         </form>

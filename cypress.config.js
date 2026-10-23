@@ -2,6 +2,8 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   allowCypressEnv: false,
+  // Keep the app's content security policy, so the tests notice when it is broken.
+  experimentalCspAllowList: ['default-src', 'script-src', 'script-src-elem', 'form-action'],
   expose: {
       users: {
           user1: {

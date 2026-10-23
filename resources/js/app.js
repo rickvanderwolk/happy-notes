@@ -9,6 +9,14 @@ const getCurrentRouteName = () => document.querySelector('meta[name="app-current
 
 const visit = (url) => window.Livewire.navigate(url);
 
+// A title is a single line, so Enter never adds a newline to it. This lives here instead
+// of an onkeydown attribute, which the content security policy does not allow.
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && event.target.matches('textarea[data-single-line]')) {
+        event.preventDefault();
+    }
+});
+
 const scrollBehavior = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 
 // Single-key shortcuts can be turned off on the shortcuts page (WCAG 2.1.4), per device

@@ -1,4 +1,4 @@
-@props(['emojis' => [], 'size' => 'default', 'clickable' => false, 'onClick' => null])
+@props(['emojis' => [], 'size' => 'default', 'clickable' => false])
 
 @php
     $sizeClass = match($size) {
@@ -10,6 +10,6 @@
 
 <div class="emoji-wrapper {{ $sizeClass }} {{ $clickable ? 'clickable' : '' }}" {{ $attributes }}>
     @foreach($emojis as $emojiIndex => $emoji)
-        <span class="emoji" @if($clickable && $onClick) onclick="{{ $onClick }}" @endif>{{ $emoji }}</span>
+        <span class="emoji">{{ $emoji }}</span>
     @endforeach
 </div>

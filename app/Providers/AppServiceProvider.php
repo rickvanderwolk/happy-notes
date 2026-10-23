@@ -26,8 +26,9 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Disable rate limiting if not production (for e2e tests)
-        if (!App::environment('production')) {
+        // Disable rate limiting only where the tests run, so a misnamed environment on a
+        // server keeps it on instead of silently switching it off.
+        if (App::environment(['local', 'testing'])) {
             RateLimiter::for('global', fn () => Limit::none());
             RateLimiter::for('api', fn () => Limit::none());
             RateLimiter::for('web', fn () => Limit::none());

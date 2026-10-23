@@ -23,7 +23,7 @@
                     rows="3"
                     autofocus
                     required
-                    onkeydown="if(event.key === 'Enter') event.preventDefault();"
+                    data-single-line
                 >{{ old('title') }}</textarea>
 
                 @error('title')
