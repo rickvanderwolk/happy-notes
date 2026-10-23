@@ -12,6 +12,8 @@
         saveUrl: @js(route('filter.emojis.store')),
         csrfToken: @js(csrf_token()),
         saveTimer: null,
+        saving: Promise.resolve(),
+        savesInFlight: 0,
 
         init() {
             this.syncInput()
@@ -83,25 +85,42 @@
             this.save()
         },
 
-        /* keepalive so the request still completes if the page is going away. */
+        /* Saves go out one after another, so an earlier one can never land after a later
+           one. keepalive so the request still completes if the page is going away. */
         save() {
-            fetch(this.saveUrl, {
-                method: 'POST',
-                keepalive: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': this.csrfToken,
-                },
-                body: JSON.stringify({
-                    storageKey: this.storageKey,
-                    emojis: this.picked,
-                    otherEmojis: this.other,
-                }),
+            const body = JSON.stringify({
+                storageKey: this.storageKey,
+                emojis: this.picked,
+                otherEmojis: this.other,
             })
+            this.savesInFlight++
+            this.saving = this.saving
+                .catch(() => {})
+                .then(() => fetch(this.saveUrl, {
+                    method: 'POST',
+                    keepalive: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': this.csrfToken,
+                    },
+                    body,
+                }))
+                .finally(() => this.savesInFlight--)
+        },
+
+        /* The next page reads the filters from the server, so it waits for the last save.
+           Otherwise the server can render it before that save is stored, with the old
+           selection. Back and forward are left alone. */
+        beforeNavigate(event) {
+            this.flush()
+            if (!this.savesInFlight || event.detail.history) return
+            event.preventDefault()
+            const url = event.detail.url.href
+            this.saving.finally(() => window.Livewire.navigate(url))
         },
     }"
-    x-on:livewire:navigate.window="flush()"
+    x-on:livewire:navigate.window="beforeNavigate($event)"
     @pagehide.window="flush()"
     @keydown.window.backspace="if (!['INPUT', 'TEXTAREA', 'SELECT'].includes($event.target.tagName)) deselectAll()"
 >

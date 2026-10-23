@@ -119,13 +119,20 @@ describe("Notes Tests", () => {
         });
     });
 
+    // Deletes a note it made itself, so the seeded notes other specs rely on stay put
+    // whatever order the specs run in.
     it("Delete note", () => {
-        cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().as("firstNote");
-        cy.get("@firstNote").invoke("text").then((deletedNoteText) => {
-            cy.get("@firstNote").click();
-            cy.get('[data-cy="delete-note"]').click();
-            cy.get('[data-cy="dialog-confirm"]').click();
-            cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').first().invoke("text").should("not.eq", deletedNoteText);
-        });
+        const title = `Note to delete - ${Date.now()}`;
+        cy.get('[data-cy="create-new-note"]').click();
+        cy.get('[data-cy="new-note-title"]').type(title);
+        cy.selectFirstSelectableEmoji();
+        cy.get('[data-cy="save-new-note"]').click();
+        cy.get('[data-cy="note-list"]').should('be.visible');
+
+        cy.contains('[data-cy="note-list-item"]', title).click();
+        cy.get('[data-cy="delete-note"]').click();
+        cy.get('[data-cy="dialog-confirm"]').click();
+        cy.get('[data-cy="note-list"]').should('be.visible');
+        cy.contains('[data-cy="note-list-item"]', title).should('not.exist');
     });
 });
