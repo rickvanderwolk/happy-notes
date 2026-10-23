@@ -75,8 +75,8 @@
   overflow-y: auto;
   z-index: $z-modal + 1;
 
-  // Tailwind is not loaded on the account pages, so the px-6/py-4 in Jetstream's markup
-  // do nothing; the spacing comes from here.
+  // Jetstream's dialog markup was written for Tailwind, which is not used here, so the
+  // spacing comes from here.
   > div {
     padding: $space-6 $space-6 0;
     text-align: left;

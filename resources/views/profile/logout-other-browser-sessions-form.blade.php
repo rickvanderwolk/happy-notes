@@ -8,7 +8,7 @@
     </x-slot>
 
     <x-slot name="content">
-        <div class="max-w-xl text-sm section-description-text">
+        <div class="max-w-xl section-description-text">
             {{ __('If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.') }}
         </div>
 
@@ -21,10 +21,10 @@
                             <x-icon :name="$session->agent->isDesktop() ? 'desktop' : 'mobile'" class="section-description-text" style="font-size: 16px;" />
                         </div>
                         <div style="flex: 1; min-width: 0; text-align: left;">
-                            <div class="text-sm section-description-text" style="font-weight: 500; margin-bottom: 4px;">
+                            <div class="section-description-text" style="font-weight: 500; margin-bottom: 4px;">
                                 {{ $session->agent->platform() ? $session->agent->platform() : __('Unknown') }} - {{ $session->agent->browser() ? $session->agent->browser() : __('Unknown') }}
                             </div>
-                            <div class="text-xs section-description-text">
+                            <div class="section-description-text">
                                 {{ $session->ip_address }}
                                 @if ($session->is_current_device)
                                     • <span class="font-semibold">{{ __('This device') }}</span>
@@ -38,7 +38,7 @@
             </div>
         @endif
 
-        <div class="flex items-center mt-5">
+        <div class="mt-5">
             <x-button wire:click="confirmLogout" wire:loading.attr="disabled">
                 {{ __('Log Out Other Browser Sessions') }}
             </x-button>
@@ -58,7 +58,7 @@
                 {{ __('Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.') }}
 
                 <div class="mt-4" x-data="{}" x-on:confirming-logout-other-browser-sessions.window="setTimeout(() => $refs.password.focus(), 250)">
-                    <x-input type="password" class="mt-1 block w-3/4"
+                    <x-input type="password" class="mt-1"
                                 autocomplete="current-password"
                                 placeholder="{{ __('Password') }}"
                                 x-ref="password"

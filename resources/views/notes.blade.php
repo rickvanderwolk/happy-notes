@@ -14,7 +14,7 @@
 
             <!-- Loading indicator -->
             <div id="loading" class="text-center py-4" role="status" style="display: none;">
-                <span class="text-sm text-gray-500">Loading...</span>
+                <span>Loading...</span>
             </div>
         @else
             <div class="empty-state">

@@ -1,16 +1,16 @@
-<div class="min-h-screen flex flex-col justify-center items-center p-4">
+<div class="auth-page">
     <div class="auth-card">
-        <div class="text-center mb-6">
+        <div class="auth-card-header">
             {{ $logo }}
         </div>
 
         {{ $slot }}
     </div>
 
-    <div class="version-text text-center mt-6">
+    <div class="version-text auth-version">
         {{ config('app.name') }} {{ config('app.version') }}
-        <span class="mx-2">•</span>
-        <a class="underline hover:text-gray-600" href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer">
+        <span class="auth-version-separator">•</span>
+        <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer">
             GitHub
         </a>
     </div>

@@ -1,5 +1,6 @@
 // HappyNotes Design System
 @use 'sass:color';
+@use 'sass:meta';
 @use 'variables' as *;
 @use 'utilities' as *;
 @use 'buttons' as *;
@@ -7,9 +8,150 @@
 @use 'forms' as *;
 @use 'accessibility';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@include meta.load-css('reset');
+
+// Auth pages: login, register, password reset, two-factor and e-mail verification
+$auth-text-color: #4b5563;
+$auth-text-hover-color: #111827;
+
+.guest-main {
+    color: #111827;
+}
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.auth-card-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.auth-card .form-control {
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.auth-text,
+.auth-intro {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: $auth-text-color;
+}
+
+.auth-intro {
+    margin-bottom: 1rem;
+}
+
+.auth-text-link:hover {
+    color: $auth-text-hover-color;
+}
+
+.auth-underline {
+    text-decoration: underline;
+}
+
+.auth-strong-link {
+    font-weight: 600;
+}
+
+.auth-status {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: #16a34a;
+}
+
+.auth-field {
+    margin-top: 1rem;
+}
+
+.auth-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.auth-row-end {
+    justify-content: flex-end;
+
+    .btn {
+        margin-left: 1rem;
+    }
+}
+
+.auth-remember {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding-top: 7px;
+
+    .auth-text {
+        margin-left: 0.5rem;
+    }
+}
+
+.auth-submit {
+    margin-top: 1.5rem;
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.auth-inline {
+    display: inline;
+}
+
+.auth-inline-gap {
+    margin-left: 0.5rem;
+}
+
+.auth-version {
+    text-align: center;
+
+    a {
+        text-decoration: underline;
+
+        &:hover {
+            color: $auth-text-color;
+        }
+    }
+}
+
+.auth-version-separator {
+    margin: 0 0.5rem;
+}
+
+.form-errors {
+    margin-bottom: 1rem;
+}
+
+.form-errors-title {
+    font-weight: 500;
+    color: #dc2626;
+}
+
+.form-errors-list {
+    margin-top: 0.75rem;
+    list-style: disc inside;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #dc2626;
+}
 
 // Base styles
 html {
@@ -53,11 +195,6 @@ img.logo-sm {
     100% {
         transform: translateY(0) rotate(360deg) scale(1.15);
     }
-}
-
-// Auth page specific
-.min-h-screen {
-    min-height: 100vh;
 }
 
 // Links
@@ -357,11 +494,12 @@ a {
     }
 
     .version-text,
-    .text-gray-600 {
+    .auth-text,
+    .auth-intro {
         color: $dark-text-secondary;
     }
 
-    .hover\:text-gray-900:hover {
+    .auth-text-link:hover {
         color: $dark-text;
     }
 

@@ -24,7 +24,7 @@
         @livewireStyles
     </head>
     <body>
-        <main class="font-sans text-gray-900">
+        <main class="guest-main">
             {{ $slot }}
         </main>
 

@@ -11,12 +11,12 @@
             </x-slot>
 
             <h1 class="auth-title">Welcome back! 👋</h1>
-            <p class="auth-subtitle mb-6">Sign in to {{ config('app.name') }}</p>
+            <p class="auth-subtitle">Sign in to {{ config('app.name') }}</p>
 
-            <x-validation-errors class="mb-4" />
+            <x-validation-errors />
 
             @session('status')
-                <div class="mb-4 font-medium text-sm text-green-600">
+                <div class="auth-status">
                     {{ $value }}
                 </div>
             @endsession
@@ -26,37 +26,37 @@
 
                 <div>
                     <x-label for="email" value="{{ __('Email') }}" />
-                    <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                    <x-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
                 </div>
 
-                <div class="mt-4">
+                <div class="auth-field">
                     <x-label for="password" value="{{ __('Password') }}" />
-                    <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+                    <x-input id="password" type="password" name="password" required autocomplete="current-password" />
                 </div>
 
-                <div class="flex items-center justify-between mt-4">
-                    <label for="remember_me" class="flex items-center cursor-pointer" style="padding-top: 7px;">
+                <div class="auth-row">
+                    <label for="remember_me" class="auth-remember">
                         <x-checkbox id="remember_me" name="remember" />
-                        <span class="ms-2 text-sm text-gray-600 hover:text-gray-900">{{ __('Remember me') }}</span>
+                        <span class="auth-text">{{ __('Remember me') }}</span>
                     </label>
 
                     @if (Route::has('password.request'))
-                        <a class="text-sm text-gray-600 hover:text-gray-900 no-underline" href="{{ route('password.request') }}">
+                        <a class="auth-text auth-text-link" href="{{ route('password.request') }}">
                             {{ __('Forgot password?') }}
                         </a>
                     @endif
                 </div>
 
-                <div class="mt-6">
-                    <x-button class="w-full justify-center">
+                <div class="auth-submit">
+                    <x-button>
                         {{ __('Log in') }}
                     </x-button>
                 </div>
 
-                <div class="text-center mt-6">
-                    <p class="text-sm text-gray-600">
+                <div class="auth-footer">
+                    <p class="auth-text">
                         Don't have an account?
-                        <a class="text-primary hover:text-primary-dark font-semibold" href="{{ route('register') }}">
+                        <a class="auth-strong-link" href="{{ route('register') }}">
                             {{ __('Sign up') }}
                         </a>
                     </p>

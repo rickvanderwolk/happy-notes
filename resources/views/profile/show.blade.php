@@ -1,8 +1,8 @@
 <x-account-layout>
     <x-slot name="title">Account</x-slot>
-    <div class="container max-w-md mx-auto">
+    <div class="container mx-auto">
         {{-- Page header --}}
-        <div class="text-center mb-6">
+        <div class="text-center">
             <h1 class="section-title"><x-icon name="gear" class="me-2" />Account</h1>
             <p class="section-description-text">Manage your profile and settings</p>
         </div>

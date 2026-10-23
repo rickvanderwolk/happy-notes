@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="title">Insights</x-slot>
-    <div class="container max-w-md mx-auto">
-        <div class="text-center mb-6">
+    <div class="container mx-auto">
+        <div class="text-center">
             <h1 class="section-title"><x-icon name="lightbulb" class="me-2" />Insights</h1>
             <p class="section-description-text">A look at your note-taking habits</p>
         </div>

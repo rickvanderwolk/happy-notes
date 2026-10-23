@@ -8,32 +8,32 @@
         </x-slot>
 
         <h1 class="auth-title">Forgot your password? 🔑</h1>
-        <p class="auth-subtitle mb-6">No worries! We'll send you reset instructions</p>
+        <p class="auth-subtitle">No worries! We'll send you reset instructions</p>
 
         @session('status')
-            <div class="mb-4 font-medium text-sm text-green-600">
+            <div class="auth-status">
                 {{ $value }}
             </div>
         @endsession
 
-        <x-validation-errors class="mb-4" />
+        <x-validation-errors />
 
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
-            <div class="block">
+            <div>
                 <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                <x-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             </div>
 
-            <div class="mt-6">
-                <x-button class="w-full justify-center">
+            <div class="auth-submit">
+                <x-button>
                     {{ __('Send Reset Link') }}
                 </x-button>
             </div>
 
-            <div class="text-center mt-6">
-                <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+            <div class="auth-footer">
+                <a class="auth-text auth-text-link" href="{{ route('login') }}">
                     <x-icon name="arrow-left" /> {{ __('Back to login') }}
                 </a>
             </div>

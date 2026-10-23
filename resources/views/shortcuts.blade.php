@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="title">Keyboard shortcuts</x-slot>
-    <div class="container max-w-md mx-auto">
-        <div class="text-center mb-6">
+    <div class="container mx-auto">
+        <div class="text-center">
             <h1 class="section-title"><x-icon name="keyboard" class="me-2" />Keyboard Shortcuts</h1>
             <p class="section-description-text">Speed up your workflow with these keyboard shortcuts</p>
         </div>
 
-        <div class="form-switch justify-content-center mb-6" x-data="{ on: window.keyboardShortcutsEnabled() }">
+        <div class="form-switch justify-content-center" x-data="{ on: window.keyboardShortcutsEnabled() }">
             <input
                 class="form-check-input"
                 type="checkbox"
@@ -174,7 +174,7 @@
             </div>
         </div>
 
-        <div class="text-center mt-6">
+        <div class="text-center">
             <p class="section-description-text">
                 <x-icon name="lightbulb" class="me-2" /><strong>Tip:</strong> Most shortcuts work context-sensitive, adapting to the current page you're viewing.
             </p>

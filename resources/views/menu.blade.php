@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="title">Menu</x-slot>
-    <div class="container max-w-md mx-auto">
-        <div class="text-center mb-6">
+    <div class="container mx-auto">
+        <div class="text-center">
             <a href="{{ route('notes.show') }}">
                 <img src="/logo.png" alt="HappyNotes" class="logo logo-menu">
             </a>

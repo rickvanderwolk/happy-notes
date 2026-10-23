@@ -1,5 +1,5 @@
-// Bootstrap & FontAwesome
-@use "bootstrap/dist/css/bootstrap.min.css";
+// The parts of Bootstrap the app uses
+@use 'bootstrap-subset';
 
 // HappyNotes Design System
 @use 'variables' as *;
