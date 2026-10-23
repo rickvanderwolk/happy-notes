@@ -7,10 +7,10 @@
     "version": "3.10.1",
     "require": {
         "php": "^8.4",
-        "laravel/framework": "^12.0",
+        "laravel/framework": "^13.0",
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9",
+        "laravel/tinker": "^3.0",
         "livewire/livewire": "^3.0"
     },
     "require-dev": {
@@ -23,7 +23,7 @@
         "nunomaduro/collision": "^8.1",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpunit/phpunit": "^11.5"
+        "phpunit/phpunit": "^12.0"
     },
     "autoload": {
         "psr-4": {

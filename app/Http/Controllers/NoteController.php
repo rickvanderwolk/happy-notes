@@ -66,8 +66,8 @@ final class NoteController extends Controller
         // id breaks ties, so notes saved within the same second cannot swap places between
         // two page requests and show up twice or not at all.
         $notes = $notes
-            ->orderBy('updated_at', 'DESC')
-            ->orderBy('id', 'DESC');
+            ->orderBy('updated_at', 'desc')
+            ->orderBy('id', 'desc');
 
         // Closing a note returns to the list at that note. Rather than the browser fetching
         // page after page until it shows up, return every page up to and including the one
