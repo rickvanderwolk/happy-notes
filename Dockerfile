@@ -32,7 +32,7 @@ RUN npm ci --no-audit --no-fund
 
 COPY --from=app /var/www/html/vendor ./vendor
 COPY resources ./resources
-COPY vite.config.js tailwind.config.js postcss.config.js ./
+COPY vite.config.js postcss.config.js ./
 RUN npm run build
 
 
