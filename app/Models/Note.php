@@ -101,7 +101,10 @@ final class Note extends Model
         // note's age. Emojis used often stay near the top, emojis used recently rise.
         // created_at rather than updated_at, so editing an old note does not drag its
         // emojis to the front.
-        $notes = $this->where('user_id', $userId)
+        // Also runs while nobody is signed in yet, such as for the welcome note on
+        // registration, so it filters by owner itself instead of relying on the scope.
+        $notes = static::withoutGlobalScope(OwnNotesScope::class)
+            ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get(['emojis', 'created_at']);
 

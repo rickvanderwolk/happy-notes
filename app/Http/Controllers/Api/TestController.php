@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Scopes\OwnNotesScope;
 use Illuminate\Http\JsonResponse;
 
 final class TestController extends Controller
@@ -24,14 +25,14 @@ final class TestController extends Controller
         ]);
 
         // Touch the first note of each user to make it appear first in the list
-        $user1FirstNote = \App\Models\Note::where('user_id', 1)
+        $user1FirstNote = \App\Models\Note::withoutGlobalScope(OwnNotesScope::class)->where('user_id', 1)
             ->where('title', 'Note 1 - user 1')
             ->first();
         if ($user1FirstNote) {
             $user1FirstNote->touch();
         }
 
-        $user2FirstNote = \App\Models\Note::where('user_id', 2)
+        $user2FirstNote = \App\Models\Note::withoutGlobalScope(OwnNotesScope::class)->where('user_id', 2)
             ->where('title', 'Note 1 - user 2')
             ->first();
         if ($user2FirstNote) {
@@ -52,7 +53,7 @@ final class TestController extends Controller
         }
 
         return response()->json([
-            'count' => \App\Models\Note::where('user_id', 1)->count(),
+            'count' => \App\Models\Note::withoutGlobalScope(OwnNotesScope::class)->where('user_id', 1)->count(),
         ]);
     }
 }

@@ -55,13 +55,13 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.show');
     Route::post('/notes', [NoteController::class, 'store'])->name('note.store');
     Route::get('/notes/new', [NoteController::class, 'create'])->name('note.create');
-    Route::get('/notes/{note}', [NoteController::class, 'show'])->name('note.show');
-    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('note.destroy');
-    Route::get('/notes/{note}/title', [NoteController::class, 'formTitle'])->name('note.title.show');
-    Route::post('/notes/{note}/title', [NoteController::class, 'storeTitle'])->name('note.title.store');
-    Route::get('/notes/{note}/emojis', [NoteController::class, 'formEmojis'])->name('note.emojis.show');
-    Route::post('/notes/{note}/emojis', [NoteController::class, 'storeEmojis'])->name('note.emojis.store');
-    Route::post('/notes/{note}/body', [NoteController::class, 'storeBody'])->name('note.body.store');
+    Route::get('/notes/{note}', [NoteController::class, 'show'])->name('note.show')->can('view', 'note');
+    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('note.destroy')->can('delete', 'note');
+    Route::get('/notes/{note}/title', [NoteController::class, 'formTitle'])->name('note.title.show')->can('update', 'note');
+    Route::post('/notes/{note}/title', [NoteController::class, 'storeTitle'])->name('note.title.store')->can('update', 'note');
+    Route::get('/notes/{note}/emojis', [NoteController::class, 'formEmojis'])->name('note.emojis.show')->can('update', 'note');
+    Route::post('/notes/{note}/emojis', [NoteController::class, 'storeEmojis'])->name('note.emojis.store')->can('update', 'note');
+    Route::post('/notes/{note}/body', [NoteController::class, 'storeBody'])->name('note.body.store')->can('update', 'note');
 
     Route::get('/filter', [FilterController::class, 'index'])->name('filter.show');
     Route::get('/filter/exclude', [FilterController::class, 'index'])->name('filter.exclude.show');

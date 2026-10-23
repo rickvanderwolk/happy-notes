@@ -41,7 +41,9 @@ describe("Filter Tests", () => {
             .then((e) => {
                 picked.push(e);
                 cy.get('body').type('{enter}');
-                cy.get('[data-cy="note-list"]').should('be.visible');
+                // Several emojis together can match no note at all, which shows the empty
+                // state instead of the list, so this waits for the notes page itself.
+                cy.location('pathname').should('eq', '/notes');
 
                 cy.visit('/filter');
                 picked.forEach((emoji) => {
@@ -134,7 +136,9 @@ describe("Filter Tests", () => {
             cy.visit(`/${page}`);
             cy.selectFirstSelectableEmoji().then(() => cy.selectFirstSelectableEmoji()).then(() => {
                 cy.get('body').type('{enter}');
-                cy.get('[data-cy="note-list"]').should('be.visible');
+                // Several emojis together can match no note at all, which shows the empty
+                // state instead of the list, so this waits for the notes page itself.
+                cy.location('pathname').should('eq', '/notes');
 
                 cy.visit(`/${page}`);
                 cy.get('.emoji-chip').should('have.length', 2);
