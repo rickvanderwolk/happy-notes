@@ -80,8 +80,14 @@ final class ProfileExportController extends Controller
 
             foreach ($data as $row) {
                 $formattedRow = array_map(function ($value) {
-                    return is_array($value)
+                    $value = is_array($value)
                         ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                        : $value;
+
+                    // Spreadsheets run a cell that starts with one of these as a formula;
+                    // the quote makes them show it as text.
+                    return is_string($value) && preg_match('/^[=+\-@\t\r]/', $value) === 1
+                        ? "'" . $value
                         : $value;
                 }, array_values($row));
 

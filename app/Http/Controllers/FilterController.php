@@ -69,23 +69,4 @@ final class FilterController extends Controller
     {
         return view('search');
     }
-
-    public function clear(Request $request, #[CurrentUser] User $user): \Illuminate\Http\RedirectResponse
-    {
-        $filterType = $request->input('filter_type', 'selected_emojis');
-
-        $user->$filterType = [];
-        $user->save();
-
-        return redirect()->back()->with('success', 'Filter cleared successfully');
-    }
-
-    public function clearSearch(#[CurrentUser] User $user): \Illuminate\Http\RedirectResponse
-    {
-        $user->search_query = null;
-        $user->search_query_only = false;
-        $user->save();
-
-        return redirect()->back()->with('success', 'Search cleared successfully');
-    }
 }

@@ -67,8 +67,6 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
     Route::get('/filter/exclude', [FilterController::class, 'index'])->name('filter.exclude.show');
     Route::get('/filter/search', [FilterController::class, 'search'])->name('filter.search.show');
     Route::post('/filter/emojis', [FilterController::class, 'storeEmojis'])->name('filter.emojis.store');
-    Route::post('/filter/clear', [FilterController::class, 'clear'])->name('filter.clear');
-    Route::post('/search/clear', [FilterController::class, 'clearSearch'])->name('search.clear');
 
     Route::get('/user/export', [ProfileExportController::class, 'export'])->name('user.export.notes.create');
 

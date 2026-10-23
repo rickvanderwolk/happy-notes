@@ -69,7 +69,7 @@ php artisan key:generate
 php artisan migrate
 ```
 
-Then point your web server at the `public` folder.
+`.env.example` is set up for local development. Before going live, set `APP_ENV=production` and `APP_DEBUG=false` in `.env`: otherwise visitors see error details, logins are not rate limited and the test routes are open. Then point your web server at the `public` folder.
 
 ### Local development
 To work on Happy Notes itself (PHP 8.4, Composer, Node.js):

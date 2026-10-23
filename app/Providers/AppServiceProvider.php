@@ -9,6 +9,7 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,8 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Password::defaults(fn () => Password::min(12));
+
         // Disable rate limiting only where the tests run, so a misnamed environment on a
         // server keeps it on instead of silently switching it off.
         if (App::environment(['local', 'testing'])) {
