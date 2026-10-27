@@ -6,7 +6,7 @@
         @if($note)
             <div id="note-content">
                 <div class="note-detail-header mb-4">
-                    <h1 class="note-detail-title">
+                    <h1 class="note-detail-title" wire:transition.navigate="note-{{ $note->uuid }}">
                         <a
                             href="{{ route('note.title.show', ['note' => $note->uuid]) }}"
                             data-cy="note-title"
@@ -18,8 +18,9 @@
                          updates without asking the server again. --}}
                     <div
                         data-cy="note-progress-bar"
-                        class="my-3"
                         x-data="{ progress: @js($note->progress), rainbow: false }"
+                        x-show="progress > 0"
+                        @style(['display: none' => !($note->progress > 0)])
                         @note-progress-updated.window="
                             if (progress < 100 && $event.detail.progress >= 100) {
                                 rainbow = true;
@@ -28,8 +29,9 @@
                             progress = $event.detail.progress
                         "
                     >
-                        <div class="progress" :class="{ 'is-rainbow': rainbow }" x-show="progress > 0" @style(['display: none' => !($note->progress > 0)])>
-                            <div class="progress-bar bg-success has-rainbow"
+                        <div class="progress" :class="{ 'is-rainbow': rainbow }">
+                            <div class="progress-bar has-rainbow"
+                                 :class="{ 'is-complete': progress >= 100 }"
                                  role="progressbar"
                                  :style="`width: ${progress}%`"
                                  style="width: {{ $note->progress ?? 0 }}%"

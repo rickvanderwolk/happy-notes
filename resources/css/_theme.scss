@@ -1,0 +1,48 @@
+// HappyNotes - Theme tokens
+// Every colour derives from the logo: its brown is the only ink, its yellow the accent.
+// Components read these custom properties (through the Sass variables in _variables), so
+// dark mode is just a second set of values here instead of overrides per component.
+
+:root {
+  --hn-bg: #FFFAF2;
+  --hn-bg-alt: #FBF0DE;
+  --hn-surface: #FFFFFF;
+  --hn-surface-hover: #FFFBEF;
+  --hn-ink: #4A2C0A;
+  --hn-muted: #7A5A30;
+  --hn-faint: #80633A;
+  --hn-divider: #F2E3CB;
+  --hn-line: #4A2C0A;
+  --hn-line-strong: #9C7B4E;
+  --hn-line-soft: #EDDBBF;
+  --hn-float-shadow: 0 8px 24px rgb(74 44 10 / 20%), 0 2px 6px rgb(74 44 10 / 12%);
+  --hn-yellow: #FFCD2E;
+  --hn-yellow-strong: #FFC107;
+  --hn-yellow-soft: #FFE38A;
+  --hn-on-yellow: #4A2C0A;
+  --hn-green: #5CC46E;
+  --hn-danger: #C62828;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hn-bg: #241B0F;
+    --hn-bg-alt: #2E2416;
+    --hn-surface: #3A2D1E;
+    --hn-surface-hover: #44362A;
+    --hn-ink: #FFEFC7;
+    --hn-muted: #C9B48A;
+    --hn-faint: #AE9B76;
+    --hn-divider: #3A2D1A;
+    --hn-line: #5C4A2E;
+    --hn-line-strong: #8A7350;
+    --hn-line-soft: #4A3A24;
+    --hn-float-shadow: 0 10px 30px rgb(0 0 0 / 55%), 0 2px 8px rgb(0 0 0 / 40%);
+    --hn-on-yellow: #2B1A06;
+    --hn-danger: #FF8A80;
+
+    color-scheme: dark;
+  }
+}

@@ -134,12 +134,6 @@
       background: $primary-dark;
     }
   }
-
-  @media (prefers-color-scheme: dark) {
-    &::-webkit-scrollbar-track {
-      background: $dark-border;
-    }
-  }
 }
 
 // Smooth scroll
@@ -149,17 +143,40 @@ html.smooth-scroll {
 
 // Section styling
 .section-title {
-  font-size: $font-size-2xl;
-  font-weight: $font-weight-bold;
+  font-size: 1.875rem;
+  font-weight: $font-weight-black;
+  letter-spacing: -0.02em;
   text-align: center;
   color: $text-primary;
   margin-bottom: $space-2;
 }
 
 .section-description-text {
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
   color: $text-secondary;
   text-align: center;
+}
+
+// Page headings get some air: above them on phones (on larger screens they line up with
+// the logo above the rail) and between them and what follows
+h1.section-title {
+  @media (max-width: $breakpoint-md - 0.02px) {
+    padding-top: $space-4;
+  }
+
+  &:last-child {
+    margin-bottom: $space-8;
+  }
+}
+
+h1.section-title + .section-description-text {
+  margin-bottom: $space-8;
+}
+
+.menu-header h1.section-title {
+  padding-top: 0;
+  margin-bottom: 0;
 }
 
 // Emoji chip component
@@ -192,8 +209,9 @@ html.smooth-scroll {
   }
 
   .remove-badge {
-    font-size: 18px;
-    color: $text-tertiary;
+    font-size: 22px;
+    font-weight: $font-weight-black;
+    color: $text-primary;
     line-height: 1;
     transition: all $transition-spring;
   }
@@ -245,7 +263,7 @@ html.smooth-scroll {
 .result-count-indicator {
   text-align: center;
   padding: $space-3;
-  background: rgba($border, 0.3);
+  background: $background-alt;
   border-radius: $radius-md;
 
   .result-count-text {
@@ -262,9 +280,10 @@ html.smooth-scroll {
 // App version text
 .app-version-text {
   text-align: center;
-  font-size: $font-size-xs;
-  color: $text-tertiary;
-  margin-top: $space-12 + $space-8;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $text-secondary;
+  margin-top: $space-8;
 }
 
 // Form page container
@@ -278,19 +297,34 @@ html.smooth-scroll {
   font-weight: $font-weight-medium;
 }
 
-// Logo sizing utilities
+// Menu: the logo as a sticker on top, the brand name below it
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-6;
+  // Room for the logo to hop without touching the top
+  padding-top: $space-4;
+
+  // On larger screens the logo already sits above the rail
+  @media (min-width: $breakpoint-md) {
+    padding-top: 0;
+
+    > a:has(.logo-menu) {
+      display: none;
+    }
+  }
+
+  .section-title {
+    margin: 0;
+  }
+}
+
 .logo-menu {
   width: 100px;
   height: auto;
-  margin: 0 auto $space-4;
   display: block;
-}
-
-// Fixed button wrapper inner
-.fixed-button-inner {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 0 $space-4;
 }
 
 // Keyboard hints
@@ -304,9 +338,9 @@ html.smooth-scroll {
   font-family: 'Monaco', 'Courier New', monospace;
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  color: $text-tertiary;
-  background: rgba($border, 0.5);
-  border: 1px solid $border-dark;
+  color: $text-secondary;
+  background: $background-alt;
+  border: 2px solid $border;
   border-radius: $radius-sm;
   text-transform: uppercase;
   line-height: 1;
@@ -334,18 +368,12 @@ html.smooth-scroll {
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
   color: $text-primary;
-  background: $surface;
-  border: 2px solid $border-dark;
-  border-bottom-width: 4px;
-  border-radius: $radius-md;
+  background: $background-alt;
+  border: 1px solid $line-soft;
+  border-bottom-width: 3px;
+  border-radius: $radius-sm;
   text-transform: uppercase;
   line-height: 1;
-  transition: all $transition-fast;
-
-  &:hover {
-    transform: translateY(1px);
-    border-bottom-width: 2px;
-  }
 }
 
 // Shortcuts section styling
@@ -354,7 +382,7 @@ html.smooth-scroll {
 
   .shortcuts-section-title {
     font-size: $font-size-lg;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-black;
     color: $text-primary;
     margin-bottom: $space-4;
     padding-bottom: $space-2;
@@ -365,11 +393,9 @@ html.smooth-scroll {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $space-3 $space-4;
-    margin-bottom: $space-2;
-    background: rgba($surface, 0.5);
-    border: 1px solid $border;
-    border-radius: $radius-md;
+    padding: $space-3 0;
+    @include plain;
+    @include row-divider;
 
     .shortcut-description {
       flex: 1;
@@ -393,66 +419,6 @@ html.smooth-scroll {
   }
 }
 
-// Dark mode utilities
-@media (prefers-color-scheme: dark) {
-  .section-title {
-    color: $dark-text;
-  }
-
-  .section-description-text {
-    color: $dark-text-secondary;
-  }
-
-
-  .result-count-indicator {
-    background: rgba($dark-border, 0.5);
-
-    .result-count-text {
-      color: $dark-text-secondary;
-
-      strong {
-        color: $dark-text;
-      }
-    }
-  }
-
-  .app-version-text {
-    color: $dark-text-secondary;
-  }
-
-  .keyboard-hint {
-    color: $dark-text-secondary;
-    background: rgba($dark-border, 0.5);
-    border-color: $dark-border;
-  }
-
-  .keyboard-key {
-    color: $dark-text;
-    background: $dark-surface;
-    border-color: $dark-border;
-  }
-
-  .shortcuts-section {
-    .shortcuts-section-title {
-      color: $dark-text;
-      border-bottom-color: $dark-border;
-    }
-
-    .shortcut-item {
-      background: rgba($dark-surface, 0.3);
-      border-color: $dark-border;
-
-      .shortcut-description {
-        color: $dark-text;
-      }
-
-      .shortcut-context {
-        color: $dark-text-secondary;
-      }
-    }
-  }
-}
-
 // Icons: inline SVGs with the same box as the Font Awesome font they replaced, so a
 // 1em tall glyph that sits 0.125em below the baseline.
 .icon {
@@ -468,12 +434,13 @@ html.smooth-scroll {
   }
 }
 
-// Emoji styles
+// Emoji styles. A faint warm shadow gives yellow emojis an edge against the cream.
 .emoji {
   font-size: $emoji-size;
   line-height: 1;
   display: inline-block;
   transition: transform $transition-fast;
+  filter: drop-shadow(0 1px 1.5px alpha($line, 0.3));
 }
 
 .emoji-wrapper {
@@ -538,23 +505,23 @@ html.smooth-scroll {
   overflow: hidden;
 }
 
-// Progress bar (modern)
+// Progress bar
 .progress {
-  height: 6px;
+  height: 8px;
   background: $border;
   border-radius: $radius-full;
   overflow: hidden;
   margin-top: $space-2;
   margin-bottom: $space-2;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: $dark-border;
-  }
 }
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+  background: $primary;
   border-radius: $radius-full;
   transition: width $transition-slow;
+
+  &.is-complete {
+    background: $success;
+  }
 }

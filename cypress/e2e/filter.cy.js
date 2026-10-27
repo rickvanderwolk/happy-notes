@@ -25,7 +25,7 @@ describe("Filter Tests", () => {
         cy.get('[data-cy="emoji-filter-emoji-selector"] span:visible').first().then(($emoji) => {
             const emoji = $emoji.text().trim();
             cy.wrap($emoji).click();
-            cy.get('[aria-label="Close"]').click();
+            cy.get('[aria-label="Done"]').click();
             cy.get('[data-cy="note-list"]').should('be.visible');
 
             cy.visit('/filter');
@@ -103,7 +103,7 @@ describe("Filter Tests", () => {
     it("Persists an excluded emoji picked right before closing", () => {
         cy.visit('/filter/exclude');
         cy.selectFirstSelectableEmoji().then((emoji) => {
-            cy.get('[aria-label="Close"]').click();
+            cy.get('[aria-label="Done"]').click();
             cy.get('[data-cy="note-list"]').should('be.visible');
 
             cy.visit('/filter/exclude');
@@ -120,7 +120,7 @@ describe("Filter Tests", () => {
             // Now take it away again and leave immediately.
             cy.visit('/filter/exclude');
             cy.get('.emoji-chip').should('contain.text', emoji).click();
-            cy.get('[aria-label="Close"]').click();
+            cy.get('[aria-label="Done"]').click();
             cy.get('[data-cy="note-list"]').should('be.visible');
 
             cy.visit('/filter/exclude');
@@ -145,7 +145,7 @@ describe("Filter Tests", () => {
                 cy.get('.emoji-chip').eq(0).click();
                 cy.wait(600);
                 cy.get('.emoji-chip').eq(0).click();
-                cy.get('[aria-label="Close"]').click();
+                cy.get('[aria-label="Done"]').click();
                 cy.get('[data-cy="note-list"]').should('be.visible');
 
                 cy.visit(`/${page}`);

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+{{-- The page and the note titles flow into each other when navigating --}}
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" wire:transition.navigate>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-        <meta name="theme-color" content="#0A0A0A" media="(prefers-color-scheme: dark)">
-        <meta name="theme-color" content="#FFFEF9" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#241B0F" media="(prefers-color-scheme: dark)">
+        <meta name="theme-color" content="#FFFAF2" media="(prefers-color-scheme: light)">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -47,7 +48,7 @@
 
         <div id="app" class="container custom-scrollbar">
             <div class="row">
-                <div class="col-12 col-sm-11 col-md-10 col-lg-9 col-xl-6 ms-auto me-auto">
+                <div class="col-12 app-column">
                     <livewire:navbar />
 
                     <main>

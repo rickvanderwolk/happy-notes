@@ -36,17 +36,13 @@
                     :storageKey="null"
                     :updateUser="false"
                 />
+
+                @error('selectedEmojis')
+                    <div data-cy="new-note-emojis-error" class="input-error-message">{{ $message }}</div>
+                @enderror
             </div>
 
             <input type="hidden" name="selectedEmojis" id="selectedEmojis">
         </form>
-
-        <div class="fixed-button-wrapper">
-            <div class="fixed-button-inner">
-                <button data-cy="save-new-note" type="submit" form="new-note-form" class="btn btn-success btn-block btn-lg">
-                    <x-icon name="check" />Save Note
-                </button>
-            </div>
-        </div>
     </div>
 </x-app-layout>

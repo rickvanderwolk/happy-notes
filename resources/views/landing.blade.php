@@ -13,6 +13,19 @@
                 No folders, no tags, just emojis ✨
             </p>
 
+            <div class="landing-buttons">
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="btn btn-primary">Sign up</a>
+                    <a href="{{ route('login') }}" class="btn btn-secondary">Log in</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-primary">Log in</a>
+                @endif
+            </div>
+        </header>
+
+        <section class="landing-section landing-section-demo">
+            <h2 class="landing-heading">Demo</h2>
+
             @php
                 $demoNotes = collect([
                     ['Birthday present for Noor', ['🎁', '💡'], null],
@@ -73,18 +86,11 @@
                     @include('notes.partials.cards', ['notes' => $demoNotes, 'linked' => false])
                 </div>
             </div>
-
-            <div class="landing-buttons">
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="btn btn-primary">Sign up</a>
-                    <a href="{{ route('login') }}" class="btn btn-secondary">Log in</a>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-primary">Log in</a>
-                @endif
-            </div>
-        </header>
+        </section>
 
         <section class="landing-section">
+            <h2 class="landing-heading">Preview</h2>
+
             <div class="landing-screenshots">
                 @foreach ([
                     '1-notes-list' => 'The note list, every note with its emojis',
@@ -92,8 +98,8 @@
                     '3-note' => 'A note with a checklist',
                 ] as $screenshot => $alt)
                     <picture>
-                        <source srcset="/images/screenshot-{{ $screenshot }}-v4-dark.png" media="(prefers-color-scheme: dark)">
-                        <img src="/images/screenshot-{{ $screenshot }}-v4-light.png" alt="{{ $alt }}" width="424" height="750" loading="lazy">
+                        <source srcset="/images/screenshot-{{ $screenshot }}-v5-dark.png" media="(prefers-color-scheme: dark)">
+                        <img src="/images/screenshot-{{ $screenshot }}-v5-light.png" alt="{{ $alt }}" width="424" height="750" loading="lazy">
                     </picture>
                 @endforeach
             </div>
