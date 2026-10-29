@@ -38,8 +38,8 @@ fresh:
 
 audit:
 	@echo "🔒 Audit..."
-	composer audit
-	npm audit --omit=dev
+	composer audit --no-dev
+	npm audit
 
 analyse:
 	@echo "🧪 Analyse code..."
