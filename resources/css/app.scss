@@ -1,7 +1,10 @@
 // The parts of Bootstrap the app uses
 @use 'bootstrap-subset';
 
+@use "@fontsource-variable/nunito/index.css";
+
 // HappyNotes Design System
+@use 'theme';
 @use 'variables' as *;
 @use 'utilities' as *;
 @use 'buttons' as *;
@@ -98,7 +101,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: $font-weight-extrabold;
+    font-weight: $font-weight-black;
     line-height: $line-height-tight;
     color: $text-primary;
     margin-bottom: $space-4;
@@ -109,6 +112,11 @@ h2 { font-size: $font-size-2xl; }
 h3 { font-size: $font-size-xl; }
 h4 { font-size: $font-size-lg; }
 h5, h6 { font-size: $font-size-base; }
+
+hr {
+    border-color: $border;
+    opacity: 1;
+}
 
 p {
     font-size: $font-size-base;
@@ -122,6 +130,9 @@ p {
     display: flex;
     flex-direction: column;
     gap: 0;
+    // The rows keep room around them for the hover mark; the first title still lines up
+    // with the headings on the other pages
+    margin-top: -$space-4;
 }
 
 // Empty state
@@ -173,44 +184,140 @@ p {
     }
 }
 
-// Fixed button wrapper (voor gradient fade)
-.fixed-button-wrapper {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(255, 254, 249, 1) 70%, transparent);
-    padding: 16px 0 20px;
-    z-index: 100;
-
-    // Zoomed in far, a fixed bar would cover most of the screen.
-    @media (max-height: 30rem) {
-        position: static;
-        background: none;
-    }
+// A note looks like its row in the list, only bigger: the same title, emojis and thin
+// progress line
+#note-content {
+    padding-top: 0;
 }
 
-// Note detail header
 .note-detail-title {
-    font-size: $font-size-2xl; // 24px - smaller but still larger than body headings
-    font-weight: $font-weight-bold;
-    margin-bottom: $space-4;
+    font-size: 1.75rem;
+    font-weight: $font-weight-extrabold;
+    letter-spacing: -0.01em;
+    line-height: $line-height-tight;
+    margin: 0;
     transition: transform $transition-fast;
 }
 
+// Title, progress and emojis at equal distances, like a row in the list but roomier
 .note-detail-header {
-    padding: 0 $space-3; // Match note card padding for consistency
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    padding: 0 $space-3;
+
+    .emoji-wrapper {
+        gap: 10px;
+    }
 
     .emoji {
-        font-size: 30px; // Smaller than default 36px
+        font-size: 32px;
+    }
+
+    // Room to match what the title leaves below its letters
+    .progress {
+        height: 4px;
+        margin: 0 0 6px;
     }
 }
 
 // Ensure editor body headings are smaller than note title
 #editorjs {
-    padding: 0 $space-3; // Match note card padding for consistency
+    padding: 0 $space-3;
+    color: $text-primary;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
 
-    h1 { font-size: 1.375rem; } // Smaller than note-detail-title (1.5rem)
+    // Checklist boxes in the app's colours instead of Editor.js' blue
+    .cdx-checklist__item-checkbox-check {
+        width: 22px;
+        height: 22px;
+        border: 1.5px solid $line-strong;
+        border-radius: 7px;
+        background: $surface;
+    }
+
+    .cdx-checklist__item-checkbox:not(.cdx-checklist__item-checkbox--no-hover):hover .cdx-checklist__item-checkbox-check {
+        background: $primary-light;
+        border-color: $line-strong;
+    }
+
+    .cdx-checklist__item--checked .cdx-checklist__item-checkbox-check,
+    .cdx-checklist__item--checked .cdx-checklist__item-checkbox:not(.cdx-checklist__item-checkbox--no-hover):hover .cdx-checklist__item-checkbox-check {
+        background: $primary;
+        border-color: $primary;
+
+        &::before {
+            background-color: $primary;
+        }
+
+        svg path {
+            stroke: $on-primary;
+        }
+    }
+
+    .cdx-checklist__item--checked .cdx-checklist__item-text {
+        opacity: 0.55;
+        text-decoration: line-through;
+        text-decoration-thickness: 2px;
+    }
+
+    // Editor.js' own buttons and menus in the app's colours, so they follow dark mode too
+    .ce-toolbar__plus,
+    .ce-toolbar__settings-btn {
+        color: $text-secondary;
+
+        &:hover {
+            color: $text-primary;
+            background: alpha($primary, 0.25);
+        }
+    }
+
+    .ce-block--selected .ce-block__content {
+        background: alpha($primary, 0.2);
+        border-radius: $radius-sm;
+    }
+
+    .ce-popover,
+    .ce-inline-toolbar {
+        --border-radius: #{$radius-md};
+        --color-border: #{$line-soft};
+        --color-shadow: rgb(0 0 0 / 12%);
+        --color-background: #{$surface};
+        --color-text-primary: #{$text-primary};
+        --color-text-secondary: #{$text-secondary};
+        --color-border-icon: #{$line-soft};
+        --color-border-icon-disabled: #{$line-soft};
+        --color-text-icon-active: #{$text-primary};
+        --color-background-icon-active: #{alpha($primary, 0.35)};
+        --color-background-item-focus: #{alpha($primary, 0.25)};
+        --color-shadow-item-focus: transparent;
+        --color-background-item-hover: #{alpha($primary, 0.2)};
+    }
+
+    // The menu's search field keeps Editor.js' own small look, not the app's fields
+    .cdx-search-field {
+        background: $background-alt;
+        border: 0;
+        color: $text-secondary;
+    }
+
+    .cdx-search-field__input {
+        height: auto;
+        padding: 0;
+        color: $text-primary;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+
+        &:focus {
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    h1 { font-size: 1.375rem; } // Smaller than note-detail-title
     h2 { font-size: 1.25rem; }
     h3 { font-size: 1.125rem; }
     h4 { font-size: 1rem; }
@@ -234,13 +341,13 @@ p {
     }
 
     i, a, .emoji {
-        font-size: 32px;
+        font-size: 28px;
         margin: 0;
         transition: all $transition-spring;
     }
 
     a, button {
-        color: $text-tertiary;
+        color: $text-primary;
         cursor: pointer;
         text-decoration: none;
         padding: 10px;
@@ -295,18 +402,19 @@ p {
             }
         }
 
+        // The current tab: a yellow sticker around the icon
         &.active {
-            color: $text-primary;
+            color: $on-primary;
+            background: $primary;
+            border: $sticker-border;
+            border-radius: $radius-md;
+            box-shadow: $sticker-shadow;
+            width: 48px;
+            height: 48px;
+            padding: 0;
 
-            &::after {
-                content: '';
-                position: absolute;
-                left: 30%;
-                right: 30%;
-                bottom: 0;
-                height: 3px;
-                border-radius: $radius-full;
-                background: currentColor;
+            i {
+                font-size: 22px;
             }
         }
     }
@@ -329,6 +437,8 @@ p {
         padding: 10px;
         background: none;
         border: none;
+        box-shadow: none;
+        transform: none;
 
         @media (min-width: $breakpoint-sm) {
             padding: 6px;
@@ -400,6 +510,276 @@ p {
     // Remove old negative margin code - now using navbar-inner padding for consistent alignment
 }
 
+// The notes list has no bar; its navigation floats in the quick actions pill, so the
+// notes get all the room
+#main-navbar:has(.quick-actions) {
+    padding: 0;
+    margin: 0;
+}
+
+// On phones the pill floats at the bottom, so the content needs room above and below
+@media (max-width: $breakpoint-md - 0.02px) {
+    #app:has(.quick-actions) main {
+        padding-top: calc(#{$space-4} + env(safe-area-inset-top));
+        padding-bottom: 110px;
+    }
+}
+
+// On larger screens the pill stands upright as a rail next to the column, the familiar
+// place for navigation on a desktop, and stays there while scrolling. The bar it is in
+// takes no room and no clicks.
+@media (min-width: $breakpoint-md) {
+    #app:has(.quick-actions) main {
+        padding-top: $space-4;
+    }
+
+    #main-navbar:has(.quick-actions) {
+        position: static;
+        height: 0;
+        padding: 0;
+        margin: 0 auto;
+        pointer-events: none;
+
+        .quick-actions {
+            pointer-events: auto;
+        }
+    }
+}
+
+// Typing in a note on a phone: the keyboard would push the pill up over the text
+@media (hover: none) {
+    body:has(#editorjs :focus) #main-navbar .quick-actions {
+        display: none;
+    }
+}
+
+// Quick actions on the notes list: menu, filter and new note together in one floating pill,
+// within thumb reach.
+#main-navbar .emoji-wrapper.quick-actions {
+    position: fixed;
+    right: $space-4;
+    bottom: calc(#{$space-6} + env(safe-area-inset-bottom));
+    z-index: $z-fixed;
+    // The next step comes first for the keyboard, but is shown last, under the thumb
+    flex-direction: row-reverse !important;
+    gap: $space-1;
+    margin: 0;
+    padding: 6px;
+    background: $surface;
+    border: 1.5px solid $line-soft;
+    border-radius: $radius-full;
+    box-shadow: $float-shadow;
+
+
+    // A single button needs no pill around it; in the rail it then lines up with the logo
+    &:has(> :only-child) {
+        padding: 0;
+        background: none;
+        border: 0;
+        box-shadow: none;
+
+        @media (min-width: $breakpoint-md) {
+            left: calc(#{$rail-left} + 6px);
+        }
+
+        .quick-new {
+            box-shadow: $sticker-shadow, $float-shadow;
+        }
+    }
+
+    @media (min-width: $breakpoint-md) {
+        // Fixed next to the column, under the logo
+        top: calc(#{$space-6} + 76px + env(safe-area-inset-top));
+        right: auto;
+        bottom: auto;
+        left: $rail-left;
+        // Upright, with the next step on top where the eye starts; the navbar forces its
+        // groups into a row otherwise
+        flex-direction: column !important;
+        flex-wrap: nowrap;
+
+        .quick-save {
+            width: 56px;
+            padding: 0;
+        }
+
+        .quick-save-label {
+            display: none;
+        }
+    }
+
+    a, button {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        min-height: 56px;
+        padding: 0;
+        color: $text-primary;
+    }
+
+    form {
+        display: flex;
+        margin: 0;
+    }
+
+    // The tab you are on: softly marked, so the yellow stays for the next step
+    a.active {
+        color: $text-primary;
+        background: alpha($primary, 0.35);
+        border: 0;
+        border-radius: $radius-full;
+        box-shadow: none;
+
+        i {
+            font-size: 24px;
+        }
+    }
+
+    .icon {
+        font-size: 24px;
+    }
+
+    // With emojis picked the filter button shows them on a soft yellow, so it reads as on
+    .quick-filter {
+        width: auto;
+        padding: 0 $space-4;
+        gap: $space-1;
+        background: alpha($primary, 0.35);
+        border-radius: $radius-full;
+
+        .emoji {
+            font-size: 24px;
+        }
+
+        // Small and quiet, so it reads as "and two more" and not as the new note button
+        .quick-filter-more {
+            font-size: $font-size-sm;
+            font-weight: $font-weight-bold;
+            color: $text-tertiary;
+        }
+
+        // In the desktop rail the emojis stack, so the rail keeps its width
+        @media (min-width: $breakpoint-md) {
+            flex-direction: column;
+            width: 56px;
+            height: auto;
+            margin: 2px 0;
+            padding: 14px 0;
+            gap: 6px;
+
+            .emoji {
+                font-size: 22px;
+            }
+        }
+    }
+
+    .quick-save {
+        width: auto;
+        padding: 0 $space-5;
+        gap: $space-2;
+        font-family: inherit;
+        font-size: $font-size-lg;
+        font-weight: $font-weight-extrabold;
+        border-radius: $radius-full;
+    }
+
+    .quick-new {
+        background: $primary;
+        color: $on-primary;
+        border: $sticker-border;
+        box-shadow: $sticker-shadow-sm;
+        transition: transform $transition-fast, box-shadow $transition-fast;
+
+        .icon {
+            font-size: 26px;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                color: $on-primary;
+                transform: translateY(-1px);
+                box-shadow: 0 3px 0 $line;
+
+                .icon-plus {
+                    transform: rotate(90deg);
+                }
+            }
+        }
+
+        &:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 $line;
+        }
+    }
+}
+
+// The logo on top of the rail, only on larger screens
+#main-navbar .rail-logo {
+    display: none;
+}
+
+@media (min-width: $breakpoint-md) {
+    #main-navbar .rail-logo {
+        position: fixed;
+        top: calc(#{$space-6} + env(safe-area-inset-top));
+        left: calc(#{$rail-left} + 6px);
+        z-index: $z-fixed;
+        display: block;
+        width: 56px;
+        min-width: 0;
+        min-height: 0;
+        padding: 0;
+        pointer-events: auto;
+
+        img {
+            display: block;
+            width: 100%;
+            animation: rail-logo-hop 5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+        }
+
+        &:hover img {
+            animation: spin-zoom-app 0.6s ease-out forwards;
+        }
+    }
+}
+
+@keyframes rail-logo-hop {
+    0%, 80%, 100% {
+        transform: translateY(0) scale(1);
+    }
+
+    87% {
+        transform: translateY(-10px) scale(1.06);
+    }
+
+    94% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+// Hovering a note gives its emojis a small nudge, nearly all at once
+@media (hover: hover) {
+    .note-card:hover .note-emojis .emoji {
+        animation: emoji-hop 0.3s ease-out;
+
+        @for $i from 2 through 14 {
+            &:nth-child(#{$i}) {
+                animation-delay: ($i - 1) * 0.015s;
+            }
+        }
+    }
+}
+
+@keyframes emoji-hop {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
 // List group modernization
 .list-group {
     display: flex;
@@ -410,16 +790,20 @@ p {
 }
 
 .list-group-item {
-    background: rgba($surface, 0.3);
-    border: 1px solid $border;
-    border-radius: $radius-md;
+    color: $text-primary;
+    @include plain;
+    @include row-divider;
     padding: $space-4;
     font-weight: $font-weight-bold;
-    transition: all $transition-base;
     cursor: pointer;
 
     &:hover {
-        border-color: $text-tertiary;
+        border-color: $line-strong;
+    }
+
+    // Bootstrap squares off and overlaps neighbouring items; these stand on their own
+    & + & {
+        border-top-width: 1.5px;
     }
 }
 
@@ -436,6 +820,67 @@ a .list-group-item {
     padding-top: $space-2;
     padding-bottom: $space-6;
     min-height: 100vh;
+}
+
+// One column, centred. On larger screens the rail and the logo stand right next to it
+// (see $rail-left).
+.app-column {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@media (min-width: $breakpoint-md) {
+    #app.container {
+        max-width: none;
+        margin-left: 0;
+        padding-left: 128px;
+        padding-right: $space-8;
+    }
+
+    .app-column {
+        max-width: 640px;
+    }
+
+    // A document reads from the left, so the headings and their groups follow the column
+    .app-column {
+        .text-center,
+        .section-title,
+        .section-description-text,
+        .app-version-text,
+        .stat-note,
+        .stat-note-sub,
+        .stat-note-strong,
+        .stats-section-title,
+        .stats-subsection-title {
+            text-align: left;
+        }
+
+        .menu-header,
+        .selected-emojis-container,
+        .stat-card {
+            align-items: flex-start;
+        }
+
+        .stat-card,
+        .stats-toggle {
+            text-align: left;
+        }
+
+        .stat-card {
+            padding-left: 0;
+        }
+
+        .selected-emojis-container .emoji-chips-wrapper {
+            justify-content: flex-start;
+        }
+    }
+}
+
+// From here there is room to keep the column in the middle of the whole screen
+@media (min-width: $breakpoint-lg) {
+    #app.container {
+        padding-right: 128px;
+    }
 }
 
 // Menu styles
@@ -506,6 +951,7 @@ a {
         &:hover {
             color: $text-primary;
             text-decoration: underline;
+            text-decoration-thickness: 2px;
         }
     }
 }
@@ -513,8 +959,9 @@ a {
 // Notification badge
 .notifiation-badge {
     top: 5px !important;
-    left: 28px !important;
+    left: 26px !important;
     background: $secondary !important;
+    border: 2px solid $line !important;
 }
 
 // Cleanup page
@@ -528,15 +975,9 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $space-4;
-    background: rgba($surface, 0.3);
-    border: 1px solid $border;
-    border-radius: $radius-md;
-    transition: all $transition-base;
-
-    &:hover {
-        border-color: $text-tertiary;
-    }
+    padding: $space-4 0;
+    @include plain;
+    @include row-divider;
 }
 
 .cleanup-emoji-info {
@@ -557,110 +998,4 @@ a {
 .cleanup-actions {
     display: flex;
     gap: $space-2;
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-    html,
-    body,
-    #app {
-        background-color: $dark-bg;
-        color: $dark-text;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-        color: $dark-text;
-    }
-
-    #main-navbar {
-        background: transparent;
-
-        a, button {
-            color: $dark-text-secondary;
-
-            @media (hover: hover) {
-                &:hover {
-                    color: $dark-text;
-                }
-            }
-
-            &.active {
-                color: $primary;
-            }
-        }
-    }
-
-    .list-group-item {
-        background: rgba($dark-surface, 0.3);
-        color: $dark-text;
-        border-color: $dark-border;
-    }
-
-    #editorjs {
-        background-color: transparent;
-        color: $dark-text;
-    }
-
-    hr {
-        border-color: $dark-border;
-    }
-
-    .emoji-wrapper {
-        background-color: transparent;
-    }
-
-    .empty-state {
-        .empty-state-title {
-            color: $dark-text;
-        }
-
-        .empty-state-subtitle {
-            color: $dark-text-secondary;
-        }
-    }
-
-    a {
-        color: $dark-text-secondary;
-
-        &:hover,
-        &:active,
-        &.active {
-            color: $primary !important;
-        }
-    }
-
-    #menu {
-        .icon {
-            color: $dark-text-secondary;
-        }
-
-        .list-group-item {
-            color: $dark-text;
-
-            form button {
-                color: $dark-text;
-            }
-        }
-    }
-
-    #toc-container #toc a {
-        color: $dark-text;
-
-        &:hover {
-            color: $primary;
-        }
-    }
-
-    .fixed-button-wrapper {
-        background: linear-gradient(to top, rgba(10, 10, 10, 1) 70%, transparent);
-    }
-
-    .cleanup-item {
-        background: rgba($dark-surface, 0.3);
-        border-color: $dark-border;
-    }
-
-    .cleanup-emoji-info .cleanup-count {
-        color: $dark-text-secondary;
-    }
 }

@@ -72,7 +72,7 @@ describe("Notes Tests", () => {
         cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').eq(0).click();
         cy.get('[data-cy="note-body"] [contenteditable="true"]').should("exist");
 
-        cy.get('[aria-label="Close"]').click();
+        cy.get('[aria-label="Done"]').click();
         cy.get('[data-cy="note-list"]').should("be.visible");
 
         cy.get('[data-cy="note-list"] [data-cy="note-list-item"]').eq(1).click();

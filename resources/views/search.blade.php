@@ -4,7 +4,8 @@
         <meta name="navigate-cache-control" content="no-cache">
     @endpush
 
-    <div x-data
+    <div class="container"
+         x-data
          @apply-filter.window="Livewire.navigate('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
             <h1 class="section-title">Search 🔍</h1>

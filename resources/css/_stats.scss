@@ -23,19 +23,12 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: $space-5 $space-3;
-  background: rgba($surface, 0.5);
-  border: 1px solid $border;
-  border-radius: $radius-md;
-  transition: transform $transition-spring;
-
-  &:hover {
-    transform: translateY(-3px) scale(1.02);
-  }
+  padding: $space-3;
+  @include plain;
 
   .stat-value {
     font-size: $font-size-3xl;
-    font-weight: $font-weight-extrabold;
+    font-weight: $font-weight-black;
     color: $text-primary;
     line-height: $line-height-tight;
 
@@ -101,8 +94,8 @@
   gap: $space-1;
   padding: 4px;
   margin-bottom: $space-5;
-  background: rgba($surface, 0.6);
-  border: 1px solid $border;
+  background: $background-alt;
+  border: 0;
   border-radius: $radius-full;
 }
 
@@ -111,7 +104,7 @@
   padding: 6px 16px;
   border-radius: $radius-full;
   font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
+  font-weight: $font-weight-extrabold;
   color: $text-secondary;
   cursor: pointer;
   white-space: nowrap;
@@ -137,7 +130,7 @@
 #period-quarter:checked ~ .stats-toggle-bar label[for="period-quarter"],
 #period-month:checked ~ .stats-toggle-bar label[for="period-month"] {
   background: $primary;
-  color: $text-primary;
+  color: $on-primary;
 }
 
 // Timeframe badge: muted = all time, accent = recent / trending window
@@ -155,8 +148,8 @@
   white-space: nowrap;
 
   &.period-badge--recent {
-    background: rgba($secondary, 0.18);
-    color: #9A4A00;
+    background: alpha($secondary, 0.25);
+    color: $text-primary;
   }
 }
 
@@ -190,10 +183,8 @@
   justify-content: space-between;
   gap: $space-2;
   height: 140px;
-  padding: $space-4;
-  background: rgba($surface, 0.5);
-  border: 1px solid $border;
-  border-radius: $radius-md;
+  padding: $space-4 0;
+  @include plain;
 
   .stat-chart-col {
     flex: 1;
@@ -221,8 +212,8 @@
   .stat-chart-bar {
     width: 100%;
     min-height: 0;
-    background: linear-gradient(180deg, $primary 0%, $secondary 100%);
-    border-radius: $radius-sm $radius-sm 0 0;
+    background: $primary;
+    border-radius: 6px 6px 0 0;
     transition: height $transition-slow;
   }
 
@@ -287,15 +278,15 @@
 
   .emoji-rank-bar-track {
     flex: 1;
-    height: 12px;
-    background: $border;
+    height: 4px;
+    background: alpha($line-soft, 0.6);
     border-radius: $radius-full;
     overflow: hidden;
   }
 
   .emoji-rank-bar {
     height: 100%;
-    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    background: $primary;
     border-radius: $radius-full;
     transition: width $transition-slow;
   }
@@ -307,61 +298,5 @@
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     color: $text-secondary;
-  }
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-  .stat-card,
-  .stat-chart {
-    background: rgba($dark-surface, 0.3);
-    border-color: $dark-border;
-  }
-
-  .stat-card .stat-value,
-  .stats-section-title,
-  .stat-note-strong {
-    color: $dark-text;
-  }
-
-  .stat-card .stat-label,
-  .stat-note,
-  .stat-note-sub,
-  .stat-chart .stat-chart-label,
-  .stat-chart .stat-chart-count,
-  .stats-section-note,
-  .stats-subsection-title,
-  .stats-toggle-btn,
-  .emoji-rank .emoji-rank-count {
-    color: $dark-text-secondary;
-  }
-
-  .stats-toggle-bar {
-    background: rgba($dark-surface, 0.3);
-    border-color: $dark-border;
-  }
-
-  .stats-toggle-btn:hover {
-    color: $dark-text;
-  }
-
-  #period-all:checked ~ .stats-toggle-bar label[for="period-all"],
-  #period-quarter:checked ~ .stats-toggle-bar label[for="period-quarter"],
-  #period-month:checked ~ .stats-toggle-bar label[for="period-month"] {
-    color: $text-primary;
-  }
-
-  .emoji-rank .emoji-rank-bar-track {
-    background: $dark-border;
-  }
-
-  .period-badge {
-    background: $dark-border;
-    color: $dark-text-secondary;
-
-    &.period-badge--recent {
-      background: rgba($secondary, 0.22);
-      color: $secondary;
-    }
   }
 }

@@ -12,10 +12,11 @@ select,
   font-size: $font-size-base;
   font-family: $font-family;
   color: $text-primary;
-  background: transparent;
-  border: 2px solid $border-input;
-  border-radius: $radius-lg;
-  transition: all $transition-base;
+  // A softly filled field; the outline only shows while typing
+  background: $background-alt;
+  border: 1.5px solid transparent;
+  border-radius: $radius-md;
+  transition: box-shadow $transition-fast;
 
   &::placeholder {
     color: $text-tertiary;
@@ -23,13 +24,14 @@ select,
 
   &:focus {
     outline: none;
-    border-color: $text-primary;
-    box-shadow: 0 0 0 4px rgba($primary, 0.6);
-    background: transparent;
+    color: $text-primary;
+    background: $surface;
+    border-color: $line-strong;
+    box-shadow: 0 0 0 4px alpha($primary, 0.55);
   }
 
   &:disabled {
-    background: $border;
+    background: $background-alt;
     cursor: not-allowed;
     opacity: 0.6;
   }
@@ -40,7 +42,7 @@ select,
     animation: shake 0.3s;
 
     &:focus {
-      box-shadow: 0 0 0 3px rgba($danger, 0.2);
+      box-shadow: 0 0 0 4px alpha($danger, 0.25);
     }
   }
 
@@ -54,7 +56,7 @@ select,
     background-size: 20px;
 
     &:focus {
-      box-shadow: 0 0 0 3px rgba($success, 0.2);
+      box-shadow: 0 0 0 4px alpha($success, 0.25);
     }
   }
 }
@@ -68,25 +70,35 @@ textarea.form-control {
   line-height: $line-height-relaxed;
 }
 
-// Elegant input (borderless)
+// Single line text areas (search) stay one line high
+textarea[rows="1"] {
+  min-height: 0;
+  height: 62px;
+  resize: none;
+}
+
+// Large free text fields (titles, search) write like a note: big text straight on the
+// background, with only a faint line below as a hint
 .elegant-input,
 input.elegant-input,
 textarea.elegant-input {
-  border: none;
-  border-bottom: 2px solid $border-input;
-  border-radius: 0;
-  padding: $space-3 $space-2;
+  padding: $space-2 $space-3;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-extrabold;
   background: transparent;
-  transition: all $transition-base;
-
-  &:focus {
-    border-bottom-color: $text-primary;
-    box-shadow: 0 3px 0 0 $primary;
-  }
+  border: 0;
+  border-bottom: 1.5px solid $line-soft;
+  border-radius: 0;
+  resize: none;
 
   &::placeholder {
-    color: $text-tertiary;
-    font-style: italic;
+    font-weight: $font-weight-bold;
+  }
+
+  &:focus {
+    background: transparent;
+    border-bottom-color: $line-strong;
+    box-shadow: none;
   }
 }
 
@@ -95,7 +107,7 @@ label,
 .form-label {
   display: block;
   font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-bold;
   color: $text-secondary;
   margin-bottom: $space-2;
 }
@@ -126,18 +138,21 @@ input[type="radio"] {
   }
 }
 
-// Toggle switch (modern iOS style)
+// Toggle switch
 .form-switch {
   display: flex;
   align-items: center;
   margin-bottom: $space-4;
+  padding-left: 0;
 
   .form-check-input {
-    width: 48px;
-    height: 26px;
-    margin-right: $space-3;
-    background-color: $border-input;
-    border: none;
+    flex: none;
+    width: 52px;
+    height: 32px;
+    margin: 0 $space-3 0 0;
+    background: $surface;
+    background-image: none;
+    border: 2px solid $line-strong;
     border-radius: $radius-full;
     position: relative;
     cursor: pointer;
@@ -148,20 +163,23 @@ input[type="radio"] {
     &::before {
       content: '';
       position: absolute;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: $radius-full;
-      background: white;
-      top: 2px;
-      left: 2px;
-      transition: transform $transition-base;
+      background: $text-primary;
+      top: 3.5px;
+      left: 3.5px;
+      transition: transform $transition-spring;
     }
 
     &:checked {
       background-color: $primary;
+      background-image: none;
+      border-color: $line-strong;
 
       &::before {
-        transform: translateX(22px);
+        background: $on-primary;
+        transform: translateX(20px);
       }
     }
 
@@ -177,6 +195,9 @@ input[type="radio"] {
 
   .form-check-label {
     margin-bottom: 0;
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
     cursor: pointer;
   }
 }
@@ -210,19 +231,20 @@ input[type="radio"] {
 
   .input-clear {
     position: absolute;
-    right: $space-4;
+    top: 50%;
+    right: $space-2;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    transform: translateY(-50%);
     background: none;
     border: none;
-    color: $text-tertiary;
+    color: $text-primary;
+    font-size: 28px;
+    font-weight: $font-weight-black;
     cursor: pointer;
-    padding: $space-2;
     border-radius: $radius-sm;
-    transition: all $transition-fast;
-
-    &:hover {
-      color: $text-primary;
-      background: $surface-hover;
-    }
+    z-index: 2;
   }
 }
 
@@ -243,67 +265,4 @@ input[type="radio"] {
   margin-top: $space-2;
   font-size: $font-size-sm;
   color: $danger;
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-  input:not([type="checkbox"]):not([type="radio"]),
-  textarea,
-  select,
-  .form-control {
-    color: $dark-text;
-    background: transparent;
-    border-color: $dark-border-input;
-
-    &::placeholder {
-      color: $dark-text-secondary;
-    }
-
-    &:focus {
-      color: $dark-text;
-      background: transparent;
-      border-color: $primary;
-      box-shadow: 0 0 0 4px rgba($primary, 0.35);
-    }
-
-    &:disabled {
-      background: $dark-bg-alt;
-    }
-  }
-
-  .elegant-input,
-  input.elegant-input,
-  textarea.elegant-input {
-    background: transparent;
-    border-bottom-color: $dark-border-input;
-
-    &:focus {
-      color: $dark-text;
-      border-bottom-color: $primary;
-      box-shadow: 0 3px 0 0 $primary;
-    }
-  }
-
-  .input-error,
-  .invalid-feedback,
-  .input-error-message {
-    color: $dark-danger;
-  }
-
-  label,
-  .form-label {
-    color: $dark-text-secondary;
-  }
-
-  .form-switch .form-check-input {
-    background-color: $dark-border-input;
-
-    &:checked {
-      background-color: $primary;
-    }
-
-    &::before {
-      background: $dark-surface;
-    }
-  }
 }

@@ -2,7 +2,7 @@
 
 @if (!is_null($progress) && $progress > 0)
     <div class="progress">
-        <div class="progress-bar bg-success"
+        <div class="progress-bar {{ $progress >= 100 ? 'is-complete' : '' }}"
              role="progressbar"
              style="width: {{ $progress }}%"
              aria-valuenow="{{ $progress }}"

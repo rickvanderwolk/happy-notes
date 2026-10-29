@@ -9,7 +9,8 @@
         $isInclude = request()->is('filter');
     @endphp
 
-    <div x-data
+    <div class="container"
+         x-data
          @apply-filter.window="Livewire.navigate('{{ route('notes.show') }}')"
          @keydown.window.enter="Livewire.navigate('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
