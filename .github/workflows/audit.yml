@@ -22,8 +22,8 @@ jobs:
           php-version: '8.4'
           coverage: none
 
-      - name: Composer audit
-        run: composer audit --locked
+      - name: Composer audit (production dependencies)
+        run: composer audit --locked --no-dev
 
-      - name: npm audit (production dependencies)
-        run: npm audit --omit=dev
+      - name: npm audit (all dependencies, the server installs them to build)
+        run: npm audit
