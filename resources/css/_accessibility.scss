@@ -6,6 +6,14 @@
   --focus-ring: #{$text-primary};
 }
 
+@supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
+  :root {
+    font: -apple-system-body;
+    font-family: $font-family;
+    line-height: $line-height-base;
+  }
+}
+
 :focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 2px;

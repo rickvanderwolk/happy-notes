@@ -91,6 +91,7 @@
 
 .stats-toggle-bar {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: $space-1;
   padding: 4px;
   margin-bottom: $space-5;
@@ -145,7 +146,6 @@
   border-radius: $radius-full;
   background: $border;
   color: $text-secondary;
-  white-space: nowrap;
 
   &.period-badge--recent {
     background: alpha($secondary, 0.25);
@@ -182,7 +182,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: $space-2;
-  height: 140px;
+  height: 8.75rem;
   padding: $space-4 0;
   @include plain;
 
@@ -262,7 +262,7 @@
   .emoji-rank-emoji,
   .combo-label {
     flex-shrink: 0;
-    width: 84px;
+    width: 5.25rem;
     text-align: left;
   }
 
