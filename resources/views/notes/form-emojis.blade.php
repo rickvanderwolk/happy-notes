@@ -19,6 +19,7 @@
                     :storageKey="null"
                     :updateUser="false"
                     :customEmojis="$item->emojis"
+                    :contextText="(string) $item->title"
                 />
 
                 @error('selectedEmojis')
