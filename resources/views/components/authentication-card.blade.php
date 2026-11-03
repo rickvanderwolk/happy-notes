@@ -8,9 +8,9 @@
     </div>
 
     <div class="version-text auth-version">
-        {{ config('app.name') }} {{ config('app.version') }}
+        HappyNotes {{ config('app.version') }}
         <span class="auth-version-separator">•</span>
-        <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer" class="text-link text-link--quiet">
             GitHub
         </a>
     </div>

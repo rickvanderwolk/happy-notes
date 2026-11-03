@@ -13,6 +13,7 @@ const userPages = [
     '/menu',
     '/insights',
     '/shortcuts',
+    '/about',
     '/cleanup',
     '/user/profile',
 ];

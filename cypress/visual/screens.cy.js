@@ -24,6 +24,7 @@ const userPages = {
     menu: '/menu',
     insights: '/insights',
     shortcuts: '/shortcuts',
+    about: '/about',
     cleanup: '/cleanup',
     profile: '/user/profile',
     'confirm-password': '/user/confirm-password',

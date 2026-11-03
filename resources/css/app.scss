@@ -845,6 +845,7 @@ a .list-group-item {
     // A document reads from the left, so the headings and their groups follow the column
     .app-column {
         .text-center,
+        .about-intro,
         .section-title,
         .section-description-text,
         .app-version-text,
@@ -871,7 +872,8 @@ a .list-group-item {
             padding-left: 0;
         }
 
-        .selected-emojis-container .emoji-chips-wrapper {
+        .selected-emojis-container .emoji-chips-wrapper,
+        .form-switch.shortcuts-toggle {
             justify-content: flex-start;
         }
     }

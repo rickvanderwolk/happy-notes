@@ -255,6 +255,12 @@ const keydownListener = (event) => {
             visit(getRouteUrl('filter.search.show'));
         }
 
+        if (event.key === 'i') {
+            if (appCurrentRouteName === 'menu.show') {
+                visit(getRouteUrl('insights.show'));
+            }
+        }
+
         if (event.key === 'l') {
             if (appCurrentRouteName === 'menu.show') {
                 document.getElementById('logout-button').click();
@@ -279,7 +285,7 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                visit(getRouteUrl('note.title.show', {uuid: getUuidFromRoute()}));
+                visit(getRouteUrl('note.title.show', {note: getUuidFromRoute()}));
             }
         }
 

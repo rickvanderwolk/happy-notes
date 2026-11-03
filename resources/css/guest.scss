@@ -50,18 +50,6 @@ $auth-text-hover-color: $text-primary;
     margin-bottom: 1rem;
 }
 
-.auth-text-link:hover {
-    color: $auth-text-hover-color;
-}
-
-.auth-underline {
-    text-decoration: underline;
-}
-
-.auth-strong-link {
-    font-weight: 600;
-}
-
 .auth-status {
     margin-bottom: 1rem;
     font-size: 0.875rem;
@@ -124,14 +112,6 @@ $auth-text-hover-color: $text-primary;
 
 .auth-version {
     text-align: center;
-
-    a {
-        text-decoration: underline;
-
-        &:hover {
-            color: $auth-text-color;
-        }
-    }
 }
 
 .auth-version-separator {
@@ -425,11 +405,6 @@ a {
 
 .landing-github {
     font-size: $font-size-sm;
-    color: $text-tertiary;
-
-    &:hover {
-        color: $text-primary;
-    }
 }
 
 // Mobile responsive

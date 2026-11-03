@@ -38,6 +38,7 @@
         <meta name="app-route-filter-exclude-show" content="{{ route('filter.exclude.show') }}">
         <meta name="app-route-filter-search-show" content="{{ route('filter.search.show') }}">
         <meta name="app-route-menu-show" content="{{ route('menu.show') }}">
+        <meta name="app-route-insights-show" content="{{ route('insights.show') }}">
         <meta name="app-route-shortcuts-show" content="{{ route('shortcuts.show') }}">
         <meta name="app-route-notes-show" content="{{ route('notes.show') }}">
         <meta name="app-route-note-create" content="{{ route('note.create') }}">

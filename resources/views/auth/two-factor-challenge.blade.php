@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="auth-row auth-row-end">
-                    <button type="button" class="auth-text auth-text-link auth-underline"
+                    <button type="button" class="auth-text text-link text-link--quiet"
                                     x-show="! recovery"
                                     x-on:click="
                                         recovery = true;
@@ -41,7 +41,7 @@
                         {{ __('Use a recovery code') }}
                     </button>
 
-                    <button type="button" class="auth-text auth-text-link auth-underline"
+                    <button type="button" class="auth-text text-link text-link--quiet"
                                     x-cloak
                                     x-show="recovery"
                                     x-on:click="

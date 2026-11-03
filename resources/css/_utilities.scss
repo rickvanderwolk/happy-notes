@@ -397,6 +397,12 @@ h1.section-title + .section-description-text {
 }
 
 // Shortcuts section styling
+// Doubled up to win over .form-switch, which is loaded later.
+.form-switch.shortcuts-toggle {
+  justify-content: center;
+  margin-bottom: $space-8;
+}
+
 .shortcuts-section {
   margin-bottom: $space-8;
 
@@ -539,4 +545,68 @@ h1.section-title + .section-description-text {
   &.is-complete {
     background: $success;
   }
+}
+
+// About page: a centred header like the menu, then left-aligned text like the other pages.
+.about-intro {
+  text-align: center;
+  margin-bottom: $space-8;
+}
+
+.about-tagline {
+  font-size: $font-size-base;
+  color: $text-secondary;
+  margin-bottom: $space-2;
+}
+
+.about-strikethrough {
+  text-decoration: line-through;
+  text-decoration-color: $primary;
+  text-decoration-thickness: 2px;
+  color: $text-tertiary;
+}
+
+.about-promise {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  margin-bottom: 0;
+}
+
+.about-section {
+  margin-bottom: $space-6;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+
+  p {
+    margin-bottom: $space-2;
+  }
+}
+
+.about-heading {
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  margin-bottom: $space-2;
+}
+
+// Links inside running text: a yellow underline that turns to the text colour on hover.
+.text-link {
+  color: $text-primary;
+  text-decoration: underline;
+  text-decoration-color: $primary;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: $text-primary;
+    text-decoration-color: currentColor;
+  }
+}
+
+// Quiet variant for small links around a form or in a footer: muted text and a thin
+// underline, so a few of them together do not shout.
+.text-link--quiet {
+  color: $text-secondary;
+  text-decoration-thickness: 1px;
 }

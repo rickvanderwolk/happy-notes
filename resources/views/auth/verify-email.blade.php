@@ -31,14 +31,14 @@
             <div>
                 <a
                     href="{{ route('profile.show') }}"
-                    class="auth-text auth-text-link auth-underline"
+                    class="auth-text text-link text-link--quiet"
                 >
                     {{ __('Edit Profile') }}</a>
 
                 <form method="POST" action="{{ route('logout') }}" class="auth-inline">
                     @csrf
 
-                    <button type="submit" class="auth-text auth-text-link auth-underline auth-inline-gap">
+                    <button type="submit" class="auth-text text-link text-link--quiet auth-inline-gap">
                         {{ __('Log Out') }}
                     </button>
                 </form>

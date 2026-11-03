@@ -55,6 +55,10 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
 
     Route::get('/insights', [InsightsController::class, 'index'])->name('insights.show');
 
+    Route::get('/about', function () {
+        return view('about');
+    })->name('about.show');
+
     Route::get('/dashboard', function () {
         return redirect(route('notes.show'));
     })->name('dashboard');

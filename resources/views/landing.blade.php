@@ -141,7 +141,7 @@
             @if (Route::has('register'))
                 <a href="{{ route('register') }}" class="btn btn-primary">Give it a try</a>
             @endif
-            <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer" class="landing-github">
+            <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer" class="landing-github text-link text-link--quiet">
                 View source on GitHub
             </a>
         </footer>
