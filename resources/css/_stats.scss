@@ -164,16 +164,16 @@
   text-align: center;
   font-size: $font-size-xs;
   color: $text-tertiary;
-  margin-top: $space-4;
+  margin-top: $space-1;
   margin-bottom: 0;
 }
 
 .stat-note-strong {
   text-align: center;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
   color: $text-primary;
-  margin-bottom: $space-2;
+  margin-bottom: 0;
 }
 
 // Per-week bar chart
@@ -188,6 +188,7 @@
 
   .stat-chart-col {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -251,6 +252,8 @@
   display: flex;
   flex-direction: column;
   gap: $space-3;
+  // Same breathing room as the charts, so every section keeps the same rhythm.
+  padding: $space-4 0;
 }
 
 .emoji-rank {
@@ -298,5 +301,73 @@
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     color: $text-secondary;
+  }
+}
+
+// Large text (iOS text size, browser zoom): measured in em, so these kick in when the
+// text is big compared to the room it has, not at a fixed screen width.
+.stats-toggle-panel {
+  container-type: inline-size;
+}
+
+// Charts with many bars (13 weeks) tighten up and label every other bar on a phone.
+@container (max-width: 30em) {
+  .stat-chart:has(.stat-chart-col:nth-child(8)) {
+    gap: 2px;
+
+    .stat-chart-label {
+      overflow: visible;
+    }
+
+    .stat-chart-col:nth-child(even) .stat-chart-label {
+      visibility: hidden;
+    }
+  }
+}
+
+@container (max-width: 18em) {
+  .stat-chart {
+    gap: 2px;
+
+    // Still grows with the text size, just a step below it so labels stay apart.
+    .stat-chart-label {
+      overflow: visible;
+      font-size: 0.6rem;
+    }
+  }
+
+  // Charts with many bars drop the per-bar numbers and keep every third label.
+  .stat-chart:has(.stat-chart-col:nth-child(8)) {
+    .stat-chart-count {
+      display: none;
+    }
+
+    .stat-chart-col:nth-child(even) .stat-chart-label {
+      visibility: visible;
+    }
+
+    .stat-chart-col:not(:nth-child(3n + 1)) .stat-chart-label {
+      visibility: hidden;
+    }
+  }
+
+  // The bar moves below the label and count instead of being squeezed to nothing.
+  .emoji-rank {
+    flex-wrap: wrap;
+    row-gap: $space-1;
+
+    .emoji-rank-emoji,
+    .combo-label {
+      width: auto;
+    }
+
+    .emoji-rank-count {
+      margin-left: auto;
+    }
+
+    .emoji-rank-bar-track {
+      flex-basis: 100%;
+      order: 1;
+    }
   }
 }

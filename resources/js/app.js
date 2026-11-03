@@ -9,6 +9,17 @@ const getCurrentRouteName = () => document.querySelector('meta[name="app-current
 
 const visit = (url) => window.Livewire.navigate(url);
 
+// Insights groups notes by day and time of day, which only makes sense in local time.
+try {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timezone) {
+        const secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = `tz=${encodeURIComponent(timezone)}; path=/; max-age=31536000; SameSite=Lax${secure}`;
+    }
+} catch {
+    // Without a timezone the insights fall back to the app timezone.
+}
+
 // A title is a single line, so Enter never adds a newline to it. This lives here instead
 // of an onkeydown attribute, which the content security policy does not allow.
 document.addEventListener('keydown', (event) => {

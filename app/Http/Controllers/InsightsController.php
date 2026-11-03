@@ -4,41 +4,74 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Carbon\Carbon;
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 final class InsightsController extends Controller
 {
-    public function index(): \Illuminate\View\View|\Illuminate\Contracts\View\View
+    public function index(Request $request): \Illuminate\View\View|\Illuminate\Contracts\View\View
     {
+        $timezone = $this->timezone($request);
+
         // Fingerprint the user's notes with two aggregates that the (user_id, updated_at)
         // index already covers. Any note that is added, changed or removed moves the key,
         // so the cached figures can never be stale; the TTL is only there to stop old
-        // entries piling up.
+        // entries piling up. Bump the version whenever the shape of the cached data changes.
         $noteCount = Note::query()->count();
         $lastChange = Note::query()->max('updated_at') ?? 'never';
 
-        $cacheKey = 'insights:' . Auth::id() . ':' . sha1($noteCount . '|' . $lastChange);
+        $cacheKey = 'insights:v8:' . Auth::id() . ':' . sha1($noteCount . '|' . $lastChange . '|' . $timezone);
 
-        $data = Cache::remember($cacheKey, now()->addDay(), fn (): array => $this->buildInsights());
+        $data = Cache::remember($cacheKey, now()->addDay(), fn (): array => $this->buildInsights($timezone));
 
         return view('insights', $data);
     }
 
     /**
+     * The browser reports its timezone in the tz cookie (set in app.js); without a valid
+     * one the figures fall back to the app timezone.
+     */
+    private function timezone(Request $request): string
+    {
+        $timezone = $request->cookie('tz');
+
+        if (! is_string($timezone) || preg_match('/^[A-Za-z0-9_+\-\/]{1,64}$/', $timezone) !== 1) {
+            return (string) config('app.timezone');
+        }
+
+        try {
+            return (new DateTimeZone($timezone))->getName();
+        } catch (\Exception) {
+            return (string) config('app.timezone');
+        }
+    }
+
+    /**
      * @return array<string, mixed>
      */
-    private function buildInsights(): array
+    private function buildInsights(string $timezone): array
     {
         // Own-notes are scoped automatically via OwnNotesScope on every query below.
-        $now = Carbon::now();
+        // Timestamps are stored in the app timezone and converted to the viewer's local
+        // time, so days, weekdays and dayparts match the clock the notes were written by.
+        $now = Carbon::now($timezone);
+        $storedZone = new DateTimeZone((string) config('app.timezone'));
+        $localZone = new DateTimeZone($timezone);
+        $toLocal = fn (mixed $ts): string => ($ts instanceof DateTimeInterface
+            ? DateTimeImmutable::createFromInterface($ts)
+            : new DateTimeImmutable((string) $ts, $storedZone))
+            ->setTimezone($localZone)
+            ->format('Y-m-d H:i:s');
         $startOfWeekStr = $now->copy()->startOfWeek()->toDateString();
         $startOfMonthStr = $now->copy()->startOfMonth()->toDateString();
 
         // Load only the bare created_at column (no body, no model hydration) and derive
         // everything from it in PHP. Stays light at 10k+ notes and is DB-independent.
-        // Note: timestamps are stored in UTC; time-of-day stats are reported in UTC.
-        $timestamps = Note::query()->pluck('created_at');
+        $timestamps = Note::query()->pluck('created_at')->map($toLocal);
         $totalNotes = $timestamps->count();
 
         if ($totalNotes === 0) {
@@ -63,7 +96,6 @@ final class InsightsController extends Controller
         $newThisMonth = 0;
 
         foreach ($timestamps as $ts) {
-            $ts = (string) $ts;
             $day = substr($ts, 0, 10);
             $hour = (int) substr($ts, 11, 2);
             $bucket = intdiv($hour, 6);
@@ -95,10 +127,30 @@ final class InsightsController extends Controller
         $comboCounts = ['all' => [], 'quarter' => [], 'month' => []];
         $comboLabels = [];
 
+        // Rising and fading emojis, on the 3-month view only: the last three months against
+        // the year before. A full year as baseline keeps seasonal emojis from looking like
+        // they disappeared; thirty days held too few notes and too much season to say much.
+        $shiftRecentFrom = $cutoffs['quarter'];
+        $shiftBaseFrom = $now->copy()->subMonths(3)->subYear()->toDateTimeString();
+        $shiftCounts = ['recent' => [], 'base' => []];
+        $shiftNotes = ['recent' => 0, 'base' => 0];
+
         foreach ($emojiRows as $row) {
-            $tsR = (string) $row->created_at;
+            $tsR = $toLocal($row->created_at);
             $emojis = array_values(array_unique($row->emojis ?? []));
             $cnt = count($emojis);
+
+            if ($cnt === 0) {
+                continue;
+            }
+
+            $side = $tsR >= $shiftRecentFrom ? 'recent' : ($tsR >= $shiftBaseFrom ? 'base' : null);
+            if ($side !== null) {
+                $shiftNotes[$side]++;
+                foreach ($emojis as $emoji) {
+                    $shiftCounts[$side][$emoji] = ($shiftCounts[$side][$emoji] ?? 0) + 1;
+                }
+            }
 
             foreach ($keys as $k) {
                 if ($cutoffs[$k] !== null && $tsR < $cutoffs[$k]) {
@@ -127,7 +179,7 @@ final class InsightsController extends Controller
         // All time: one bar per month across the entire history (first note -> now).
         // When that spans many months, only January bars are labelled (with the year).
         $range = [];
-        $cursorMonth = Carbon::parse($timestamps->min())->startOfMonth();
+        $cursorMonth = Carbon::parse($timestamps->min(), $timezone)->startOfMonth();
         $nowMonth = $now->copy()->startOfMonth();
         while ($cursorMonth <= $nowMonth) {
             $range[] = $cursorMonth->copy();
@@ -188,11 +240,11 @@ final class InsightsController extends Controller
 
         // --- Lifetime headline values. ---
         $daysSinceFirst = (int) round(abs(
-            Carbon::parse($timestamps->min())->startOfDay()->diffInDays($now->copy()->startOfDay())
+            Carbon::parse($timestamps->min(), $timezone)->startOfDay()->diffInDays($now->copy()->startOfDay())
         )) + 1;
         $uniqueEmojis = count($emCounts['all']);
         $totalEmojis = $emTags['all'];
-        $notingSince = Carbon::parse($timestamps->min())->format('M Y');
+        $notingSince = Carbon::parse($timestamps->min(), $timezone)->format('M Y');
 
         // Days in each window, capped by account age, for the per-period pace.
         $windowDays = [
@@ -217,6 +269,10 @@ final class InsightsController extends Controller
                 'dayparts' => $this->buildDaypartChart($daypart[$k]),
                 'topEmojis' => $this->topEmojis($emCounts[$k]),
                 'emojiCombos' => $this->topCombos($comboCounts[$k], $comboLabels),
+                'shiftNote' => $timestamps->min() > $shiftBaseFrom ? 'vs before' : 'vs the year before',
+                'emojiShifts' => $k === 'quarter'
+                    ? $this->emojiShifts($shiftCounts, $shiftNotes)
+                    : ['rising' => [], 'fading' => []],
             ];
         }
 
@@ -296,5 +352,47 @@ final class InsightsController extends Controller
             }
         }
         return $combos;
+    }
+
+    /**
+     * Emojis whose share of notes grew or shrank the most between the two windows,
+     * in percentage points so the emojis that matter most come first.
+     *
+     * @param  array{recent:array<string,int>,base:array<string,int>}  $counts
+     * @param  array{recent:int,base:int}  $notes
+     * @return array{rising:list<array{emoji:string,from:int,to:int,change:float}>,fading:list<array{emoji:string,from:int,to:int,change:float}>}
+     */
+    private function emojiShifts(array $counts, array $notes): array
+    {
+        $shifts = ['rising' => [], 'fading' => []];
+
+        if ($notes['recent'] < 5 || $notes['base'] < 20) {
+            return $shifts;
+        }
+
+        $emojis = array_keys($counts['recent'] + $counts['base']);
+        foreach ($emojis as $emoji) {
+            $emoji = (string) $emoji;
+            $recent = $counts['recent'][$emoji] ?? 0;
+            $base = $counts['base'][$emoji] ?? 0;
+            $to = $recent / $notes['recent'] * 100;
+            $from = $base / $notes['base'] * 100;
+            $change = $to - $from;
+
+            $row = ['emoji' => $emoji, 'from' => (int) round($from), 'to' => (int) round($to), 'change' => $change];
+            if ($change >= 5 && $recent >= 3) {
+                $shifts['rising'][] = $row;
+            } elseif ($change <= -5 && $base >= 5) {
+                $shifts['fading'][] = $row;
+            }
+        }
+
+        usort($shifts['rising'], fn (array $x, array $y): int => $y['change'] <=> $x['change']);
+        usort($shifts['fading'], fn (array $x, array $y): int => $x['change'] <=> $y['change']);
+
+        return [
+            'rising' => array_slice($shifts['rising'], 0, 5),
+            'fading' => array_slice($shifts['fading'], 0, 5),
+        ];
     }
 }
