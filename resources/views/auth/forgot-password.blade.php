@@ -33,7 +33,7 @@
             </div>
 
             <div class="auth-footer">
-                <a class="auth-text auth-text-link" href="{{ route('login') }}">
+                <a class="auth-text text-link text-link--quiet" href="{{ route('login') }}">
                     <x-icon name="arrow-left" /> {{ __('Back to login') }}
                 </a>
             </div>

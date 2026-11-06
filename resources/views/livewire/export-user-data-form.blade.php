@@ -8,10 +8,10 @@
     </x-slot>
 
     <x-slot name="content">
-        <div>
+        <div class="section-actions">
             <form action="{{ route('user.export.notes.create') }}" method="GET" style="display: inline;">
                 <input type="hidden" name="format" value="csv">
-                <button type="submit" class="btn btn-secondary me-2">
+                <button type="submit" class="btn btn-secondary">
                     Download CSV
                 </button>
             </form>

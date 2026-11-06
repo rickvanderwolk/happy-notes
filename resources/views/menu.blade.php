@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="title">Menu</x-slot>
     <div class="container mx-auto">
-        <div class="text-center">
-            <a href="{{ route('notes.show') }}">
-                <img src="/logo.png" alt="HappyNotes" class="logo logo-menu">
+        <div class="menu-header">
+            <a href="{{ route('notes.show') }}" aria-label="Back to notes">
+                <img src="/logo.png" alt="" class="logo logo-menu">
             </a>
-            <h1 class="section-title">Menu</h1>
+            <h1 class="section-title">HappyNotes</h1>
         </div>
 
         <div class="menu-card-modern">
@@ -22,7 +22,10 @@
 
             <a href="{{ route('insights.show') }}" class="menu-item-modern">
                 <div class="menu-item-content">
-                    <span class="menu-item-title">Insights</span>
+                    <span class="menu-item-title">
+                        Insights
+                        <x-keyboard-hint key="I" />
+                    </span>
                     <span class="menu-item-subtitle">A look at your note-taking habits</span>
                 </div>
                 <x-icon name="lightbulb" class="menu-item-icon" />
@@ -31,7 +34,7 @@
             <a href="{{ route('shortcuts.show') }}" data-no-navigate class="menu-item-modern menu-item-desktop-only">
                 <div class="menu-item-content">
                     <span class="menu-item-title">
-                        Keyboard Shortcuts
+                        Keyboard shortcuts
                         <x-keyboard-hint key="?" />
                     </span>
                     <span class="menu-item-subtitle">View all available shortcuts</span>
@@ -39,7 +42,7 @@
                 <x-icon name="keyboard" class="menu-item-icon" />
             </a>
 
-            <a href="https://github.com/rickvanderwolk/happynotes" target="_blank" rel="noopener noreferrer" data-no-navigate class="menu-item-modern">
+            <a href="{{ route('about.show') }}" class="menu-item-modern">
                 <div class="menu-item-content">
                     <span class="menu-item-title">About</span>
                     <span class="menu-item-subtitle">Learn more about HappyNotes</span>
@@ -49,10 +52,11 @@
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
+                {{-- The L shortcut clicks this button --}}
                 <button id="logout-button" type="submit" class="menu-item-modern">
                     <span class="menu-item-content">
                         <span class="menu-item-title">
-                            Logout
+                            Log out
                             <x-keyboard-hint key="L" />
                         </span>
                         <span class="menu-item-subtitle">Sign out of your account</span>
@@ -63,7 +67,7 @@
         </div>
 
         <div class="app-version-text">
-            {{ config('app.name') }} {{ config('app.version') }}
+            HappyNotes {{ config('app.version') }}
         </div>
     </div>
 </x-app-layout>

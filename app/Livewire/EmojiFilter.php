@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\EmojiSuggestions;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -33,16 +34,19 @@ final class EmojiFilter extends Component
      */
     public array $otherEmojis = [];
 
+    public string $contextText = '';
+
     /**
      * $customEmojis comes straight from a json_decode of the note, so its keys are not
      * guaranteed to be sequential.
      *
      * @param  array<array-key, string>  $customEmojis
      */
-    public function mount(?string $storageKey = null, bool $updateUser = false, array $customEmojis = []): void
+    public function mount(?string $storageKey = null, bool $updateUser = false, array $customEmojis = [], string $contextText = ''): void
     {
         $this->storageKey = $storageKey;
         $this->updateUser = $updateUser;
+        $this->contextText = $contextText;
 
         $user = Auth::user();
 
@@ -82,6 +86,34 @@ final class EmojiFilter extends Component
         return $this->tracksOtherList()
             ? array_merge($this->emojis, $this->otherEmojis)
             : $this->emojis;
+    }
+
+    /**
+     * @return list<string>
+     */
+    #[Computed]
+    public function initialSuggestions(): array
+    {
+        if ($this->storageKey === 'excluded_emojis') {
+            return [];
+        }
+
+        return array_slice(array_values(array_diff($this->allEmojis(), $this->hiddenEmojis())), 0, 5);
+    }
+
+    #[Computed]
+    public function dataUrl(): ?string
+    {
+        $user = Auth::user();
+
+        if ($user === null || $this->storageKey === 'excluded_emojis') {
+            return null;
+        }
+
+        return route('emoji.suggestions', [
+            'scope' => $this->storageKey === null ? 'notes' : 'filter',
+            'v' => EmojiSuggestions::version($user),
+        ]);
     }
 
     public function tracksOtherList(): bool

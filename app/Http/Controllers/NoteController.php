@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
 
 final class NoteController extends Controller
 {
@@ -131,6 +132,7 @@ final class NoteController extends Controller
         $selectedEmojis = array_merge($selectedEmojis, $emojisInTitle);
 
         $selectedEmojis = array_values(array_unique($selectedEmojis));
+        $this->requireEmojis($selectedEmojis);
 
         $note = new Note();
         $note->user()->associate($user);
@@ -191,9 +193,26 @@ final class NoteController extends Controller
         ]);
 
         $selectedEmojis = $this->sanitizeEmojis($request->input('selectedEmojis'));
+        $this->requireEmojis($selectedEmojis);
+
         $note->emojis = $selectedEmojis;
         $note->save();
         return redirect()->route('note.show', ['note' => $note->uuid]);
+    }
+
+    /**
+     * Emojis are how notes are found again, so a note always has at least one. An emoji
+     * typed in the title counts too.
+     *
+     * @param  list<string>  $emojis
+     */
+    private function requireEmojis(array $emojis): void
+    {
+        if ($emojis === []) {
+            throw ValidationException::withMessages([
+                'selectedEmojis' => 'Pick at least one emoji.',
+            ]);
+        }
     }
 
     public function storeBody(

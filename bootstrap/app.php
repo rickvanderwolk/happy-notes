@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(SecurityHeadersMiddleware::class);
+        $middleware->encryptCookies(except: ['tz']);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

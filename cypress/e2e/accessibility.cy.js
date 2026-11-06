@@ -13,13 +13,19 @@ const userPages = [
     '/menu',
     '/insights',
     '/shortcuts',
+    '/about',
     '/cleanup',
     '/user/profile',
 ];
 
+// Reduced motion makes animations finish at once, so axe measures the colours that stay
+// on screen and not a block of the editor halfway through fading in.
 const setColorScheme = (theme) => Cypress.automation('remote:debugger:protocol', {
     command: 'Emulation.setEmulatedMedia',
-    params: { features: [{ name: 'prefers-color-scheme', value: theme }] },
+    params: { features: [
+        { name: 'prefers-color-scheme', value: theme },
+        { name: 'prefers-reduced-motion', value: 'reduce' },
+    ] },
 });
 
 const logViolations = (violations) => {

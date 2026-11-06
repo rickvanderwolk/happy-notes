@@ -10,11 +10,12 @@
   justify-content: center;
   gap: $space-2; // Consistent spacing between icon and text
   padding: $space-3 $space-6;
+  font-family: inherit;
   font-size: $font-size-base;
-  font-weight: $font-weight-bold;
+  font-weight: $font-weight-extrabold;
   line-height: $line-height-tight;
   text-align: center;
-  border: 2px solid transparent;
+  border: $sticker-border-width solid transparent;
   border-radius: $radius-full;
   cursor: pointer;
   text-decoration: none;
@@ -33,102 +34,81 @@
   }
 }
 
-// Primary button (Yellow)
-.btn-primary, button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-outline):not(.menu-item-modern) {
-  background: $primary;
+// The filled and outlined variants are all stickers; they only differ in fill
+// The main buttons are yellow, green or red stickers
+.btn-primary, button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-outline):not(.menu-item-modern),
+.btn-success,
+.btn-danger {
+  @include sticker(3px, $radius-full);
+  @include sticker-press(3px);
   color: $text-primary;
-  border-color: $primary;
 
-  &:hover:not(:disabled) {
-    background: $primary-dark;
-    border-color: $primary-dark;
-    color: $text-primary; // Keep text color consistent
-    transform: scale(1.05);
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.98);
-  }
-
-  // Bootstrap's own focus state would otherwise turn a focused primary button blue.
+  &:hover:not(:disabled),
   &:focus-visible {
-    background: $primary-dark;
-    border-color: $primary-dark;
     color: $text-primary;
   }
 }
 
-// Secondary button
-.btn-secondary {
-  background: $surface;
-  color: $text-primary;
-  border-color: $border-dark;
+// Primary button (Yellow)
+.btn-primary, button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-outline):not(.menu-item-modern) {
+  background: $primary;
+  color: $on-primary;
 
-  &:hover:not(:disabled) {
-    background: rgba($primary, 0.1);
-    border-color: $primary;
-    color: $text-primary; // Keep text color consistent
-    transform: scale(1.05);
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: $primary;
+    color: $on-primary;
   }
+}
 
-  &:active:not(:disabled) {
-    background: rgba($primary, 0.15);
-    transform: scale(0.98);
+// The quiet buttons are softly filled, like the fields
+.btn-secondary,
+.btn-outline {
+  color: $text-primary;
+  background: $background-alt;
+  border-color: transparent;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    color: $text-primary;
+    background: alpha($primary, 0.3);
   }
 }
 
 // Success button (Green)
 .btn-success {
   background: $success;
-  color: white;
-  border-color: $success;
+  color: $on-primary;
 
-  &:hover:not(:disabled) {
-    background: $success-dark;
-    border-color: $success-dark;
-    color: white; // Keep text color consistent
-    transform: scale(1.05);
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.98);
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: $success;
+    color: $on-primary;
   }
 }
 
 // Danger button (Red)
 .btn-danger {
-  background: $danger;
+  background: $danger-fill;
   color: white;
-  border-color: $danger;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled),
+  &:focus-visible {
     background: $danger-dark;
-    border-color: $danger-dark;
-    color: white; // Keep text color consistent
-    transform: scale(1.05);
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.98);
+    color: white;
   }
 }
 
-// Outline button
-.btn-outline {
-  background: transparent;
-  color: $text-primary;
-  border-color: $border-dark;
+// Quiet danger: says what it does in red
+.btn-outline.btn-danger {
+  @include filled($radius-full);
+  color: $danger;
 
-  &:hover:not(:disabled) {
-    background: $primary;
-    border-color: $primary;
-    color: $text-primary;
-    transform: scale(1.05);
-  }
-
-  &:active:not(:disabled) {
-    background: $primary-dark;
-    transform: scale(0.98);
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: alpha($danger-fill, 0.12);
+    color: $danger;
   }
 }
 
@@ -171,61 +151,15 @@
 .btn-lg {
   padding: $space-4 $space-8;
   font-size: $font-size-lg;
-  min-height: $button-height-lg;
+  min-height: $button-height-lg + 4px;
+
+  &:is(.btn-primary, .btn-success, .btn-danger) {
+    @include sticker(4px, $radius-full);
+    @include sticker-press(4px);
+  }
 }
 
 .btn-block {
   display: flex;
   width: 100%;
-}
-
-// Floating Action Button (FAB)
-.btn-fab {
-  position: fixed;
-  bottom: $space-6;
-  right: $space-6;
-  width: $fab-size;
-  height: $fab-size;
-  border-radius: $radius-full;
-  background: $primary;
-  color: $text-primary;
-  border: none;
-  z-index: $z-fixed;
-  font-size: $font-size-3xl;
-  transition: all $transition-spring;
-
-  &:hover {
-    transform: rotate(90deg) scale(1.15);
-  }
-
-  &:active {
-    transform: rotate(90deg) scale(1.0);
-  }
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-  .btn-secondary {
-    background: $dark-surface;
-    color: $dark-text;
-    border-color: $dark-border;
-
-    &:hover:not(:disabled) {
-      background: $dark-surface-hover;
-      border-color: $text-secondary;
-    }
-  }
-
-  .btn-outline {
-    color: $dark-text;
-    border-color: $dark-border;
-
-    &:hover:not(:disabled) {
-      color: $text-primary;
-    }
-  }
-
-  .btn-link {
-    color: $dark-text-secondary;
-  }
 }

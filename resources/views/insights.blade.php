@@ -81,7 +81,7 @@
                             </div>
 
                             {{-- Day of the week --}}
-                            <h2 class="stats-subsection-title">Day of the week <span class="stats-section-note">(UTC)</span></h2>
+                            <h2 class="stats-subsection-title">Day of the week</h2>
                             <div class="stat-chart">
                                 @foreach ($p['weekdays']['list'] as $weekday)
                                     <div class="stat-chart-col">
@@ -95,7 +95,7 @@
                             </div>
 
                             {{-- Time of day --}}
-                            <h2 class="stats-subsection-title">Time of day <span class="stats-section-note">(UTC)</span></h2>
+                            <h2 class="stats-subsection-title">Time of day</h2>
                             <div class="stat-chart">
                                 @foreach ($p['dayparts']['list'] as $part)
                                     <div class="stat-chart-col">
@@ -139,6 +139,24 @@
                                     @endforeach
                                 </div>
                             @endif
+
+                            {{-- Rising and fading emojis --}}
+                            @foreach (['rising' => 'On the rise', 'fading' => 'Fading'] as $direction => $title)
+                                @if (count($p['emojiShifts'][$direction]) > 0)
+                                    <h2 class="stats-subsection-title">{{ $title }} <span class="stats-section-note">({{ $p['shiftNote'] }}, share of notes)</span></h2>
+                                    <div class="emoji-rank-list">
+                                        @foreach ($p['emojiShifts'][$direction] as $shift)
+                                            <div class="emoji-rank">
+                                                <span class="emoji-rank-emoji">{{ $shift['emoji'] }}</span>
+                                                <div class="emoji-rank-bar-track">
+                                                    <div class="emoji-rank-bar" style="width: {{ max(6, round((abs($shift['change']) / abs($p['emojiShifts'][$direction][0]['change'])) * 100)) }}%"></div>
+                                                </div>
+                                                <span class="emoji-rank-count">{{ $shift['from'] }}% &rarr; {{ $shift['to'] }}%</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @endforeach
                         @endif
                     </div>
                 @endforeach

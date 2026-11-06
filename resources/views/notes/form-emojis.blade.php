@@ -19,19 +19,16 @@
                     :storageKey="null"
                     :updateUser="false"
                     :customEmojis="$item->emojis"
+                    :contextText="(string) $item->title"
                 />
+
+                @error('selectedEmojis')
+                    <div data-cy="note-emojis-error" class="input-error-message">{{ $message }}</div>
+                @enderror
             </div>
 
             <input type="hidden" name="selectedEmojis" id="selectedEmojis">
         </form>
-
-        <div class="fixed-button-wrapper">
-            <div class="fixed-button-inner">
-                <button data-cy="save-note-emojis" type="submit" form="emoji-form" class="btn btn-success btn-block btn-lg">
-                    <x-icon name="check" />Save Note
-                </button>
-            </div>
-        </div>
     </div>
 
     @livewireScripts

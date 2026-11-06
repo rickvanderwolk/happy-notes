@@ -2,11 +2,11 @@
     <x-slot name="title">Keyboard shortcuts</x-slot>
     <div class="container mx-auto">
         <div class="text-center">
-            <h1 class="section-title"><x-icon name="keyboard" class="me-2" />Keyboard Shortcuts</h1>
+            <h1 class="section-title"><x-icon name="keyboard" class="me-2" />Keyboard shortcuts</h1>
             <p class="section-description-text">Speed up your workflow with these keyboard shortcuts</p>
         </div>
 
-        <div class="form-switch justify-content-center" x-data="{ on: window.keyboardShortcutsEnabled() }">
+        <div class="form-switch shortcuts-toggle" x-data="{ on: window.keyboardShortcutsEnabled() }">
             <input
                 class="form-check-input"
                 type="checkbox"
@@ -63,7 +63,7 @@
 
         {{-- Filters --}}
         <div class="shortcuts-section">
-            <h2 class="shortcuts-section-title">Filters & Search</h2>
+            <h2 class="shortcuts-section-title">Filters & search</h2>
 
             <div class="shortcut-item">
                 <div class="shortcut-description">Filter by emoji</div>
@@ -107,9 +107,9 @@
             </div>
         </div>
 
-        {{-- Note Editing --}}
+        {{-- Note editing --}}
         <div class="shortcuts-section">
-            <h2 class="shortcuts-section-title">Note Editing</h2>
+            <h2 class="shortcuts-section-title">Note editing</h2>
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
@@ -142,9 +142,9 @@
             </div>
         </div>
 
-        {{-- Menu Actions --}}
+        {{-- Menu actions --}}
         <div class="shortcuts-section">
-            <h2 class="shortcuts-section-title">Menu Actions</h2>
+            <h2 class="shortcuts-section-title">Menu actions</h2>
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
@@ -158,7 +158,16 @@
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
-                    Logout
+                    Open insights
+                    <span class="shortcut-context">from menu</span>
+                </div>
+                <div class="shortcut-keys">
+                    <span class="keyboard-key">I</span>
+                </div>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-description">
+                    Log out
                     <span class="shortcut-context">from menu</span>
                 </div>
                 <div class="shortcut-keys">
@@ -176,7 +185,7 @@
 
         <div class="text-center">
             <p class="section-description-text">
-                <x-icon name="lightbulb" class="me-2" /><strong>Tip:</strong> Most shortcuts work context-sensitive, adapting to the current page you're viewing.
+                <x-icon name="lightbulb" class="me-2" /><strong>Tip:</strong> What a shortcut does can depend on the page you're on.
             </p>
         </div>
     </div>

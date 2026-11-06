@@ -24,13 +24,5 @@
                 >{{ $item->title }}</textarea>
             </div>
         </form>
-
-        <div class="fixed-button-wrapper">
-            <div class="fixed-button-inner">
-                <button data-cy="save-note" type="submit" form="title-form" class="btn btn-success btn-block btn-lg">
-                    <x-icon name="check" />Save Note
-                </button>
-            </div>
-        </div>
     </div>
 </x-app-layout>

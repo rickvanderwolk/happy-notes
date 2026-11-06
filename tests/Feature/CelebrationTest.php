@@ -22,7 +22,7 @@ class CelebrationTest extends TestCase
 
     private function storeNote(User $user): \Illuminate\Testing\TestResponse
     {
-        return $this->actingAs($user)->post(route('note.store'), ['title' => 'Another one']);
+        return $this->actingAs($user)->post(route('note.store'), ['title' => 'Another one', 'selectedEmojis' => json_encode(['🎉'])]);
     }
 
     public function test_writing_the_99th_note_is_celebrated(): void

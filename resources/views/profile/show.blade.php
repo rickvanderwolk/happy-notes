@@ -30,7 +30,7 @@
 
         {{-- App version --}}
         <div class="app-version-text">
-            {{ config('app.name') }} {{ config('app.version') }}
+            HappyNotes {{ config('app.version') }}
         </div>
     </div>
 </x-account-layout>

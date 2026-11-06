@@ -23,19 +23,12 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: $space-5 $space-3;
-  background: rgba($surface, 0.5);
-  border: 1px solid $border;
-  border-radius: $radius-md;
-  transition: transform $transition-spring;
-
-  &:hover {
-    transform: translateY(-3px) scale(1.02);
-  }
+  padding: $space-3;
+  @include plain;
 
   .stat-value {
     font-size: $font-size-3xl;
-    font-weight: $font-weight-extrabold;
+    font-weight: $font-weight-black;
     color: $text-primary;
     line-height: $line-height-tight;
 
@@ -98,11 +91,12 @@
 
 .stats-toggle-bar {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: $space-1;
   padding: 4px;
   margin-bottom: $space-5;
-  background: rgba($surface, 0.6);
-  border: 1px solid $border;
+  background: $background-alt;
+  border: 0;
   border-radius: $radius-full;
 }
 
@@ -111,7 +105,7 @@
   padding: 6px 16px;
   border-radius: $radius-full;
   font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
+  font-weight: $font-weight-extrabold;
   color: $text-secondary;
   cursor: pointer;
   white-space: nowrap;
@@ -137,7 +131,7 @@
 #period-quarter:checked ~ .stats-toggle-bar label[for="period-quarter"],
 #period-month:checked ~ .stats-toggle-bar label[for="period-month"] {
   background: $primary;
-  color: $text-primary;
+  color: $on-primary;
 }
 
 // Timeframe badge: muted = all time, accent = recent / trending window
@@ -152,11 +146,10 @@
   border-radius: $radius-full;
   background: $border;
   color: $text-secondary;
-  white-space: nowrap;
 
   &.period-badge--recent {
-    background: rgba($secondary, 0.18);
-    color: #9A4A00;
+    background: alpha($secondary, 0.25);
+    color: $text-primary;
   }
 }
 
@@ -171,16 +164,16 @@
   text-align: center;
   font-size: $font-size-xs;
   color: $text-tertiary;
-  margin-top: $space-4;
+  margin-top: $space-1;
   margin-bottom: 0;
 }
 
 .stat-note-strong {
   text-align: center;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
   color: $text-primary;
-  margin-bottom: $space-2;
+  margin-bottom: 0;
 }
 
 // Per-week bar chart
@@ -189,14 +182,13 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: $space-2;
-  height: 140px;
-  padding: $space-4;
-  background: rgba($surface, 0.5);
-  border: 1px solid $border;
-  border-radius: $radius-md;
+  height: 8.75rem;
+  padding: $space-4 0;
+  @include plain;
 
   .stat-chart-col {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -221,8 +213,8 @@
   .stat-chart-bar {
     width: 100%;
     min-height: 0;
-    background: linear-gradient(180deg, $primary 0%, $secondary 100%);
-    border-radius: $radius-sm $radius-sm 0 0;
+    background: $primary;
+    border-radius: 6px 6px 0 0;
     transition: height $transition-slow;
   }
 
@@ -260,6 +252,8 @@
   display: flex;
   flex-direction: column;
   gap: $space-3;
+  // Same breathing room as the charts, so every section keeps the same rhythm.
+  padding: $space-4 0;
 }
 
 .emoji-rank {
@@ -271,7 +265,7 @@
   .emoji-rank-emoji,
   .combo-label {
     flex-shrink: 0;
-    width: 84px;
+    width: 5.25rem;
     text-align: left;
   }
 
@@ -287,15 +281,15 @@
 
   .emoji-rank-bar-track {
     flex: 1;
-    height: 12px;
-    background: $border;
+    height: 4px;
+    background: alpha($line-soft, 0.6);
     border-radius: $radius-full;
     overflow: hidden;
   }
 
   .emoji-rank-bar {
     height: 100%;
-    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    background: $primary;
     border-radius: $radius-full;
     transition: width $transition-slow;
   }
@@ -310,58 +304,70 @@
   }
 }
 
-// Dark mode
-@media (prefers-color-scheme: dark) {
-  .stat-card,
+// Large text (iOS text size, browser zoom): measured in em, so these kick in when the
+// text is big compared to the room it has, not at a fixed screen width.
+.stats-toggle-panel {
+  container-type: inline-size;
+}
+
+// Charts with many bars (13 weeks) tighten up and label every other bar on a phone.
+@container (max-width: 30em) {
+  .stat-chart:has(.stat-chart-col:nth-child(8)) {
+    gap: 2px;
+
+    .stat-chart-label {
+      overflow: visible;
+    }
+
+    .stat-chart-col:nth-child(even) .stat-chart-label {
+      visibility: hidden;
+    }
+  }
+}
+
+@container (max-width: 18em) {
   .stat-chart {
-    background: rgba($dark-surface, 0.3);
-    border-color: $dark-border;
+    gap: 2px;
+
+    // Still grows with the text size, just a step below it so labels stay apart.
+    .stat-chart-label {
+      overflow: visible;
+      font-size: 0.6rem;
+    }
   }
 
-  .stat-card .stat-value,
-  .stats-section-title,
-  .stat-note-strong {
-    color: $dark-text;
+  // Charts with many bars drop the per-bar numbers and keep every third label.
+  .stat-chart:has(.stat-chart-col:nth-child(8)) {
+    .stat-chart-count {
+      display: none;
+    }
+
+    .stat-chart-col:nth-child(even) .stat-chart-label {
+      visibility: visible;
+    }
+
+    .stat-chart-col:not(:nth-child(3n + 1)) .stat-chart-label {
+      visibility: hidden;
+    }
   }
 
-  .stat-card .stat-label,
-  .stat-note,
-  .stat-note-sub,
-  .stat-chart .stat-chart-label,
-  .stat-chart .stat-chart-count,
-  .stats-section-note,
-  .stats-subsection-title,
-  .stats-toggle-btn,
-  .emoji-rank .emoji-rank-count {
-    color: $dark-text-secondary;
-  }
+  // The bar moves below the label and count instead of being squeezed to nothing.
+  .emoji-rank {
+    flex-wrap: wrap;
+    row-gap: $space-1;
 
-  .stats-toggle-bar {
-    background: rgba($dark-surface, 0.3);
-    border-color: $dark-border;
-  }
+    .emoji-rank-emoji,
+    .combo-label {
+      width: auto;
+    }
 
-  .stats-toggle-btn:hover {
-    color: $dark-text;
-  }
+    .emoji-rank-count {
+      margin-left: auto;
+    }
 
-  #period-all:checked ~ .stats-toggle-bar label[for="period-all"],
-  #period-quarter:checked ~ .stats-toggle-bar label[for="period-quarter"],
-  #period-month:checked ~ .stats-toggle-bar label[for="period-month"] {
-    color: $text-primary;
-  }
-
-  .emoji-rank .emoji-rank-bar-track {
-    background: $dark-border;
-  }
-
-  .period-badge {
-    background: $dark-border;
-    color: $dark-text-secondary;
-
-    &.period-badge--recent {
-      background: rgba($secondary, 0.22);
-      color: $secondary;
+    .emoji-rank-bar-track {
+      flex-basis: 100%;
+      order: 1;
     }
   }
 }

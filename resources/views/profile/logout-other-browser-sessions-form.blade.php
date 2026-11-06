@@ -38,10 +38,10 @@
             </div>
         @endif
 
-        <div class="mt-5">
-            <x-button wire:click="confirmLogout" wire:loading.attr="disabled">
+        <div class="section-actions">
+            <x-secondary-button wire:click="confirmLogout" wire:loading.attr="disabled">
                 {{ __('Log Out Other Browser Sessions') }}
-            </x-button>
+            </x-secondary-button>
 
             <x-action-message class="ms-3" on="loggedOut">
                 {{ __('Done.') }}

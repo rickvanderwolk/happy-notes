@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-        <meta name="theme-color" content="#0A0A0A" media="(prefers-color-scheme: dark)">
-        <meta name="theme-color" content="#FFFEF9" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#241B0F" media="(prefers-color-scheme: dark)">
+        <meta name="theme-color" content="#FFFAF2" media="(prefers-color-scheme: light)">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -31,17 +31,20 @@
 
         <div id="app" class="container custom-scrollbar">
             <div class="row">
-                <div class="col-12 col-sm-11 col-md-10 col-lg-9 col-xl-6 ms-auto me-auto">
+                <div class="col-12 app-column">
                     {{-- Simple navbar for account pages --}}
                     <nav id="main-navbar" class="main-navbar" aria-label="Main">
+                        {{-- Like the other pages: the logo above the rail on larger screens --}}
+                        <a href="{{ route('notes.show') }}" class="rail-logo" aria-label="Back to notes">
+                            <img src="/logo.png" alt="">
+                        </a>
                         <div class="navbar-inner">
                             <div class="row g-0">
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-12 d-flex justify-content-between">
-                                            <div class="emoji-wrapper"></div>
-                                            <div class="emoji-wrapper">
-                                                <a href="{{ route('notes.show') }}" aria-label="Close">
+                                            <div class="emoji-wrapper quick-actions">
+                                                <a href="{{ route('notes.show') }}" class="quick-new" aria-label="Close">
                                                     <x-icon name="close" />
                                                 </a>
                                             </div>

@@ -44,7 +44,7 @@
             <div class="auth-footer">
                 <p class="auth-text">
                     Already have an account?
-                    <a class="auth-strong-link" href="{{ route('login') }}">
+                    <a class="text-link text-link--quiet" href="{{ route('login') }}">
                         {{ __('Sign in') }}
                     </a>
                 </p>

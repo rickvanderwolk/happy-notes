@@ -2,9 +2,7 @@
 @use 'variables' as *;
 
 .card {
-  background: transparent;
-  border: 1px solid $border;
-  border-radius: $radius-md;
+  @include plain;
   padding: $card-padding;
   transition: all $transition-base;
 
@@ -25,7 +23,7 @@
   }
 
   &.card-flat {
-    border: 1px solid $border;
+    background: transparent;
   }
 }
 
@@ -33,16 +31,18 @@
 // This is an <a> so cards support cmd-click, middle-click and keyboard focus; the link
 // styling is reset so it keeps reading as a card.
 .note-card {
-  display: block;
   color: inherit;
   text-decoration: none;
-  background: rgba($surface, 0.5);
+  // A plain row on the background; a thin line separates it from the one above. Title,
+  // progress and emojis sit at equal distances.
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-4 $space-3;
   border-radius: $radius-md;
-  padding: $space-3;
-  margin-bottom: $space-3;
   cursor: pointer;
-  transition: all $transition-base;
-  border: 1px solid $border;
+  transition: background-color $transition-fast;
 
   &:hover,
   &:focus-visible {
@@ -50,41 +50,82 @@
     text-decoration: none;
   }
 
+  & + &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: $space-3;
+    right: $space-3;
+    height: 1px;
+    background: alpha($line-soft, 0.4);
+  }
+
   &:hover {
-    border-color: $text-tertiary;
+    background: alpha($primary, 0.15);
   }
 
   .note-title {
-    font-size: $font-size-base;
-    font-weight: $font-weight-bold;
+    font-size: 1.125rem;
+    font-weight: $font-weight-extrabold;
+    letter-spacing: -0.01em;
     color: $text-primary;
-    margin-bottom: $space-2;
     line-height: $line-height-tight;
   }
 
   .note-emojis {
     display: flex;
-    gap: $space-3;
-    margin-top: $space-2;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+    flex-wrap: nowrap;
+
+    .note-emojis-more {
+      flex: none;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-bold;
+      color: $text-tertiary;
+    }
+
+    // Phones fit 8 emojis on the line, wider screens 14; each shows its own count
+    @media (max-width: $breakpoint-md - 0.02px) {
+      .emoji-wide-only,
+      .note-emojis-more-wide {
+        display: none;
+      }
+    }
+
+    @media (min-width: $breakpoint-md) {
+      .note-emojis-more-phone {
+        display: none;
+      }
+    }
+
+    .emoji-wrapper {
+      flex-wrap: nowrap;
+      gap: $space-2;
+    }
 
     .emoji {
-      font-size: 22px;
+      font-size: 26px;
       line-height: 1;
     }
   }
 
+  // Progress is information, not structure: a thin line. The title leaves room below
+  // its letters, so the line gets the same below it to sit optically in the middle.
   .note-progress {
-    margin-top: $space-2;
+    margin-bottom: $space-1;
+
+    .progress {
+      height: 4px;
+      margin: 0;
+    }
   }
 }
 
 // Auth card (for login, register, etc.)
 .auth-card {
-  background: rgba($surface, 0.8);
-  border: 1px solid $border;
-  border-radius: $radius-lg;
-  padding: $space-8;
+  @include plain;
+  padding: $space-6 $space-4;
   max-width: 480px;
   width: 100%;
 
@@ -96,7 +137,7 @@
 
   .auth-title {
     font-size: $font-size-2xl;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-black;
     text-align: center;
     margin-bottom: $space-2;
     color: $text-primary;
@@ -111,15 +152,13 @@
 
   .auth-divider {
     margin: $space-6 0;
-    border-top: 1px solid $border;
+    border-top: 2px solid $border;
   }
 }
 
 // Menu card (legacy)
 .menu-card {
-  background: rgba($surface, 0.5);
-  border: 1px solid $border;
-  border-radius: $radius-md;
+  @include plain;
   overflow: hidden;
 
   .menu-item {
@@ -128,9 +167,9 @@
     padding: $space-4 $space-6;
     color: $text-primary;
     text-decoration: none;
-    border-bottom: 1px solid $border;
+    border-bottom: 2px solid $border;
     transition: all $transition-base;
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-bold;
 
     &:last-child {
       border-bottom: none;
@@ -149,23 +188,24 @@
   }
 }
 
-// Modern menu card
+// Modern menu: a plain list on the background
 .menu-card-modern {
   display: flex;
   flex-direction: column;
-  gap: $space-3;
 }
 
 .menu-item-modern {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: $space-5 $space-6;
-  background: rgba($surface, 0.5);
-  border: 1px solid $border;
+  gap: $space-4;
+  min-height: 72px;
+  padding: $space-3 $space-5;
+  margin: 0;
+  background: transparent;
+  border: 0;
   border-radius: $radius-md;
   text-decoration: none;
-  transition: all $transition-fast;
+  transition: background-color $transition-fast;
   color: inherit;
   width: 100%;
   font: inherit;
@@ -173,35 +213,41 @@
   cursor: pointer;
 
   &:hover {
-    border-color: $text-tertiary;
+    color: inherit;
+    background: alpha($primary, 0.15);
   }
 
   .menu-item-content {
     display: flex;
     flex-direction: column;
-    gap: $space-1;
+    gap: 1px;
     flex: 1;
   }
 
   .menu-item-title {
     font-size: $font-size-lg;
-    font-weight: $font-weight-semibold;
+    font-weight: $font-weight-extrabold;
     color: $text-primary;
   }
 
   .menu-item-subtitle {
     font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
     color: $text-secondary;
   }
 
   .menu-item-icon {
-    font-size: 28px;
-    color: $text-tertiary;
-    transition: all $transition-fast;
+    order: -1;
+    width: 28px;
+    flex: none;
+    text-align: center;
+    font-size: 24px;
+    color: $text-primary;
+    transition: transform $transition-spring;
   }
 
   &:hover .menu-item-icon {
-    color: $text-primary;
+    transform: scale(1.15);
   }
 
   // Desktop only menu items (hide on mobile/touch devices)
@@ -213,17 +259,16 @@
 }
 
 // Account card
+// A section of the account page, straight on the background like the rest
 .account-card {
-  background: rgba($surface, 0.5);
-  border: 1px solid $border;
-  border-radius: $radius-lg;
-  padding: $space-6;
-  margin-bottom: $space-6;
-  transition: all $transition-base;
+  @include plain;
+  @include row-divider;
+  padding: $space-6 0;
+  margin-bottom: 0;
 
   .account-card-title {
     font-size: $font-size-xl;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-black;
     margin-bottom: $space-3;
     color: $text-primary;
     text-align: left;
@@ -239,14 +284,10 @@
 
   // Better spacing for form elements
   .grid {
-    gap: $space-5;
+    display: grid;
+    gap: $space-4;
   }
 
-  // Actions at bottom
-  .section-actions {
-    margin-top: $space-6;
-    padding-top: $space-5;
-  }
 
   // Text alignment for description text
   .max-w-xl,
@@ -288,100 +329,10 @@
   align-items: flex-start;
   gap: 12px;
   padding: 12px;
-  background: rgba(245, 245, 245, 0.5);
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: $background-alt;
+  border-radius: $radius-md;
+  border: 2px solid $border;
   text-align: left;
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-  .card,
-  .note-card,
-  .auth-card,
-  .menu-card,
-  .account-card {
-    background: rgba($dark-surface, 0.3);
-    border-color: $dark-border;
-
-    .note-title,
-    .auth-title,
-    .account-card-title {
-      color: $dark-text;
-    }
-
-    .auth-subtitle {
-      color: $dark-text-secondary;
-    }
-  }
-
-  .note-card {
-    background: rgba($dark-surface, 0.3);
-    border-color: $dark-border;
-  }
-
-  .card.card-hover:hover,
-  .note-card:hover,
-  .menu-item-modern:hover {
-    border-color: $dark-text-secondary;
-  }
-
-  .menu-card .menu-item:hover {
-    background: $dark-surface-hover;
-  }
-
-  .menu-card .menu-item {
-    color: $dark-text;
-    border-bottom-color: $dark-border;
-  }
-
-  .menu-item-modern {
-    background: rgba($dark-surface, 0.3);
-    border-color: $dark-border;
-
-    .menu-item-title {
-      color: $dark-text;
-    }
-
-    .menu-item-subtitle {
-      color: $dark-text-secondary;
-    }
-
-    .menu-item-icon {
-      color: $dark-text-secondary;
-    }
-
-    &:hover .menu-item-icon {
-      color: $primary;
-    }
-  }
-
-  .account-card {
-    .account-card-description {
-      color: $dark-text-secondary;
-    }
-  }
-
-  .account-section {
-    .account-section-header {
-      .account-section-title {
-        color: $dark-text;
-      }
-
-      .account-section-subtitle {
-        color: $dark-text-secondary;
-      }
-    }
-  }
-
-  .card.card-flat {
-    border-color: $dark-border;
-  }
-
-  .browser-session-item {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
 }
 
 // Placeholder for the note body while EditorJS builds it. Unlike a skeleton over
@@ -396,7 +347,7 @@
   .editor-placeholder-line {
     height: 14px;
     border-radius: $radius-sm;
-    background: rgba(0, 0, 0, 0.06);
+    background: $border;
     animation: editor-placeholder-pulse 1.5s ease-in-out infinite;
   }
 }
@@ -412,8 +363,12 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .editor-placeholder .editor-placeholder-line {
-    background: rgba(255, 255, 255, 0.08);
-  }
+// The buttons of a section sit together on the right
+.section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $space-3;
+  margin-top: $space-5;
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CleanupController;
+use App\Http\Controllers\EmojiSuggestionController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileExportController;
@@ -38,6 +39,11 @@ if (config('app.force_email_verification')) {
 }
 $defaultAppMiddlewares[] = StoreOriginalRoute::class;
 
+Route::middleware(array_values(array_diff($defaultAppMiddlewares, [StoreOriginalRoute::class])))
+    ->get('/emoji-suggestions/{scope}', EmojiSuggestionController::class)
+    ->whereIn('scope', ['notes', 'filter'])
+    ->name('emoji.suggestions');
+
 Route::middleware($defaultAppMiddlewares)->group(function () {
     Route::get('/menu', function () {
         return view('menu');
@@ -48,6 +54,10 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
     })->name('shortcuts.show');
 
     Route::get('/insights', [InsightsController::class, 'index'])->name('insights.show');
+
+    Route::get('/about', function () {
+        return view('about');
+    })->name('about.show');
 
     Route::get('/dashboard', function () {
         return redirect(route('notes.show'));

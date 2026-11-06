@@ -124,7 +124,18 @@ export function alertDialog(message, { okLabel = 'OK' } = {}) {
     ]);
 }
 
-// Any button or link with data-confirm asks first. The listener runs in the capture
+// Whether a form holds anything the user typed or picked, so leaving it would lose work.
+export function hasInput(form) {
+    if (!form) {
+        return false;
+    }
+
+    return [...form.elements].some((field) => field.name && field.name !== '_token'
+        && !['', '[]'].includes(field.value.trim()));
+}
+
+// Any button or link with data-confirm asks first. With data-confirm-if-filled it only
+// asks when the form with that id holds input. The listener runs in the capture
 // phase so it also stops wire:click and form submits before they happen; once
 // confirmed, the original click is simply repeated.
 document.addEventListener('click', (event) => {
@@ -135,6 +146,10 @@ document.addEventListener('click', (event) => {
 
     if (trigger === confirmedTrigger) {
         confirmedTrigger = null;
+        return;
+    }
+
+    if (trigger.dataset.confirmIfFilled && !hasInput(document.getElementById(trigger.dataset.confirmIfFilled))) {
         return;
     }
 

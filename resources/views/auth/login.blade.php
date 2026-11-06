@@ -41,7 +41,7 @@
                     </label>
 
                     @if (Route::has('password.request'))
-                        <a class="auth-text auth-text-link" href="{{ route('password.request') }}">
+                        <a class="auth-text text-link text-link--quiet" href="{{ route('password.request') }}">
                             {{ __('Forgot password?') }}
                         </a>
                     @endif
@@ -56,7 +56,7 @@
                 <div class="auth-footer">
                     <p class="auth-text">
                         Don't have an account?
-                        <a class="auth-strong-link" href="{{ route('register') }}">
+                        <a class="text-link text-link--quiet" href="{{ route('register') }}">
                             {{ __('Sign up') }}
                         </a>
                     </p>

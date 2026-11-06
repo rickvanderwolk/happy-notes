@@ -1,6 +1,6 @@
 import './bootstrap';
 import { startCelebration } from './celebration';
-import { closeDialog, isDialogOpen } from './dialog';
+import { closeDialog, hasInput, isDialogOpen } from './dialog';
 
 const appBaseUrl = document.querySelector('meta[name="app-base-url"]').getAttribute('content');
 // Read on every key press: page navigation swaps the page without reloading this module,
@@ -8,6 +8,17 @@ const appBaseUrl = document.querySelector('meta[name="app-base-url"]').getAttrib
 const getCurrentRouteName = () => document.querySelector('meta[name="app-current-route-name"]')?.getAttribute('content');
 
 const visit = (url) => window.Livewire.navigate(url);
+
+// Insights groups notes by day and time of day, which only makes sense in local time.
+try {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timezone) {
+        const secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = `tz=${encodeURIComponent(timezone)}; path=/; max-age=31536000; SameSite=Lax${secure}`;
+    }
+} catch {
+    // Without a timezone the insights fall back to the app timezone.
+}
 
 // A title is a single line, so Enter never adds a newline to it. This lives here instead
 // of an onkeydown attribute, which the content security policy does not allow.
@@ -17,7 +28,17 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-const scrollBehavior = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+// Saving an empty new note means there was nothing to keep, so it just closes instead of
+// asking for a title.
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-leave-if-empty]');
+    if (!button || hasInput(button.form)) {
+        return;
+    }
+
+    event.preventDefault();
+    visit(button.dataset.leaveIfEmpty);
+}, true);
 
 // Single-key shortcuts can be turned off on the shortcuts page (WCAG 2.1.4), per device
 // since they only matter where there is a keyboard.
@@ -161,6 +182,13 @@ const keydownListener = (event) => {
             return;
         }
 
+        // Escape on a new note goes through its close button, which asks before
+        // throwing away what was typed.
+        if (appCurrentRouteName === 'note.create' && event.key === 'Escape') {
+            document.querySelector('[data-confirm-if-filled]')?.click();
+            return;
+        }
+
         if (event.key === 'Escape') {
             if ([
                 'note.title.show',
@@ -227,6 +255,12 @@ const keydownListener = (event) => {
             visit(getRouteUrl('filter.search.show'));
         }
 
+        if (event.key === 'i') {
+            if (appCurrentRouteName === 'menu.show') {
+                visit(getRouteUrl('insights.show'));
+            }
+        }
+
         if (event.key === 'l') {
             if (appCurrentRouteName === 'menu.show') {
                 document.getElementById('logout-button').click();
@@ -251,7 +285,7 @@ const keydownListener = (event) => {
                 'note.title.show',
                 'note.emojis.show',
             ].includes(appCurrentRouteName)) {
-                visit(getRouteUrl('note.title.show', {uuid: getUuidFromRoute()}));
+                visit(getRouteUrl('note.title.show', {note: getUuidFromRoute()}));
             }
         }
 
@@ -329,6 +363,63 @@ document.addEventListener('livewire:navigated', function() {
     checkAndLoadForAnchor();
 });
 
+// Back from a note, the list is as you left it: the note sits at the height on the screen
+// where you tapped it. A note you changed has moved to the top of the list, so it shows
+// there. Without a tap to go by (a link or a reload) the note sits just above the middle.
+//
+// It waits until the page has settled: Livewire scrolls to the fragment itself right after
+// navigating (with the note at the very top), and the web font swapping in rewraps titles
+// and shifts everything above the note. Scrolling before either lands a few notes off.
+const returnToKey = 'return-to-note';
+
+document.addEventListener('click', (event) => {
+    const card = event.target.closest('#note-list .note-card');
+    if (!card) {
+        return;
+    }
+    try {
+        sessionStorage.setItem(returnToKey, JSON.stringify({ id: card.id, top: card.getBoundingClientRect().top }));
+    } catch {
+        // Without storage the list falls back to showing the note around the middle
+    }
+});
+
+const tappedAt = (element) => {
+    try {
+        const stored = JSON.parse(sessionStorage.getItem(returnToKey) ?? 'null');
+        return stored?.id === element.id ? stored.top : null;
+    } catch {
+        return null;
+    }
+};
+
+// A full page load asks twice (on load and on navigated); the note is placed once
+let placingNote = null;
+
+const showNote = (element) => {
+    if (placingNote === element.id) {
+        return;
+    }
+    placingNote = element.id;
+
+    document.fonts.ready.then(() => {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            const top = tappedAt(element);
+            if (top === null) {
+                element.scrollIntoView({ block: 'center', behavior: 'instant' });
+            } else {
+                window.scrollBy({ top: element.getBoundingClientRect().top - top, behavior: 'instant' });
+            }
+            try {
+                sessionStorage.removeItem(returnToKey);
+            } catch {
+                // Nothing stored then either
+            }
+            placingNote = null;
+        }));
+    });
+};
+
 function checkAndLoadForAnchor() {
     const hash = window.location.hash;
     if (!hash || !hash.startsWith('#note-')) {
@@ -339,7 +430,7 @@ function checkAndLoadForAnchor() {
     const targetElement = document.getElementById(targetId);
 
     if (targetElement) {
-        targetElement.scrollIntoView({ behavior: scrollBehavior() });
+        showNote(targetElement);
         return;
     }
 
@@ -387,7 +478,7 @@ function loadMoreDataForAnchor(targetId) {
 
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
-                targetElement.scrollIntoView({ behavior: scrollBehavior() });
+                showNote(targetElement);
             }
         })
         .catch(error => {

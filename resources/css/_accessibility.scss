@@ -6,6 +6,15 @@
   --focus-ring: #{$text-primary};
 }
 
+@supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
+  :root {
+    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+    font: -apple-system-body;
+    font-family: $font-family;
+    line-height: $line-height-base;
+  }
+}
+
 :focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
@@ -57,7 +66,7 @@
   .cleanup-item,
   .shortcut-item,
   .stat-chart {
-    border-color: $text-tertiary !important;
+    border-color: $text-primary !important;
   }
 
   .section-description-text,
@@ -101,7 +110,7 @@
   .cleanup-item,
   .shortcut-item,
   .stat-chart {
-    border-color: $dark-text-secondary !important;
+    border-color: $text-primary !important;
   }
 
   .section-description-text,

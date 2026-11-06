@@ -7,16 +7,16 @@ _A note-taking app for ~~chaotic~~ free-spirited minds_
 
 <p>
   <picture>
-    <source srcset="public/images/screenshot-1-notes-list-v4-dark.png" media="(prefers-color-scheme: dark)">
-    <img src="public/images/screenshot-1-notes-list-v4-light.png" width="30%" alt="The note list" />
+    <source srcset="public/images/screenshot-1-notes-list-v5-dark.png" media="(prefers-color-scheme: dark)">
+    <img src="public/images/screenshot-1-notes-list-v5-light.png" width="30%" alt="The note list" />
   </picture>
   <picture>
-    <source srcset="public/images/screenshot-2-filter-v4-dark.png" media="(prefers-color-scheme: dark)">
-    <img src="public/images/screenshot-2-filter-v4-light.png" width="30%" alt="Filtering by emoji" />
+    <source srcset="public/images/screenshot-2-filter-v5-dark.png" media="(prefers-color-scheme: dark)">
+    <img src="public/images/screenshot-2-filter-v5-light.png" width="30%" alt="Filtering by emoji" />
   </picture>
   <picture>
-    <source srcset="public/images/screenshot-3-note-v4-dark.png" media="(prefers-color-scheme: dark)">
-    <img src="public/images/screenshot-3-note-v4-light.png" width="30%" alt="A note with a checklist" />
+    <source srcset="public/images/screenshot-3-note-v5-dark.png" media="(prefers-color-scheme: dark)">
+    <img src="public/images/screenshot-3-note-v5-light.png" width="30%" alt="A note with a checklist" />
   </picture>
 </p>
 
