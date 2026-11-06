@@ -7,8 +7,15 @@ Cypress.Commands.add('login', (email, password) => {
 });
 
 Cypress.Commands.add('selectFirstSelectableEmoji', () => {
-    // The grid now renders every emoji and hides the picked ones client side, so filter
-    // down to what is actually on screen instead of asserting the whole set is visible.
+    // The grid hides picked and suggested emojis client side. Suggestions change once the
+    // suggestion data has loaded and 250ms after typing a title, which can hide the emoji
+    // about to be clicked, so wait for the picker to settle before picking one.
+    cy.document().then((doc) => {
+        if (doc.querySelector('[data-cy="emoji-suggestions"]')) {
+            cy.window().its('emojiSuggestionData').should('not.be.empty');
+        }
+    });
+    cy.wait(300);
     return cy.get('[data-cy="emoji-filter-emoji-selector"] span:visible')
         .first()
         .should('be.visible')
