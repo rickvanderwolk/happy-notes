@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\EmojiArrayCast;
+use App\Helpers\NoteBodyHelper;
 use App\Scopes\OwnNotesScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,6 +56,12 @@ final class Note extends Model
         static::creating(function ($note) {
             if (empty($note->uuid)) {
                 $note->uuid = Str::uuid()->toString();
+            }
+        });
+
+        static::saving(function ($note) {
+            if ($note->isDirty('body')) {
+                $note->body_text = NoteBodyHelper::toPlainText($note->body);
             }
         });
 

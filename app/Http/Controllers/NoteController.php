@@ -35,9 +35,10 @@ final class NoteController extends Controller
         $notes = Note::query();
 
         if (!empty($searchQuery)) {
-            $notes->where(function ($query) use ($searchQuery) {
-                $query->where('title', 'LIKE', "%{$searchQuery}%")
-                    ->orWhere('body', 'LIKE', "%{$searchQuery}%");
+            $like = '%' . str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $searchQuery) . '%';
+            $notes->where(function ($query) use ($like) {
+                $query->whereRaw("title LIKE ? ESCAPE '!'", [$like])
+                    ->orWhereRaw("body_text LIKE ? ESCAPE '!'", [$like]);
             });
         }
 
