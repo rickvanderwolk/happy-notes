@@ -23,4 +23,31 @@ Cypress.on('window:before:load', (win) => {
     win.addEventListener('securitypolicyviolation', (event) => {
         throw new Error(`CSP violation: ${event.violatedDirective} blocked ${event.blockedURI || 'inline code'} ${event.sample}`);
     });
+    win.addEventListener('emoji-filter-changed', () => {
+        lastFilterChange = Date.now();
+    });
+});
+
+// A filter change is saved after a 300ms debounce, and on pagehide with keepalive. A save
+// still running when a test ends answers after Cypress cleared the cookies and signs the
+// next test back in, so every test waits for its saves to land before the next one starts.
+let lastFilterChange = 0;
+let pendingSaves = 0;
+
+beforeEach(() => {
+    lastFilterChange = 0;
+    pendingSaves = 0;
+    cy.intercept('POST', '/filter/emojis', (req) => {
+        pendingSaves++;
+        req.on('after:response', () => {
+            pendingSaves--;
+        });
+    });
+});
+
+afterEach(() => {
+    cy.wrap(null, { log: false, timeout: 10000 }).should(() => {
+        expect(Date.now() - lastFilterChange, 'time since the last filter change').to.be.greaterThan(400);
+        expect(pendingSaves, 'filter saves still running').to.eq(0);
+    });
 });
