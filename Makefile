@@ -59,6 +59,8 @@ autofix:
 test:
 	@echo "🧪 Running tests..."
 	vendor/bin/phpunit --testdox
+	@echo "🗑️  Resetting the local database to the seed data for Cypress..."
+	php artisan migrate:fresh --seed
 	npx cypress run
 
 docker-check:
