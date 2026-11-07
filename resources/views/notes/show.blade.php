@@ -6,7 +6,7 @@
         @if($note)
             <div id="note-content">
                 <div class="note-detail-header mb-4">
-                    <h1 class="note-detail-title" wire:transition.navigate="note-{{ $note->uuid }}">
+                    <h1 class="note-detail-title" lang="{{ $noteLang }}" wire:transition.navigate="note-{{ $note->uuid }}">
                         <a
                             href="{{ route('note.title.show', ['note' => $note->uuid]) }}"
                             data-cy="note-title"
@@ -75,7 +75,7 @@
                             <div class="editor-placeholder-line" style="width: 70%;"></div>
                         </div>
 
-                        <div id="editorjs" data-cy="note-body" data-note-uuid="{{ $note->uuid }}" data-save-body-url="{{ route('note.body.store', ['note' => $note->uuid]) }}" data-initial-data="{{ json_encode($note->body) }}"></div>
+                        <div id="editorjs" lang="{{ $noteLang }}" data-cy="note-body" data-note-uuid="{{ $note->uuid }}" data-save-body-url="{{ route('note.body.store', ['note' => $note->uuid]) }}" data-initial-data="{{ json_encode($note->body) }}"></div>
                         @vite('resources/js/editor.js')
                     </form>
                 </div>

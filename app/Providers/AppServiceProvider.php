@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Helpers\NoteLanguageHelper;
 use Closure;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -28,6 +30,11 @@ final class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Password::defaults(fn () => Password::min(12));
+
+        View::composer(
+            ['notes.partials.cards', 'notes.show', 'new', 'notes.form-title'],
+            fn ($view) => $view->with('noteLang', NoteLanguageHelper::fromRequest(request()))
+        );
 
         // Disable rate limiting only where the tests run, so a misnamed environment on a
         // server keeps it on instead of silently switching it off.

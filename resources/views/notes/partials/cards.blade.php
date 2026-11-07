@@ -17,7 +17,7 @@
     @else
         <div class="note-card" data-emojis='@json($note->emojis ?? [])'>
     @endif
-        <div class="note-title" @if($linked) wire:transition.navigate="note-{{ $note->uuid }}" @endif>{{ $note->title }}</div>
+        <div class="note-title" @if($linked) lang="{{ $noteLang }}" wire:transition.navigate="note-{{ $note->uuid }}" @endif>{{ $note->title }}</div>
 
         @if($note->progress)
             <div class="note-progress">

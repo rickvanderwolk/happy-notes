@@ -17,6 +17,7 @@
             <div class="mb-4">
                 <textarea
                     name="title"
+                    lang="{{ $noteLang }}"
                     data-cy="new-note-title"
                     class="form-control elegant-input input-large @error('title') is-invalid @enderror"
                     placeholder="💭 Write anything..."

@@ -15,6 +15,7 @@
                     id="titleTextarea"
                     data-cy="note-title-editor"
                     name="title"
+                    lang="{{ $noteLang }}"
                     class="form-control elegant-input input-large"
                     placeholder="Title"
                     rows="3"
