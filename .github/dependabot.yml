@@ -1,0 +1,32 @@
+version: 2
+# Minor and patch updates come grouped in one weekly PR per ecosystem, majors in a PR of their
+# own so they can be reviewed separately. New versions are only picked up after a few days, so a
+# compromised release is usually pulled before it lands here; security updates skip that wait.
+updates:
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 5
+    groups:
+      composer:
+        patterns: ['*']
+        update-types: [minor, patch]
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 5
+    groups:
+      npm:
+        patterns: ['*']
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
