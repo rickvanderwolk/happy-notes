@@ -2,6 +2,7 @@ version: 2
 # Minor and patch updates come grouped in one weekly PR per ecosystem, majors in a PR of their
 # own so they can be reviewed separately. New versions are only picked up after a few days, so a
 # compromised release is usually pulled before it lands here; security updates skip that wait.
+# Stylelint and its configs only work on the same major, so their majors come together.
 updates:
   - package-ecosystem: composer
     directory: /
@@ -23,6 +24,9 @@ updates:
       npm:
         patterns: ['*']
         update-types: [minor, patch]
+      stylelint:
+        patterns: ['stylelint*']
+        update-types: [major]
   - package-ecosystem: github-actions
     directory: /
     schedule:
