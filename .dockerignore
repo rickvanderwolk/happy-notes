@@ -21,3 +21,5 @@ misc
 Dockerfile
 compose.yaml
 bootstrap/cache/*.php
+.phpunit.result.cache
+.phpunit.cache
