@@ -3,7 +3,8 @@ name: release
 # Right after a Dependabot merge (started by ci.yml), daily as a fallback, and on demand: when every
 # commit since the last stable tag is from Dependabot, run CI on that exact commit, raise the patch
 # version (also in composer.json and the lock hash) and tag a release. Any other commit since the
-# tag means a release by hand, so nothing happens. Runs wait for each other, never two at once.
+# tag means a release by hand, so nothing happens. Commits that only touch .github/ or *.md do not
+# count either way. Runs wait for each other, never two at once.
 # A tag pushed by hand gets its GitHub release here too, so every tag shows up under Releases.
 on:
   schedule:
@@ -59,8 +60,9 @@ jobs:
           say() { echo "$1" | tee -a "$GITHUB_STEP_SUMMARY"; }
           last=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1 || true)
           if [ -z "$last" ]; then say "No stable tag yet."; exit 0; fi
-          if [ -z "$(git log "$last..HEAD" --oneline)" ]; then say "Nothing new since $last."; exit 0; fi
-          others=$(git log "$last..HEAD" --format='%an' | grep -vx 'dependabot\[bot\]' | sort -u | paste -sd, - || true)
+          app=(-- . ':(exclude).github' ':(exclude)*.md')
+          if [ -z "$(git log "$last..HEAD" --oneline "${app[@]}")" ]; then say "Nothing new in the app since $last."; exit 0; fi
+          others=$(git log "$last..HEAD" --format='%an' "${app[@]}" | grep -vx 'dependabot\[bot\]' | sort -u | paste -sd, - || true)
           if [ -n "$others" ]; then say "Commits by $others since $last: release by hand."; exit 0; fi
           next=$(echo "${last#v}" | awk -F. '{ print $1 "." $2 "." $3 + 1 }')
           echo "next=$next" >> "$GITHUB_OUTPUT"
@@ -73,6 +75,7 @@ jobs:
     if: needs.check.outputs.next != ''
     uses: ./.github/workflows/ci.yml
     permissions:
+      actions: write
       contents: write
       pull-requests: write
 
