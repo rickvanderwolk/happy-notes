@@ -1,0 +1,94 @@
+name: release
+
+# Right after a Dependabot merge (started by ci.yml), daily as a fallback, and on demand: when every
+# commit since the last stable tag is from Dependabot, run CI on that exact commit, raise the patch
+# version (also in composer.json and the lock hash) and tag a release. Any other commit since the
+# tag means a release by hand, so nothing happens. Runs wait for each other, never two at once.
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: release
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check for Dependabot-only changes
+    runs-on: ubuntu-latest
+    outputs:
+      next: ${{ steps.check.outputs.next }}
+      sha: ${{ steps.check.outputs.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check
+        id: check
+        run: |
+          say() { echo "$1" | tee -a "$GITHUB_STEP_SUMMARY"; }
+          last=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1 || true)
+          if [ -z "$last" ]; then say "No stable tag yet."; exit 0; fi
+          if [ -z "$(git log "$last..HEAD" --oneline)" ]; then say "Nothing new since $last."; exit 0; fi
+          others=$(git log "$last..HEAD" --format='%an' | grep -vx 'dependabot\[bot\]' | sort -u | paste -sd, - || true)
+          if [ -n "$others" ]; then say "Commits by $others since $last: release by hand."; exit 0; fi
+          next=$(echo "${last#v}" | awk -F. '{ print $1 "." $2 "." $3 + 1 }')
+          echo "next=$next" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          say "Only Dependabot since $last: v$next once CI is green."
+
+  ci:
+    name: CI
+    needs: check
+    if: needs.check.outputs.next != ''
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: write
+      pull-requests: write
+
+  release:
+    name: Tag the release
+    needs: [check, ci]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+
+      - name: Raise the version, tag and release
+        env:
+          NEXT: ${{ needs.check.outputs.next }}
+          SHA: ${{ needs.check.outputs.sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$SHA" ]; then
+            echo "main moved since the check; the next run tries again." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if grep -q '"version"' composer.json; then
+            sed -i -E "s/\"version\": \"[^\"]*\"/\"version\": \"$NEXT\"/" composer.json
+            composer update --lock --no-install --no-scripts --no-plugins --ignore-platform-reqs --quiet
+            git commit -am "Bump version to $NEXT"
+          fi
+          git tag "v$NEXT"
+          git push --atomic origin HEAD:main "v$NEXT"
+          gh release create "v$NEXT" --generate-notes --verify-tag
+          echo "Released v$NEXT" >> "$GITHUB_STEP_SUMMARY"

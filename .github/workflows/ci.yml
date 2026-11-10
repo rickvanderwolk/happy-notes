@@ -9,6 +9,7 @@ on:
   push:
     branches: [main]
     paths-ignore: ['**.md']
+  workflow_call:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -221,13 +222,15 @@ jobs:
 
   # A minor or patch update from Dependabot is merged once every job above is green, a major one
   # stays open for review. Private repositories cannot require status checks on a free account,
-  # so all apps wait for the jobs like this instead of relying on a ruleset.
+  # so all apps wait for the jobs like this instead of relying on a ruleset. After the merge the
+  # release workflow starts right away, so a security update does not wait for its daily run.
   automerge:
     name: Merge Dependabot minor and patch updates
     needs: [analyse, phpunit, cypress, build]
     if: github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
       pull-requests: write
 
@@ -238,7 +241,9 @@ jobs:
 
       - name: Merge
         if: steps.metadata.outputs.update-type != 'version-update:semver-major'
-        run: gh pr merge --squash "$PR_URL"
+        run: |
+          gh pr merge --squash "$PR_URL"
+          gh workflow run release.yml --ref main --repo "$GITHUB_REPOSITORY"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
