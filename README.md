@@ -34,7 +34,9 @@ _A note-taking app for ~~chaotic~~ free-spirited minds_
 ## What 📝
 Happy Notes is a simple web-based (Laravel) note-taking app where you categorize notes with emojis instead of words.
 
-Built with Laravel 12, Livewire and Editor.js. Runs on PHP 8.4 with SQLite or MySQL, with two-factor login and export to CSV or JSON. No tracking, no external services.
+Built with Laravel 13, Livewire and Editor.js. Runs on PHP 8.4 or newer with SQLite or MySQL, with two-factor login and export to CSV or JSON. No tracking, no external services.
+
+Supports the PHP versions that still receive security updates, each tested in CI. When a version stops receiving them, it is dropped in the next release.
 
 ## Why 🤷
 No note-taking app ever felt natural to me. I tried paper, various apps, and other tools—but I always lost track. Either too messy or too rigid. So I built my own: simple, visual, emoji-based. Now, I can finally organize my ideas in a way that works for me.
@@ -59,7 +61,7 @@ Then open [http://localhost:8080](http://localhost:8080) and sign up. Port 8080 
 - To update: `git pull` and `docker compose up -d --build` again. Migrations run automatically on start.
 
 ### Without Docker
-Set it up like any other Laravel app (PHP 8.4, SQLite or MySQL):
+Set it up like any other Laravel app (PHP 8.4+, SQLite or MySQL):
 
 ```bash
 composer install --no-dev
@@ -72,7 +74,7 @@ php artisan migrate
 `.env.example` is set up for local development. Before going live, set `APP_ENV=production` and `APP_DEBUG=false` in `.env`: otherwise visitors see error details, logins are not rate limited and the test routes are open. Then point your web server at the `public` folder.
 
 ### Local development
-To work on Happy Notes itself (PHP 8.4, Composer, Node.js):
+To work on Happy Notes itself (PHP 8.4+, Composer, Node.js):
 
 ```bash
 make install

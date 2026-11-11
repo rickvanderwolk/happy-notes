@@ -1,4 +1,4 @@
-FROM php:8.4-apache AS app
+FROM php:8.5-apache AS app
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends unzip \
