@@ -295,7 +295,7 @@
 
     <div class="text-center mb-4" x-show="picked.length" @style(['display: none' => empty($this->emojis)])>
         <button type="button" @mousedown.prevent @click="deselectAll()" class="btn btn-outline">
-            <x-icon name="times-circle" />Clear (Backspace)
+            <x-icon name="times-circle" />Clear<span class="keyboard-hint">&nbsp;(Backspace)</span>
         </button>
     </div>
 

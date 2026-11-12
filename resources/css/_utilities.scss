@@ -158,6 +158,12 @@ html.smooth-scroll {
   text-align: center;
 }
 
+.keyboard-hint {
+  @media (hover: none) {
+    display: none;
+  }
+}
+
 // Page headings get some air: above them on phones (on larger screens they line up with
 // the logo above the rail) and between them and what follows
 h1.section-title {
