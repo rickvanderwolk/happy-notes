@@ -115,6 +115,29 @@ document.addEventListener('livewire:navigate', (event) => {
     }
 });
 
+// Notes are often changed on another device in the meantime. Coming back to a tab that has
+// been hidden for a while reloads it, so you never keep working on an old version; the
+// note body autosaves on every change, so only form fields can hold unsaved text.
+const reloadAfterHiddenMs = 5 * 60 * 1000;
+let hiddenSince = null;
+
+const hasUnsavedInput = () => [...document.querySelectorAll('input, textarea')]
+    .some((field) => !['hidden', 'checkbox', 'radio'].includes(field.type) && field.value !== field.defaultValue);
+
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        hiddenSince = Date.now();
+        return;
+    }
+
+    const wasHiddenLong = hiddenSince !== null && Date.now() - hiddenSince >= reloadAfterHiddenMs;
+    hiddenSince = null;
+
+    if (wasHiddenLong && !hasUnsavedInput()) {
+        window.location.reload();
+    }
+});
+
 function getRouteUrl(routeName, params = {}) {
     routeName = routeName.split(".").join("-");
     let route = document.querySelector(`meta[name="app-route-${routeName}"]`)?.getAttribute('content');
