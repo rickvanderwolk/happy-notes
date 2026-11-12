@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 final class NoteController extends Controller
@@ -21,6 +22,11 @@ final class NoteController extends Controller
     private const MAX_EMOJI_BYTES = 64;
 
     private const NOTES_PER_PAGE = 15;
+
+    /**
+     * The same new note saved again within this window is a double tap, not a second note.
+     */
+    private const REPEATED_SUBMIT_SECONDS = 10;
 
     public function index(
         Request $request,
@@ -135,17 +141,39 @@ final class NoteController extends Controller
         $selectedEmojis = array_values(array_unique($selectedEmojis));
         $this->requireEmojis($selectedEmojis);
 
-        $note = new Note();
-        $note->user()->associate($user);
-        $note->title = EmojiHelper::getStringWithoutEmojis($data['title']);
-        $note->emojis = $selectedEmojis;
-        $note->save();
+        $title = EmojiHelper::getStringWithoutEmojis($data['title']);
 
-        $this->celebrateMilestone($user);
+        // A double tap on save sends the same note twice, often in parallel. The lock makes
+        // the second request wait for the first, so it sees the note and keeps it at one.
+        Cache::lock("note-store:{$user->id}", 10)->block(5, function () use ($user, $title, $selectedEmojis) {
+            if ($this->isRepeatedSubmit($title, $selectedEmojis)) {
+                return;
+            }
+
+            $note = new Note();
+            $note->user()->associate($user);
+            $note->title = $title;
+            $note->emojis = $selectedEmojis;
+            $note->save();
+
+            $this->celebrateMilestone($user);
+        });
 
         // Straight to the list rather than via 'dashboard': that redirects again, and the
         // flashed celebration would be gone before the list renders.
         return redirect()->route('notes.show');
+    }
+
+    /**
+     * @param  list<string>  $emojis
+     */
+    private function isRepeatedSubmit(string $title, array $emojis): bool
+    {
+        return Note::query()
+            ->where('title', $title)
+            ->where('created_at', '>=', now()->subSeconds(self::REPEATED_SUBMIT_SECONDS))
+            ->get()
+            ->contains(fn (Note $note) => $note->emojis === $emojis);
     }
 
     public function destroy(Note $note): \Illuminate\Http\RedirectResponse

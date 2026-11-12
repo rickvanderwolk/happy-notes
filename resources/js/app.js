@@ -40,6 +40,30 @@ document.addEventListener('click', (event) => {
     visit(button.dataset.leaveIfEmpty);
 }, true);
 
+// A double tap on save would post the form twice, so a form that is already on its way
+// ignores further submits. Forms that handle the submit themselves cancel it first and
+// are left alone.
+document.addEventListener('submit', (event) => {
+    const form = event.target;
+    if (event.defaultPrevented) {
+        return;
+    }
+
+    if (form.dataset.submitting) {
+        event.preventDefault();
+        return;
+    }
+
+    form.dataset.submitting = 'true';
+});
+
+// Going back can restore a page from the browser cache, form state included.
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        document.querySelectorAll('form[data-submitting]').forEach((form) => delete form.dataset.submitting);
+    }
+});
+
 // Single-key shortcuts can be turned off on the shortcuts page (WCAG 2.1.4), per device
 // since they only matter where there is a keyboard.
 const shortcutsStorageKey = 'keyboard-shortcuts';
