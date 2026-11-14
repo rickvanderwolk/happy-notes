@@ -119,6 +119,46 @@ class EmojiSuggestionsTest extends TestCase
         $this->assertNotContains('🦊', collect(EmojiSuggestions::forFilter()['sets'])->pluck('e')->flatten()->all());
     }
 
+    public function test_new_emojis_from_the_newest_note_are_fresh(): void
+    {
+        $user = User::factory()->create();
+
+        $this->createNote($user, 'Een', ['😊']);
+        $this->createNote($user, 'Twee', ['😊']);
+        $this->createNote($user, 'Drie', ['🦔']);
+        $this->createNote($user, 'Vier', ['😊', '🌋', '🦙']);
+
+        $this->actingAs($user);
+
+        $this->assertSame(['🌋', '🦙'], EmojiSuggestions::forFilter()['fresh']);
+        $this->assertSame(['🌋', '🦙'], EmojiSuggestions::forNotes()['fresh']);
+    }
+
+    public function test_an_emoji_used_in_more_than_two_notes_is_no_longer_fresh(): void
+    {
+        $user = User::factory()->create();
+
+        $this->createNote($user, 'Een', ['🌋']);
+        $this->createNote($user, 'Twee', ['🌋']);
+        $this->createNote($user, 'Drie', ['🌋', '🦙']);
+
+        $this->actingAs($user);
+
+        $this->assertSame(['🦙'], EmojiSuggestions::forFilter()['fresh']);
+    }
+
+    public function test_only_the_newest_note_counts_as_fresh(): void
+    {
+        $user = User::factory()->create();
+
+        $this->createNote($user, 'Een', ['🌋']);
+        $this->createNote($user, 'Twee', ['🦙']);
+
+        $this->actingAs($user);
+
+        $this->assertSame(['🦙'], EmojiSuggestions::forFilter()['fresh']);
+    }
+
     public function test_the_route_serves_the_right_data_and_keeps_it_off_the_disk(): void
     {
         $user = User::factory()->create();
@@ -126,10 +166,10 @@ class EmojiSuggestionsTest extends TestCase
 
         $response = $this->actingAs($user)->getJson('/emoji-suggestions/filter?v=1');
 
-        $response->assertOk()->assertJsonStructure(['sets']);
+        $response->assertOk()->assertJsonStructure(['sets', 'fresh']);
         $this->assertStringContainsString('no-store', (string) $response->headers->get('Cache-Control'));
 
-        $this->getJson('/emoji-suggestions/notes?v=1')->assertOk()->assertJsonStructure(['words', 'pairs']);
+        $this->getJson('/emoji-suggestions/notes?v=1')->assertOk()->assertJsonStructure(['words', 'pairs', 'fresh']);
     }
 
     public function test_the_route_needs_a_signed_in_user_and_a_known_scope(): void

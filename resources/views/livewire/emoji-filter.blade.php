@@ -22,6 +22,7 @@
         overallShare: null,
         wordScores: {},
         emojiPairs: {},
+        freshEmojis: [],
         contextText: @js($this->contextText),
         ranked: @js($this->allEmojis),
         suggested: @js($initialSuggestions),
@@ -56,7 +57,7 @@
                 .catch(() => {})
         },
 
-        useData({ sets = [], words = {}, pairs = {} }) {
+        useData({ sets = [], words = {}, pairs = {}, fresh = [] }) {
             const setsByEmoji = new Map()
             for (const set of sets) {
                 for (const emoji of set.e) {
@@ -69,6 +70,7 @@
             this.overallShare = this.share(sets)
             this.wordScores = words
             this.emojiPairs = pairs
+            this.freshEmojis = fresh
         },
 
         share(sets) {
@@ -122,15 +124,18 @@
             const usable = emoji => !this.picked.includes(emoji) && !this.isUnreachable(emoji)
             const ranked = Alpine.raw(this.ranked).filter(usable)
             const fixed = ranked.slice(0, 2)
+            const fresh = Alpine.raw(this.freshEmojis)
+                .filter(emoji => usable(emoji) && !fixed.includes(emoji))
+                .slice(0, 1)
             const titleScores = this.titleScores()
             const pickScores = this.pickScores()
             const smart = [...new Set([...titleScores.keys(), ...pickScores.keys()])]
-                .filter(emoji => usable(emoji) && !fixed.includes(emoji))
+                .filter(emoji => usable(emoji) && !fixed.includes(emoji) && !fresh.includes(emoji))
                 .map(emoji => [emoji, (titleScores.get(emoji) ?? 0) + 2 * (pickScores.get(emoji) ?? 0)])
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 3)
                 .map(([emoji]) => emoji)
-            const next = [...new Set([...fixed, ...smart, ...ranked])].slice(0, 5)
+            const next = [...new Set([...fixed, ...fresh, ...smart, ...ranked])].slice(0, 5)
 
             if (next.join() !== [...this.suggested].join()) this.suggested = next
         },

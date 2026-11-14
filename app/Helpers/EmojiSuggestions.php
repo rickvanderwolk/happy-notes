@@ -12,6 +12,7 @@ final class EmojiSuggestions
     private const MAX_EMOJIS_PER_ENTRY = 5;
     private const MIN_NOTES_PER_WORD = 2;
     private const MIN_SCORE = 0.1;
+    private const MAX_NOTES_FOR_FRESH = 2;
 
     public static function version(User $user): string
     {
@@ -23,19 +24,54 @@ final class EmojiSuggestions
     }
 
     /**
-     * @return array{words: array<array-key, array<array-key, float>>, pairs: array<array-key, array<array-key, float>>}
+     * @return array{words: array<array-key, array<array-key, float>>, pairs: array<array-key, array<array-key, float>>, fresh: list<string>}
      */
     public static function forNotes(): array
     {
-        return ['words' => self::wordScores(), 'pairs' => self::pairScores()];
+        $sets = self::sets();
+
+        return ['words' => self::wordScores(), 'pairs' => self::pairScores($sets), 'fresh' => self::fresh($sets)];
     }
 
     /**
-     * @return array{sets: list<array{e: list<string>, n: int}>}
+     * @return array{sets: list<array{e: list<string>, n: int}>, fresh: list<string>}
      */
     public static function forFilter(): array
     {
-        return ['sets' => self::sets()];
+        $sets = self::sets();
+
+        return ['sets' => $sets, 'fresh' => self::fresh($sets)];
+    }
+
+    /**
+     * @param  list<array{e: list<string>, n: int}>  $sets
+     * @return list<string>
+     */
+    private static function fresh(array $sets): array
+    {
+        $latest = Note::query()
+            ->where('title', '!=', User::welcomeNoteTitle())
+            ->latest()
+            ->latest('id')
+            ->toBase()
+            ->first(['emojis']);
+
+        if ($latest === null) {
+            return [];
+        }
+
+        $counts = [];
+
+        foreach ($sets as $set) {
+            foreach ($set['e'] as $emoji) {
+                $counts[$emoji] = ($counts[$emoji] ?? 0) + $set['n'];
+            }
+        }
+
+        return array_values(array_filter(
+            array_unique(self::decodeEmojis($latest->emojis)),
+            fn (string $emoji): bool => ($counts[$emoji] ?? 0) <= self::MAX_NOTES_FOR_FRESH
+        ));
     }
 
     /**
@@ -57,15 +93,16 @@ final class EmojiSuggestions
     }
 
     /**
+     * @param  list<array{e: list<string>, n: int}>  $sets
      * @return array<array-key, array<array-key, float>>
      */
-    private static function pairScores(): array
+    private static function pairScores(array $sets): array
     {
         $total = 0;
         $emojiCounts = [];
         $pairCounts = [];
 
-        foreach (self::sets() as $set) {
+        foreach ($sets as $set) {
             $total += $set['n'];
 
             foreach ($set['e'] as $emoji) {
