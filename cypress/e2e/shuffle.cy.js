@@ -29,6 +29,11 @@ const shouldHoldEveryNoteOnce = (ids, recent) => {
 describe('Shuffle', () => {
     let recent;
 
+    // The order is kept with the user, so leave the list in its usual order for other specs
+    after(() => {
+        cy.request('POST', `${Cypress.config('baseUrl')}/api/test/reset-filters`);
+    });
+
     beforeEach(() => {
         cy.request('POST', `${Cypress.config('baseUrl')}/api/test/reset-filters`);
         const user = Cypress.expose('users').user1;

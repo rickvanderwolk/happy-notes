@@ -22,6 +22,7 @@ final class TestController extends Controller
             'excluded_emojis' => '[]',
             'search_query' => null,
             'search_query_only' => false,
+            'shuffle_seed' => null,
         ]);
 
         // Touch the first note of each user to make it appear first in the list

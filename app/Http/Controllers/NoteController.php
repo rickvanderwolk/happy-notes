@@ -28,8 +28,6 @@ final class NoteController extends Controller
      */
     private const REPEATED_SUBMIT_SECONDS = 10;
 
-    private const SHUFFLE_SESSION_KEY = 'notes_shuffle_seed';
-
     /**
      * 2^31 - 1. Every intermediate value in the shuffle order stays below 2^62, so it fits a
      * signed 64-bit integer in both databases.
@@ -81,7 +79,7 @@ final class NoteController extends Controller
 
         // id breaks ties, so notes saved within the same second cannot swap places between
         // two page requests and show up twice or not at all.
-        $shuffleSeed = $this->shuffleSeed($request);
+        $shuffleSeed = $this->shuffleSeed($request, $user);
         if (is_int($shuffleSeed)) {
             $notes->orderByRaw(
                 '((id * ? + ?) % ?) * ((id * ? + ?) % ?) % ?',
@@ -135,35 +133,39 @@ final class NoteController extends Controller
      * send that order along (0 for most recent first), so shuffling or saving a note in
      * another tab cannot change the order halfway through a list and show notes twice.
      */
-    private function shuffleSeed(Request $request): ?int
+    private function shuffleSeed(Request $request, User $user): ?int
     {
-        if ($request->has('shuffle')) {
-            $seed = $request->integer('shuffle');
+        $seed = $request->has('shuffle') ? $request->integer('shuffle') : $user->shuffle_seed;
 
-            return $seed > 0 && $seed < self::SHUFFLE_PRIME ? $seed : null;
-        }
-
-        $seed = $request->session()->get(self::SHUFFLE_SESSION_KEY);
-
-        return is_int($seed) ? $seed : null;
+        return is_int($seed) && $seed > 0 && $seed < self::SHUFFLE_PRIME ? $seed : null;
     }
 
     /**
-     * A new seed per shuffle, kept in the session rather than the URL: infinite scroll and
-     * coming back from a note ask for the list again and need the same order to find their place.
+     * A new seed per shuffle, kept with the user like the filter, so every device shows the
+     * same order, and rather than in the URL: infinite scroll and coming back from a note ask
+     * for the list again and need the same order to find their place.
      */
-    public function shuffle(Request $request): \Illuminate\Http\RedirectResponse
+    public function shuffle(#[CurrentUser] User $user): \Illuminate\Http\RedirectResponse
     {
-        $request->session()->put(self::SHUFFLE_SESSION_KEY, random_int(1, self::SHUFFLE_PRIME - 1));
+        $user->shuffle_seed = random_int(1, self::SHUFFLE_PRIME - 1);
+        $user->save();
 
         return redirect()->route('notes.show');
     }
 
-    public function unshuffle(Request $request): \Illuminate\Http\RedirectResponse
+    public function unshuffle(#[CurrentUser] User $user): \Illuminate\Http\RedirectResponse
     {
-        $request->session()->forget(self::SHUFFLE_SESSION_KEY);
+        $this->stopShuffling($user);
 
         return redirect()->route('notes.show');
+    }
+
+    private function stopShuffling(User $user): void
+    {
+        if ($user->shuffle_seed !== null) {
+            $user->shuffle_seed = null;
+            $user->save();
+        }
     }
 
     /**
@@ -226,7 +228,7 @@ final class NoteController extends Controller
         });
 
         // A new note belongs at the top of the list, which a shuffled list would hide
-        $request->session()->forget(self::SHUFFLE_SESSION_KEY);
+        $this->stopShuffling($user);
 
         // Straight to the list rather than via 'dashboard': that redirects again, and the
         // flashed celebration would be gone before the list renders.

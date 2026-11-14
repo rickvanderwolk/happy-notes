@@ -76,31 +76,51 @@ class NoteListTest extends TestCase
         return $matches[1];
     }
 
+    private function shuffleFor(User $user, ?int $seed): void
+    {
+        $user->shuffle_seed = $seed;
+        $user->save();
+    }
+
     public function test_shuffle_stores_a_seed_and_returns_to_the_list(): void
     {
         $user = $this->userWithoutWelcomeNotes();
 
         $this->actingAs($user)
             ->get(route('notes.shuffle'))
-            ->assertRedirect(route('notes.show'))
-            ->assertSessionHas('notes_shuffle_seed');
+            ->assertRedirect(route('notes.show'));
+
+        $this->assertNotNull($user->fresh()->shuffle_seed);
+    }
+
+    public function test_a_shuffle_follows_you_to_another_device(): void
+    {
+        $user = $this->userWithoutWelcomeNotes();
+        $this->createNotes($user, 3);
+
+        $this->actingAs($user)->get(route('notes.shuffle'));
+        $this->flushSession();
+
+        $this->actingAs($user->fresh())->get(route('notes.show'))
+            ->assertSee('data-cy="shuffle-label"', false);
     }
 
     /**
-     * The list as infinite scroll builds it: the first page with the order from the session,
+     * The list as infinite scroll builds it: the first page with the order kept with the user,
      * then every further batch asking for the order the list was opened with.
      *
      * @return list<string>
      */
-    private function scrollThrough(User $user, int $sessionSeed, int $pages, ?int $seedFromSecondPage = null): array
+    private function scrollThrough(User $user, int $seed, int $pages, ?int $seedFromSecondPage = null): array
     {
-        $first = $this->actingAs($user)->withSession(['notes_shuffle_seed' => $sessionSeed])->get(route('notes.show'));
+        $this->shuffleFor($user, $seed);
+        $first = $this->actingAs($user)->get(route('notes.show'));
         preg_match('/data-shuffle="(\d+)"/', $first->getContent(), $match);
         $uuids = $this->uuidsIn($first->getContent());
 
+        $this->shuffleFor($user, $seedFromSecondPage ?? $seed);
         for ($page = 2; $page <= $pages; $page++) {
             $batch = $this->actingAs($user)
-                ->withSession(['notes_shuffle_seed' => $seedFromSecondPage ?? $sessionSeed])
                 ->get(route('notes.show', ['page' => $page, 'partial' => 1, 'shuffle' => $match[1]]));
             $uuids = [...$uuids, ...$this->uuidsIn($batch->getContent())];
         }
@@ -123,7 +143,7 @@ class NoteListTest extends TestCase
         $this->assertSame($shuffled, $this->scrollThrough($user, 123456789, 4));
     }
 
-    public function test_shuffling_in_another_tab_does_not_change_a_list_halfway(): void
+    public function test_shuffling_on_another_device_does_not_change_a_list_halfway(): void
     {
         $user = $this->userWithoutWelcomeNotes();
         $notes = $this->createNotes($user, 50);
@@ -133,13 +153,14 @@ class NoteListTest extends TestCase
         $this->assertSame($this->scrollThrough($user, 123456789, 4), $this->scrollThrough($user, 123456789, 4, 987654321));
     }
 
-    public function test_a_list_opened_in_recent_order_stays_in_it_when_another_tab_shuffles(): void
+    public function test_a_list_opened_in_recent_order_stays_in_it_when_another_device_shuffles(): void
     {
         $user = $this->userWithoutWelcomeNotes();
         $notes = $this->createNotes($user, 30);
         $recent = array_map(fn (Note $note) => $note->uuid, $notes);
+        $this->shuffleFor($user, 42);
 
-        $batch = $this->actingAs($user)->withSession(['notes_shuffle_seed' => 42])
+        $batch = $this->actingAs($user)
             ->get(route('notes.show', ['page' => 2, 'partial' => 1, 'shuffle' => 0]));
 
         $this->assertSame(array_slice($recent, 15, 15), $this->uuidsIn($batch->getContent()));
@@ -153,7 +174,8 @@ class NoteListTest extends TestCase
         $this->actingAs($user)->get(route('notes.show'))
             ->assertDontSee('data-cy="shuffle-label"', false);
 
-        $this->actingAs($user)->withSession(['notes_shuffle_seed' => 42])->get(route('notes.show'))
+        $this->shuffleFor($user, 42);
+        $this->actingAs($user)->get(route('notes.show'))
             ->assertSee('data-cy="shuffle-label"', false)
             ->assertSee(route('notes.unshuffle'));
     }
@@ -161,21 +183,25 @@ class NoteListTest extends TestCase
     public function test_unshuffle_brings_back_the_most_recent_first(): void
     {
         $user = $this->userWithoutWelcomeNotes();
+        $this->shuffleFor($user, 42);
 
-        $this->actingAs($user)->withSession(['notes_shuffle_seed' => 42])
+        $this->actingAs($user)
             ->get(route('notes.unshuffle'))
-            ->assertRedirect(route('notes.show'))
-            ->assertSessionMissing('notes_shuffle_seed');
+            ->assertRedirect(route('notes.show'));
+
+        $this->assertNull($user->fresh()->shuffle_seed);
     }
 
     public function test_saving_a_new_note_stops_shuffling(): void
     {
         $user = $this->userWithoutWelcomeNotes();
+        $this->shuffleFor($user, 42);
 
-        $this->actingAs($user)->withSession(['notes_shuffle_seed' => 42])
+        $this->actingAs($user)
             ->post(route('note.store'), ['title' => 'New 🦊'])
-            ->assertRedirect(route('notes.show'))
-            ->assertSessionMissing('notes_shuffle_seed');
+            ->assertRedirect(route('notes.show'));
+
+        $this->assertNull($user->fresh()->shuffle_seed);
     }
 
     public function test_autosave_returns_the_progress(): void

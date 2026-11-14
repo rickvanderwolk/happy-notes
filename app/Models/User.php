@@ -65,6 +65,7 @@ final class User extends Authenticatable implements MustVerifyEmail
             'search_query_only' => 'boolean',
             'celebrated_milestone' => 'integer',
             'celebrated_anniversary' => 'integer',
+            'shuffle_seed' => 'integer',
         ];
     }
 

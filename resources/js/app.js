@@ -479,8 +479,8 @@ const showNote = (element) => {
     });
 };
 
-// Every batch asks for the order the list was opened with, so shuffling in another tab
-// cannot change it halfway through.
+// Every batch asks for the order the list was opened with, so shuffling in another tab or
+// on another device cannot change it halfway through.
 const listOrder = (noteList) => encodeURIComponent(noteList.dataset.shuffle ?? '0');
 
 function checkAndLoadForAnchor() {
