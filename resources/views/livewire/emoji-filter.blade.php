@@ -135,7 +135,8 @@
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 3)
                 .map(([emoji]) => emoji)
-            const next = [...new Set([...fixed, ...fresh, ...smart, ...ranked])].slice(0, 5)
+            const rest = [...new Set([...fixed, ...smart, ...ranked])].filter(emoji => !fresh.includes(emoji))
+            const next = [...rest.slice(0, 5 - fresh.length), ...fresh]
 
             if (next.join() !== [...this.suggested].join()) this.suggested = next
         },
