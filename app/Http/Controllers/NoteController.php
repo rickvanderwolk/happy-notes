@@ -83,7 +83,10 @@ final class NoteController extends Controller
         // two page requests and show up twice or not at all.
         $shuffleSeed = $this->shuffleSeed($request);
         if (is_int($shuffleSeed)) {
-            $notes->orderByRaw($this->shuffleOrder($shuffleSeed));
+            $notes->orderByRaw(
+                '((id * ? + ?) % ?) * ((id * ? + ?) % ?) % ?',
+                $this->shuffleOrderBindings($shuffleSeed)
+            );
         } else {
             $notes->orderBy('updated_at', 'desc');
         }
@@ -167,14 +170,15 @@ final class NoteController extends Controller
      * A seeded order that is the same on every request and works in both SQLite and MySQL,
      * which share no seeded random function. Squaring makes it non-linear, so notes that
      * were written one after another do not keep following each other at a fixed distance.
+     *
+     * @return list<int>
      */
-    private function shuffleOrder(int $seed): string
+    private function shuffleOrderBindings(int $seed): array
     {
         $prime = self::SHUFFLE_PRIME;
         $offset = ($seed * 7919) % $prime;
-        $mixed = "((id * {$seed} + {$offset}) % {$prime})";
 
-        return "{$mixed} * {$mixed} % {$prime}";
+        return [$seed, $offset, $prime, $seed, $offset, $prime, $prime];
     }
 
     public function show(Note $note): \Illuminate\View\View|\Illuminate\Contracts\View\View
