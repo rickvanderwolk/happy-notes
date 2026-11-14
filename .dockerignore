@@ -23,3 +23,4 @@ compose.yaml
 bootstrap/cache/*.php
 .phpunit.result.cache
 .phpunit.cache
+**/.DS_Store

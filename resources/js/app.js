@@ -237,6 +237,12 @@ const keydownListener = (event) => {
         }
 
         if (event.key === 'Escape') {
+            const shuffleLabel = document.querySelector('[data-cy="shuffle-label"]');
+            if (appCurrentRouteName === 'notes.show' && shuffleLabel) {
+                visit(shuffleLabel.href);
+                return;
+            }
+
             if ([
                 'note.title.show',
                 'note.title.show',
@@ -300,6 +306,12 @@ const keydownListener = (event) => {
 
         if (event.key === 's') {
             visit(getRouteUrl('filter.search.show'));
+        }
+
+        if (event.key === 'h') {
+            if (['notes.show', 'menu.show'].includes(appCurrentRouteName)) {
+                visit(getRouteUrl('notes.shuffle'));
+            }
         }
 
         if (event.key === 'i') {
@@ -467,6 +479,10 @@ const showNote = (element) => {
     });
 };
 
+// Every batch asks for the order the list was opened with, so shuffling in another tab
+// cannot change it halfway through.
+const listOrder = (noteList) => encodeURIComponent(noteList.dataset.shuffle ?? '0');
+
 function checkAndLoadForAnchor() {
     const hash = window.location.hash;
     if (!hash || !hash.startsWith('#note-')) {
@@ -506,7 +522,7 @@ function loadMoreDataForAnchor(targetId) {
     // One request for every page up to the note; the server says which page that ended
     // on, so infinite scroll picks up after it.
     const uuid = targetId.substring('note-'.length);
-    fetch(`${appBaseUrl}/notes?page=${page + 1}&partial=1&until=${encodeURIComponent(uuid)}`)
+    fetch(`${appBaseUrl}/notes?page=${page + 1}&partial=1&shuffle=${listOrder(noteList)}&until=${encodeURIComponent(uuid)}`)
         .then(response => {
             const lastPage = parseInt(response.headers.get('X-Last-Page'), 10);
             if (!Number.isNaN(lastPage)) {
@@ -551,7 +567,7 @@ function loadMoreData() {
     page++;
     loadingEl.style.display = 'block';
 
-    fetch(`${appBaseUrl}/notes?page=${page}&partial=1`)
+    fetch(`${appBaseUrl}/notes?page=${page}&partial=1&shuffle=${listOrder(noteList)}`)
         .then(response => response.text())
         .then(data => {
             // The endpoint returns just the cards, so parse a fragment instead of a

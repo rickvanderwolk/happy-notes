@@ -9,15 +9,16 @@
         </div>
 
         <div class="menu-card-modern">
-            <a href="{{ route('profile.show') }}" data-no-navigate class="menu-item-modern">
+            {{-- Your notes first, then you and the app, then leaving --}}
+            <a href="{{ route('notes.shuffle') }}" class="menu-item-modern" data-cy="menu-shuffle">
                 <div class="menu-item-content">
                     <span class="menu-item-title">
-                        Account
-                        <x-keyboard-hint key="A" />
+                        Shuffle
+                        <x-keyboard-hint key="H" />
                     </span>
-                    <span class="menu-item-subtitle">Manage your profile & settings</span>
+                    <span class="menu-item-subtitle">Browse your notes in a random order</span>
                 </div>
-                <x-icon name="user" class="menu-item-icon" />
+                <x-icon name="dice" class="menu-item-icon" />
             </a>
 
             <a href="{{ route('insights.show') }}" class="menu-item-modern">
@@ -29,6 +30,17 @@
                     <span class="menu-item-subtitle">A look at your note-taking habits</span>
                 </div>
                 <x-icon name="lightbulb" class="menu-item-icon" />
+            </a>
+
+            <a href="{{ route('profile.show') }}" data-no-navigate class="menu-item-modern">
+                <div class="menu-item-content">
+                    <span class="menu-item-title">
+                        Account
+                        <x-keyboard-hint key="A" />
+                    </span>
+                    <span class="menu-item-subtitle">Manage your profile & settings</span>
+                </div>
+                <x-icon name="user" class="menu-item-icon" />
             </a>
 
             <a href="{{ route('shortcuts.show') }}" data-no-navigate class="menu-item-modern menu-item-desktop-only">

@@ -148,11 +148,21 @@
 
             <div class="shortcut-item">
                 <div class="shortcut-description">
-                    Open account
-                    <span class="shortcut-context">from menu</span>
+                    Shuffle notes
+                    <span class="shortcut-context">from list or menu</span>
                 </div>
                 <div class="shortcut-keys">
-                    <span class="keyboard-key">A</span>
+                    <span class="keyboard-key">H</span>
+                </div>
+            </div>
+
+            <div class="shortcut-item">
+                <div class="shortcut-description">
+                    Stop shuffling
+                    <span class="shortcut-context">in a shuffled list</span>
+                </div>
+                <div class="shortcut-keys">
+                    <span class="keyboard-key">ESC</span>
                 </div>
             </div>
 
@@ -165,6 +175,17 @@
                     <span class="keyboard-key">I</span>
                 </div>
             </div>
+
+            <div class="shortcut-item">
+                <div class="shortcut-description">
+                    Open account
+                    <span class="shortcut-context">from menu</span>
+                </div>
+                <div class="shortcut-keys">
+                    <span class="keyboard-key">A</span>
+                </div>
+            </div>
+
             <div class="shortcut-item">
                 <div class="shortcut-description">
                     Log out

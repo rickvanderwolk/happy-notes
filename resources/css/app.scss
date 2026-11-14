@@ -135,6 +135,30 @@ p {
     margin-top: -$space-4;
 }
 
+// Shown above a shuffled list; tapping it brings back the most recent first
+.shuffle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    margin: 0 0 $space-6 $space-3;
+    padding: $space-1 $space-3;
+    border: 1px solid $line-soft;
+    border-radius: $radius-full;
+    color: $text-secondary;
+    font-size: 0.875rem;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+        color: $text-primary;
+        border-color: $line-strong;
+    }
+
+    .icon {
+        font-size: 0.75em;
+    }
+}
+
 // Empty state
 .empty-state {
     text-align: center;

@@ -65,6 +65,8 @@ Route::middleware($defaultAppMiddlewares)->group(function () {
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.show');
     Route::post('/notes', [NoteController::class, 'store'])->name('note.store');
     Route::get('/notes/new', [NoteController::class, 'create'])->name('note.create');
+    Route::get('/notes/shuffle', [NoteController::class, 'shuffle'])->name('notes.shuffle');
+    Route::get('/notes/unshuffle', [NoteController::class, 'unshuffle'])->name('notes.unshuffle');
     Route::get('/notes/{note}', [NoteController::class, 'show'])->name('note.show')->can('view', 'note');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('note.destroy')->can('delete', 'note');
     Route::get('/notes/{note}/title', [NoteController::class, 'formTitle'])->name('note.title.show')->can('update', 'note');

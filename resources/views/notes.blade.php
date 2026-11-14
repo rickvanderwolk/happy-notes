@@ -7,8 +7,14 @@
     @include('notes.partials.celebration')
 
     <div>
+        @if($shuffleSeed ?? null)
+            <a href="{{ route('notes.unshuffle') }}" class="shuffle-label" data-cy="shuffle-label" aria-label="Shuffled, back to the most recent first">
+                <span aria-hidden="true">🎲</span> Shuffled <x-icon name="close" />
+            </a>
+        @endif
+
         @if(isset($notes) && $notes->count() > 0)
-            <div id="note-list" data-cy="note-list" class="notes-list">
+            <div id="note-list" data-cy="note-list" class="notes-list" data-shuffle="{{ $shuffleSeed ?? 0 }}">
                 @include('notes.partials.cards', ['notes' => $notes])
             </div>
 

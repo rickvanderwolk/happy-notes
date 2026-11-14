@@ -28,6 +28,14 @@ final class NoteController extends Controller
      */
     private const REPEATED_SUBMIT_SECONDS = 10;
 
+    private const SHUFFLE_SESSION_KEY = 'notes_shuffle_seed';
+
+    /**
+     * 2^31 - 1. Every intermediate value in the shuffle order stays below 2^62, so it fits a
+     * signed 64-bit integer in both databases.
+     */
+    private const SHUFFLE_PRIME = 2147483647;
+
     public function index(
         Request $request,
         #[CurrentUser] User $user
@@ -73,9 +81,13 @@ final class NoteController extends Controller
 
         // id breaks ties, so notes saved within the same second cannot swap places between
         // two page requests and show up twice or not at all.
-        $notes = $notes
-            ->orderBy('updated_at', 'desc')
-            ->orderBy('id', 'desc');
+        $shuffleSeed = $this->shuffleSeed($request);
+        if (is_int($shuffleSeed)) {
+            $notes->orderByRaw($this->shuffleOrder($shuffleSeed));
+        } else {
+            $notes->orderBy('updated_at', 'desc');
+        }
+        $notes = $notes->orderBy('id', 'desc');
 
         // Closing a note returns to the list at that note. Rather than the browser fetching
         // page after page until it shows up, return every page up to and including the one
@@ -112,7 +124,57 @@ final class NoteController extends Controller
 
         $this->celebrateAnniversary($user);
 
-        return view('notes', compact('notes'));
+        return view('notes', compact('notes', 'shuffleSeed'));
+    }
+
+    /**
+     * A list keeps the order it was opened with. Infinite scroll and coming back to a note
+     * send that order along (0 for most recent first), so shuffling or saving a note in
+     * another tab cannot change the order halfway through a list and show notes twice.
+     */
+    private function shuffleSeed(Request $request): ?int
+    {
+        if ($request->has('shuffle')) {
+            $seed = $request->integer('shuffle');
+
+            return $seed > 0 && $seed < self::SHUFFLE_PRIME ? $seed : null;
+        }
+
+        $seed = $request->session()->get(self::SHUFFLE_SESSION_KEY);
+
+        return is_int($seed) ? $seed : null;
+    }
+
+    /**
+     * A new seed per shuffle, kept in the session rather than the URL: infinite scroll and
+     * coming back from a note ask for the list again and need the same order to find their place.
+     */
+    public function shuffle(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->session()->put(self::SHUFFLE_SESSION_KEY, random_int(1, self::SHUFFLE_PRIME - 1));
+
+        return redirect()->route('notes.show');
+    }
+
+    public function unshuffle(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->session()->forget(self::SHUFFLE_SESSION_KEY);
+
+        return redirect()->route('notes.show');
+    }
+
+    /**
+     * A seeded order that is the same on every request and works in both SQLite and MySQL,
+     * which share no seeded random function. Squaring makes it non-linear, so notes that
+     * were written one after another do not keep following each other at a fixed distance.
+     */
+    private function shuffleOrder(int $seed): string
+    {
+        $prime = self::SHUFFLE_PRIME;
+        $offset = ($seed * 7919) % $prime;
+        $mixed = "((id * {$seed} + {$offset}) % {$prime})";
+
+        return "{$mixed} * {$mixed} % {$prime}";
     }
 
     public function show(Note $note): \Illuminate\View\View|\Illuminate\Contracts\View\View
@@ -158,6 +220,9 @@ final class NoteController extends Controller
 
             $this->celebrateMilestone($user);
         });
+
+        // A new note belongs at the top of the list, which a shuffled list would hide
+        $request->session()->forget(self::SHUFFLE_SESSION_KEY);
 
         // Straight to the list rather than via 'dashboard': that redirects again, and the
         // flashed celebration would be gone before the list renders.

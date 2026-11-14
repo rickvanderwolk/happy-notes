@@ -41,6 +41,7 @@
         <meta name="app-route-insights-show" content="{{ route('insights.show') }}">
         <meta name="app-route-shortcuts-show" content="{{ route('shortcuts.show') }}">
         <meta name="app-route-notes-show" content="{{ route('notes.show') }}">
+        <meta name="app-route-notes-shuffle" content="{{ route('notes.shuffle') }}">
         <meta name="app-route-note-create" content="{{ route('note.create') }}">
         <meta name="app-route-note-show" content="{{ route('note.show', ':note') }}">
         <meta name="app-route-note-title-show" content="{{ route('note.title.show', ':note') }}">

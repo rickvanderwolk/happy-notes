@@ -1,0 +1,2 @@
+{{-- A die showing five, drawn for HappyNotes in the solid style of the other icons --}}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill-rule="evenodd" d="M112 48h288a64 64 0 0 1 64 64v288a64 64 0 0 1-64 64H112a64 64 0 0 1-64-64V112a64 64 0 0 1 64-64zM160 120a40 40 0 1 0 0 80a40 40 0 1 0 0-80zM352 120a40 40 0 1 0 0 80a40 40 0 1 0 0-80zM256 216a40 40 0 1 0 0 80a40 40 0 1 0 0-80zM160 312a40 40 0 1 0 0 80a40 40 0 1 0 0-80zM352 312a40 40 0 1 0 0 80a40 40 0 1 0 0-80z"/></svg>
