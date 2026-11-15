@@ -11,6 +11,33 @@
 
         <title>{{ isset($title) ? $title . ' – ' : '' }}{{ config('app.name', 'happynotes') }}</title>
         <meta name="description" content="A note-taking app for free-spirited minds. No folders, no tags, just emojis.">
+        {{-- Only the landing page of the official instance is meant to be found; self-hosted copies and the auth pages stay out of search results. --}}
+        @if (request()->routeIs('home') && config('app.official_instance'))
+            <link rel="canonical" href="{{ url('/') }}">
+            <meta property="og:type" content="website">
+            <meta property="og:site_name" content="HappyNotes">
+            <meta property="og:title" content="HappyNotes">
+            <meta property="og:description" content="A note-taking app for free-spirited minds. No folders, no tags, just emojis.">
+            <meta property="og:url" content="{{ url('/') }}">
+            <meta property="og:image" content="{{ asset('logo.png') }}">
+            <meta name="twitter:card" content="summary">
+            @php
+                $structuredData = [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'WebApplication',
+                    'name' => 'HappyNotes',
+                    'url' => url('/'),
+                    'description' => 'A note-taking app for free-spirited minds. No folders, no tags, just emojis.',
+                    'applicationCategory' => 'ProductivityApplication',
+                    'operatingSystem' => 'Web',
+                    'image' => asset('logo.png'),
+                    'sameAs' => ['https://github.com/rickvanderwolk/happy-notes'],
+                ];
+            @endphp
+            <script type="application/ld+json" nonce="{{ \Illuminate\Support\Facades\Vite::cspNonce() }}">{!! json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+        @else
+            <meta name="robots" content="noindex, nofollow">
+        @endif
 
         <link rel="icon" type="image/png" href="/favicon-96x96.png?v=2" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />

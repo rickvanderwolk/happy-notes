@@ -12,6 +12,7 @@
 
         <title>{{ isset($title) ? $title . ' – ' : '' }}{{ config('app.name', 'happynotes') }}</title>
         <meta name="description" content="💥🧠📝🎨🚀">
+        <meta name="robots" content="noindex, nofollow">
 
         <link rel="icon" type="image/png" href="/favicon-96x96.png?v=2" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
