@@ -20,6 +20,22 @@ describe("Filter Tests", () => {
         });
     });
 
+    it("Applies the filter on enter with the focus on an emoji, without toggling it", () => {
+        cy.visit('/filter');
+        cy.selectFirstSelectableEmoji().then((picked) => {
+            cy.get('[data-cy="emoji-filter-emoji-selector"] button:visible').first().then(($button) => {
+                const focused = $button.text().trim();
+                cy.wrap($button).focus();
+                cy.press(Cypress.Keyboard.Keys.ENTER);
+                cy.location('pathname').should('eq', '/notes');
+
+                cy.visit('/filter');
+                cy.get('.emoji-chips-wrapper').should('contain.text', picked);
+                cy.get('.emoji-chips-wrapper').should('not.contain.text', focused);
+            });
+        });
+    });
+
     it("Persists a selection made right before closing the filter", () => {
         cy.visit('/filter');
         cy.get('[data-cy="emoji-filter-emoji-selector"] span:visible').first().then(($emoji) => {

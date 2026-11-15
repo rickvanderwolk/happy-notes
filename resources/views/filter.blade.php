@@ -11,8 +11,7 @@
 
     <div class="container"
          x-data
-         @apply-filter.window="Livewire.navigate('{{ route('notes.show') }}')"
-         @keydown.window.enter="Livewire.navigate('{{ route('notes.show') }}')">
+         @apply-filter.window="Livewire.navigate('{{ route('notes.show') }}')">
         <div class="text-center mb-4">
             <h1 class="section-title">
                 @if($isInclude)

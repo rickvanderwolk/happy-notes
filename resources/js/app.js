@@ -26,6 +26,12 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && event.target.matches('textarea[data-single-line]')) {
         event.preventDefault();
     }
+
+    // On the filter pages Enter applies the filter, also with the focus on an emoji.
+    // Without this the same Enter would first toggle that emoji; Space still does.
+    if (event.key === 'Enter' && isFilterRoute() && event.target.closest('.emoji-selector, .emoji-chip')) {
+        event.preventDefault();
+    }
 });
 
 // Saving an empty new note means there was nothing to keep, so it just closes instead of
@@ -182,6 +188,12 @@ function getRouteUrl(routeName, params = {}) {
     }
 }
 
+const isFilterRoute = () => [
+    'filter.show',
+    'filter.exclude.show',
+    'filter.search.show',
+].includes(getCurrentRouteName());
+
 const getUuidFromRoute = () => {
     let noteUuid = document.querySelector(`meta[name="app-note-uuid"]`)?.getAttribute('content');
     if (noteUuid) {
@@ -267,11 +279,8 @@ const keydownListener = (event) => {
         }
 
         if (event.key === 'Enter') {
-            if ([
-                    'filter.show',
-                    'filter.exclude.show',
-                    'filter.search.show',
-                ].includes(appCurrentRouteName)) {
+            const ownAction = event.target.closest('a, button:not(.emoji-selector):not(.emoji-chip)');
+            if (isFilterRoute() && !ownAction) {
                 visit(getRouteUrl('notes.show'))
             }
         }
