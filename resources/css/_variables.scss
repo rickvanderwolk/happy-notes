@@ -202,6 +202,10 @@ $fab-size: 66px;
 // and never closer than 32px to the edge of the screen. Half the screen, minus half the
 // column (320px), the rail (68px) and a gap (32px).
 $rail-left: max(#{$space-8}, calc(50vw - 420px));
+// The pill grows with the text size, up to a limit so three buttons still fit a phone
+$pill-button: min(3.5rem, 72px);
+$pill-icon: min(1.5rem, 32px);
+$pill-icon-lg: min(1.625rem, 34px);
 $emoji-size: 36px;
 $emoji-size-sm: 26px;
 $emoji-size-lg: 42px;

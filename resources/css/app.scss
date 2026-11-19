@@ -235,7 +235,7 @@ p {
     }
 
     .emoji {
-        font-size: 32px;
+        font-size: min(2rem, 48px);
     }
 
     // Room to match what the title leaves below its letters
@@ -252,10 +252,22 @@ p {
     font-size: $font-size-lg;
     font-weight: $font-weight-medium;
 
-    // Checklist boxes in the app's colours instead of Editor.js' blue
+    // Checklist boxes in the app's colours instead of Editor.js' blue, sized to the text
+    .cdx-checklist__item-checkbox {
+        width: 1.25em;
+        height: 1.25em;
+        margin-top: 0.16em;
+
+        svg {
+            width: 1.25em;
+            height: 1.25em;
+            max-height: none;
+        }
+    }
+
     .cdx-checklist__item-checkbox-check {
-        width: 22px;
-        height: 22px;
+        width: 1.25em;
+        height: 1.25em;
         border: 1.5px solid $line-strong;
         border-radius: 7px;
         background: $surface;
@@ -324,6 +336,33 @@ p {
         background: $background-alt;
         border: 0;
         color: $text-secondary;
+    }
+
+    // Editor.js sizes its menus in px; these follow the text size instead
+    .ce-popover {
+        --width: 12.5rem;
+    }
+
+    .ce-popover-item__title,
+    .cdx-search-field__input,
+    .ce-popover__nothing-found-message,
+    .ce-inline-tool-input {
+        font-size: 0.875rem;
+    }
+
+    .ce-popover-item__secondary-title {
+        font-size: 0.75rem;
+    }
+
+    .ce-popover-header__text {
+        font-size: 1.125rem;
+    }
+
+    @media (max-width: 650px) {
+        .ce-popover-item__title,
+        .ce-inline-tool-input {
+            font-size: 1rem;
+        }
     }
 
     .cdx-search-field__input {
@@ -545,7 +584,7 @@ p {
 @media (max-width: $breakpoint-md - 0.02px) {
     #app:has(.quick-actions) main {
         padding-top: calc(#{$space-4} + env(safe-area-inset-top));
-        padding-bottom: 110px;
+        padding-bottom: calc(#{$pill-button} + 54px);
     }
 }
 
@@ -613,7 +652,7 @@ p {
 
     @media (min-width: $breakpoint-md) {
         // Fixed next to the column, under the logo
-        top: calc(#{$space-6} + 76px + env(safe-area-inset-top));
+        top: calc(#{$space-6} + #{$pill-button} + 20px + env(safe-area-inset-top));
         right: auto;
         bottom: auto;
         left: $rail-left;
@@ -623,7 +662,7 @@ p {
         flex-wrap: nowrap;
 
         .quick-save {
-            width: 56px;
+            width: $pill-button;
             padding: 0;
         }
 
@@ -633,10 +672,10 @@ p {
     }
 
     a, button {
-        width: 56px;
-        height: 56px;
-        min-width: 56px;
-        min-height: 56px;
+        width: $pill-button;
+        height: $pill-button;
+        min-width: $pill-button;
+        min-height: $pill-button;
         padding: 0;
         color: $text-primary;
     }
@@ -655,12 +694,12 @@ p {
         box-shadow: none;
 
         i {
-            font-size: 24px;
+            font-size: $pill-icon;
         }
     }
 
     .icon {
-        font-size: 24px;
+        font-size: $pill-icon;
     }
 
     // With emojis picked the filter button shows them on a soft yellow, so it reads as on
@@ -672,7 +711,7 @@ p {
         border-radius: $radius-full;
 
         .emoji {
-            font-size: 24px;
+            font-size: $pill-icon;
         }
 
         // Small and quiet, so it reads as "and two more" and not as the new note button
@@ -685,14 +724,14 @@ p {
         // In the desktop rail the emojis stack, so the rail keeps its width
         @media (min-width: $breakpoint-md) {
             flex-direction: column;
-            width: 56px;
+            width: $pill-button;
             height: auto;
             margin: 2px 0;
             padding: 14px 0;
             gap: 6px;
 
             .emoji {
-                font-size: 22px;
+                font-size: min(1.375rem, 30px);
             }
         }
     }
@@ -716,7 +755,7 @@ p {
         transition: transform $transition-fast, box-shadow $transition-fast;
 
         .icon {
-            font-size: 26px;
+            font-size: $pill-icon-lg;
         }
 
         @media (hover: hover) {
@@ -750,7 +789,7 @@ p {
         left: calc(#{$rail-left} + 6px);
         z-index: $z-fixed;
         display: block;
-        width: 56px;
+        width: $pill-button;
         min-width: 0;
         min-height: 0;
         padding: 0;
