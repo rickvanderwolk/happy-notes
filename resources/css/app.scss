@@ -344,13 +344,24 @@ p {
     }
 
     .ce-popover-item__title,
-    .ce-popover__nothing-found-message {
+    .ce-popover__nothing-found-message,
+    .tc-popover__item-label {
         font-size: 0.875rem;
+    }
+
+    // Editor.js and its tools fix these lines in px and clip the rest; Nunito needs more,
+    // or the bottoms of p and y get cut off once the text grows
+    .ce-popover-item__title,
+    .tc-popover__item-label,
+    .ce-inline-tool-input,
+    .cdx-list-start-with-field__input {
+        line-height: 1.4;
     }
 
     // Below 16px iOS zooms the whole page in when a field gets focus, and stays there
     .cdx-search-field__input,
-    .ce-inline-tool-input {
+    .ce-inline-tool-input,
+    .cdx-list-start-with-field__input {
         font-size: max(16px, 1rem);
     }
 
