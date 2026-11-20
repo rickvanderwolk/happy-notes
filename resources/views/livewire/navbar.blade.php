@@ -29,6 +29,9 @@
                                 <a href="{{ $closeUrl }}" class="quick-new" aria-label="Done">
                                     <x-icon name="check" />
                                 </a>
+                                <button type="button" class="quick-copy" data-copy-note data-cy="copy-note" aria-label="Copy note">
+                                    <x-icon name="copy" /><x-icon name="check" />
+                                </button>
                                 <form action="{{ route('note.destroy', ['note' => $uuidFromRoute]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')

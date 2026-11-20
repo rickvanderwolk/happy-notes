@@ -344,10 +344,14 @@ p {
     }
 
     .ce-popover-item__title,
-    .cdx-search-field__input,
-    .ce-popover__nothing-found-message,
-    .ce-inline-tool-input {
+    .ce-popover__nothing-found-message {
         font-size: 0.875rem;
+    }
+
+    // Below 16px iOS zooms the whole page in when a field gets focus, and stays there
+    .cdx-search-field__input,
+    .ce-inline-tool-input {
+        font-size: max(16px, 1rem);
     }
 
     .ce-popover-item__secondary-title {
@@ -359,8 +363,7 @@ p {
     }
 
     @media (max-width: 650px) {
-        .ce-popover-item__title,
-        .ce-inline-tool-input {
+        .ce-popover-item__title {
             font-size: 1rem;
         }
     }
@@ -1083,4 +1086,21 @@ a {
     rotate: 360deg;
     scale: 1.15;
     animation: none;
+}
+
+// Copying the note: the icon turns into a check for a moment
+#main-navbar .quick-copy {
+    .icon-check {
+        display: none;
+    }
+
+    &.is-copied {
+        .icon-copy {
+            display: none;
+        }
+
+        .icon-check {
+            display: inline-block;
+        }
+    }
 }

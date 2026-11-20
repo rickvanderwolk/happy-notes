@@ -9,7 +9,8 @@ select,
   width: 100%;
   height: $input-height;
   padding: $input-padding;
-  font-size: $font-size-base;
+  // Below 16px iOS zooms the page in on focus; a small system text size would get there
+  font-size: max(16px, #{$font-size-base});
   font-family: $font-family;
   color: $text-primary;
   // A softly filled field; the outline only shows while typing

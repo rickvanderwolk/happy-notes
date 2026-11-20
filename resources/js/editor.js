@@ -6,6 +6,7 @@ import Code from '@editorjs/code'
 import Delimiter from '@editorjs/delimiter'
 import Table from '@editorjs/table'
 import Undo from 'editorjs-undo'
+import { blocksToText, copyText } from './note-text'
 
 /**
  * This module is evaluated only once per browser session, because that is how ES modules
@@ -17,6 +18,33 @@ import Undo from 'editorjs-undo'
 let editor = null
 let undo = null
 let attachedTo = null
+// The last saved body, so a copy can be answered right away; a copy event cannot wait for
+// the editor to save.
+let latestData = null
+
+const copyIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>'
+
+// "Copy" in the menu of every block, so a single list can be copied on a phone as well
+class CopyTune {
+    static get isTune() {
+        return true
+    }
+
+    constructor({ block }) {
+        this.block = block
+    }
+
+    render() {
+        return {
+            icon: copyIcon,
+            title: 'Copy',
+            closeOnActivate: true,
+            onActivate: () => {
+                copyText(this.block.save().then((saved) => blocksToText([{ type: saved.tool, data: saved.data }])))
+            },
+        }
+    }
+}
 
 // Same check EditorJS uses; iPads report themselves as a Mac with a touch screen.
 const isIOS = /iP(ad|hone|od)/.test(navigator.platform)
@@ -83,14 +111,17 @@ const destroyEditor = () => {
     editor = null
     undo = null
     attachedTo = null
+    latestData = null
 }
 
 const buildEditor = (container, placeholder) => {
     const saveBodyUrl = container.dataset.saveBodyUrl
     const initialData = JSON.parse(container.dataset.initialData)
+    latestData = initialData
 
     const autoSave = () => {
         editor.save().then((outputData) => {
+            latestData = outputData
             fetch(saveBodyUrl, {
                 method: 'POST',
                 headers: {
@@ -168,7 +199,9 @@ const buildEditor = (container, placeholder) => {
     const instance = new EditorJS({
         holder: container,
         data: initialData,
+        tunes: ['copy'],
         tools: {
+            copy: CopyTune,
             header: {
                 class: Header,
                 inlineToolbar: true
@@ -259,6 +292,45 @@ const initEditor = () => {
     attachedTo = container
     editor = buildEditor(container, document.getElementById('editor-placeholder'))
 }
+
+// The copy button in the pill puts the whole note on the clipboard
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-copy-note]')
+
+    if (!button || !editor) {
+        return
+    }
+
+    copyText(editor.save().then((data) => blocksToText(data.blocks))).then(() => {
+        button.classList.add('is-copied')
+        button.setAttribute('aria-label', 'Copied')
+
+        setTimeout(() => {
+            button.classList.remove('is-copied')
+            button.setAttribute('aria-label', 'Copy note')
+        }, 1500)
+    })
+})
+
+/**
+ * Blocks selected with the mouse are copied by EditorJS as the bare text of each block,
+ * which glues list items together. This runs after it and replaces that text.
+ */
+window.addEventListener('copy', (event) => {
+    const selected = [...document.querySelectorAll('#editorjs .ce-block--selected')]
+
+    if (!latestData || selected.length === 0) {
+        return
+    }
+
+    const blocks = selected.map((element) => latestData.blocks.find((block) => block.id === element.dataset.id))
+
+    if (blocks.includes(undefined)) {
+        return
+    }
+
+    event.clipboardData.setData('text/plain', blocksToText(blocks))
+})
 
 // Covers the visit during which this module is first fetched: livewire:navigated has usually
 // already fired by the time the module finishes loading.

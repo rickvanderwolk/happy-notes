@@ -140,6 +140,38 @@ describe("Notes Tests", () => {
         cy.get('.cdx-list > .cdx-list__item').should('have.length', 2).last().should('contain.text', 'two');
     });
 
+    it("Copies the whole note or a single block as readable text", () => {
+        const title = `Copy note - ${Date.now()}`;
+        const copiedText = () => cy.get('@clipboardWrite')
+            .then((stub) => stub.lastCall.args[0][0].getType('text/plain'))
+            .then((blob) => blob.text());
+
+        cy.get('[data-cy="create-new-note"]').click();
+        cy.get('[data-cy="new-note-title"]').type(title);
+        cy.selectFirstSelectableEmoji();
+        cy.get('[data-cy="save-new-note"]').click();
+        cy.contains('[data-cy="note-list-item"]', title).click();
+
+        cy.get('[data-cy="note-body"] [contenteditable="true"]').first().click();
+        cy.get('.ce-toolbar__plus').click();
+        cy.contains('.ce-popover-item', 'Ordered List').click();
+        cy.focused().type('one{enter}two{enter}{enter}');
+        cy.get('.ce-toolbar__plus').click();
+        cy.contains('.ce-popover-item', 'Checklist').click();
+        cy.focused().type('done{enter}todo');
+        cy.get('.cdx-checklist__item-checkbox').first().click();
+
+        cy.window().then((win) => cy.stub(win.navigator.clipboard, 'write').as('clipboardWrite').resolves());
+
+        cy.get('[data-cy="copy-note"]').click();
+        copiedText().should('eq', '1. one\n2. two\n\n- [x] done\n- [ ] todo');
+
+        cy.get('.cdx-checklist__item-text').last().click();
+        cy.get('.ce-toolbar__settings-btn').click();
+        cy.contains('.ce-popover-item', 'Copy').click();
+        copiedText().should('eq', '- [x] done\n- [ ] todo');
+    });
+
     // Deletes a note it made itself, so the seeded notes other specs rely on stay put
     // whatever order the specs run in.
     it("Delete note", () => {
