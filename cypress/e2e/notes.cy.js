@@ -166,7 +166,7 @@ describe("Notes Tests", () => {
         cy.window().then((win) => cy.stub(win.navigator.clipboard, 'write').as('clipboardWrite').resolves());
 
         cy.get('[data-cy="copy-note"]').click();
-        copiedText().should('eq', '1. one\n2. two\n\n- [x] done\n- [ ] todo');
+        copiedText().should('eq', `${title}\n\n1. one\n2. two\n\n- [x] done\n- [ ] todo`);
 
         cy.get('.cdx-checklist__item-text').last().click();
         cy.get('.ce-toolbar__settings-btn').click();

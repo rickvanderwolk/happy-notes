@@ -293,7 +293,7 @@ const initEditor = () => {
     editor = buildEditor(container, document.getElementById('editor-placeholder'))
 }
 
-// The copy button in the pill puts the whole note on the clipboard
+// The copy button in the pill puts the whole note on the clipboard, title first
 document.addEventListener('click', (event) => {
     const button = event.target.closest('[data-copy-note]')
 
@@ -301,7 +301,10 @@ document.addEventListener('click', (event) => {
         return
     }
 
-    copyText(editor.save().then((data) => blocksToText(data.blocks))).then(() => {
+    const title = document.querySelector('[data-cy="note-title"]')?.textContent.trim() ?? ''
+    const text = editor.save().then((data) => [title, blocksToText(data.blocks)].filter(Boolean).join('\n\n'))
+
+    copyText(text).then(() => {
         button.classList.add('is-copied')
         button.setAttribute('aria-label', 'Copied')
 
