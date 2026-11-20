@@ -44,7 +44,8 @@ const checkPage = (path) => {
 };
 
 themes.forEach((theme) => {
-    describe(`Accessibility (${theme})`, () => {
+    // Switching the colour scheme goes through the Chrome DevTools protocol, which WebKit lacks
+    describe(`Accessibility (${theme})`, { browser: '!webkit' }, () => {
         beforeEach(() => {
             setColorScheme(theme);
         });

@@ -20,7 +20,8 @@ describe("Filter Tests", () => {
         });
     });
 
-    it("Applies the filter on enter with the focus on an emoji, without toggling it", () => {
+    // cy.press() is not available in WebKit
+    it("Applies the filter on enter with the focus on an emoji, without toggling it", { browser: "!webkit" }, () => {
         cy.visit('/filter');
         cy.selectFirstSelectableEmoji().then((picked) => {
             cy.get('[data-cy="emoji-filter-emoji-selector"] button:visible').first().then(($button) => {
