@@ -22,6 +22,57 @@ let attachedTo = null
 const isIOS = /iP(ad|hone|od)/.test(navigator.platform)
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
 
+const itemContent = (item) => item.querySelector(':scope > .cdx-list__item-content')
+
+const currentListItem = () => {
+    const selection = window.getSelection()
+
+    if (!selection?.isCollapsed || !selection.anchorNode) {
+        return null
+    }
+
+    const node = selection.anchorNode
+    const element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement
+
+    return element?.closest('.cdx-list__item-content')?.closest('.cdx-list__item') ?? null
+}
+
+const textBeforeCaret = (item) => {
+    const range = window.getSelection().getRangeAt(0)
+    const before = document.createRange()
+    before.selectNodeContents(itemContent(item))
+    before.setEnd(range.startContainer, range.startOffset)
+
+    return before.toString()
+}
+
+const removeLeadingWhitespace = (element, count) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
+
+    while (count > 0 && walker.nextNode()) {
+        const node = walker.currentNode
+
+        while (count > 0 && /^[ \u00a0]/.test(node.data)) {
+            node.data = node.data.slice(1)
+            count--
+        }
+    }
+}
+
+const pressTab = (content, shiftKey) => {
+    content.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, cancelable: true }))
+}
+
+const placeCaretAtStart = (element) => {
+    const range = document.createRange()
+    range.setStart(element, 0)
+    range.collapse(true)
+
+    const selection = window.getSelection()
+    selection.removeAllRanges()
+    selection.addRange(range)
+}
+
 const destroyEditor = () => {
     try {
         undo?.onDestroy()
@@ -76,6 +127,43 @@ const buildEditor = (container, placeholder) => {
             }
         }, true)
     }
+
+    /**
+     * The list plugin only nests items with Tab and Shift+Tab, which the iOS keyboard does
+     * not have. Two spaces at the start of an item indent it, and Backspace at the start of
+     * a nested item outdents it before it would merge with the item above. Both hand a Tab
+     * keydown to the plugin, so its own nesting code does the work.
+     */
+    container.addEventListener('input', () => {
+        const item = currentListItem()
+
+        if (!item || !item.previousElementSibling || !/^[ \u00a0]{2}$/.test(textBeforeCaret(item))) {
+            return
+        }
+
+        const content = itemContent(item)
+        removeLeadingWhitespace(content, 2)
+        pressTab(content, false)
+        placeCaretAtStart(content)
+    })
+
+    container.addEventListener('keydown', (event) => {
+        if (event.key !== 'Backspace') {
+            return
+        }
+
+        const item = currentListItem()
+
+        if (!item || !item.parentElement.closest('.cdx-list__item') || textBeforeCaret(item) !== '') {
+            return
+        }
+
+        event.preventDefault()
+        event.stopPropagation()
+        const content = itemContent(item)
+        pressTab(content, true)
+        placeCaretAtStart(content)
+    }, true)
 
     const instance = new EditorJS({
         holder: container,

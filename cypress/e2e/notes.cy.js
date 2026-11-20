@@ -119,6 +119,27 @@ describe("Notes Tests", () => {
         });
     });
 
+    it("Nests a list item with two spaces and outdents it with Backspace", () => {
+        const title = `List note - ${Date.now()}`;
+        cy.get('[data-cy="create-new-note"]').click();
+        cy.get('[data-cy="new-note-title"]').type(title);
+        cy.selectFirstSelectableEmoji();
+        cy.get('[data-cy="save-new-note"]').click();
+        cy.contains('[data-cy="note-list-item"]', title).click();
+
+        cy.get('[data-cy="note-body"] [contenteditable="true"]').first().click();
+        cy.get('.ce-toolbar__plus').click();
+        cy.contains('.ce-popover-item', 'Unordered List').click();
+        cy.focused().type('one{enter}  two');
+
+        cy.get('.cdx-list__item-children .cdx-list__item-content').should('have.text', 'two');
+
+        cy.focused().type('{moveToStart}{backspace}');
+
+        cy.get('.cdx-list__item-children').should('not.exist');
+        cy.get('.cdx-list > .cdx-list__item').should('have.length', 2).last().should('contain.text', 'two');
+    });
+
     // Deletes a note it made itself, so the seeded notes other specs rely on stay put
     // whatever order the specs run in.
     it("Delete note", () => {
