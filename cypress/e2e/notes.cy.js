@@ -156,6 +156,8 @@ describe("Notes Tests", () => {
         cy.get('.ce-toolbar__plus').click();
         cy.contains('.ce-popover-item', 'Ordered List').click();
         cy.focused().type('one{enter}two{enter}{enter}');
+        // Typing hides the toolbar; clicking the new empty paragraph brings it back
+        cy.get('.ce-paragraph').last().click();
         cy.get('.ce-toolbar__plus').click();
         cy.contains('.ce-popover-item', 'Checklist').click();
         cy.focused().type('done{enter}todo');
