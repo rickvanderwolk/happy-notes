@@ -69,6 +69,8 @@ final class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public const WELCOME_EMOJIS = ['🎉', '👋', '✨', '🫶'];
+
     public static function welcomeNoteTitle(): string
     {
         return 'Welcome to ' . Config::get('app.name') . '!';
@@ -84,7 +86,7 @@ final class User extends Authenticatable implements MustVerifyEmail
             $note->user_id = $user->id;
             $note->title = self::welcomeNoteTitle();
             $note->body = $body;
-            $note->emojis = ['🎉', '👋', '✨', '🫶'];
+            $note->emojis = self::WELCOME_EMOJIS;
             $note->progress = 50;
             $note->save();
         });

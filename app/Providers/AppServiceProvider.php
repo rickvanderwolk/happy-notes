@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\LogoVariant;
 use App\Helpers\NoteLanguageHelper;
 use Closure;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -35,6 +36,15 @@ final class AppServiceProvider extends ServiceProvider
             ['notes.partials.cards', 'notes.show', 'new', 'notes.form-title'],
             fn ($view) => $view->with('noteLang', NoteLanguageHelper::fromRequest(request()))
         );
+
+        View::composer(['layouts.app', 'layouts.account', 'layouts.guest'], function ($view) {
+            $variant = LogoVariant::current();
+
+            $view->with('logoVariant', $variant)->with(
+                'logoEmojis',
+                $variant === LogoVariant::EMOJI_DAY ? LogoVariant::emojis(auth()->user()) : []
+            );
+        });
 
         // Disable rate limiting only where the tests run, so a misnamed environment on a
         // server keeps it on instead of silently switching it off.

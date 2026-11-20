@@ -166,7 +166,7 @@ img.logo-sm {
         transform: translateY(0) scale(1);
     }
     50% {
-        transform: translateY(-15px) scale(1.05);
+        transform: translateY(calc(-15px * var(--hop, 1))) scale(1.05);
     }
 }
 
@@ -459,4 +459,21 @@ a {
     .landing-story {
         font-size: $font-size-base;
     }
+}
+
+// 1 April: the logo stands on its head, and still jumps up
+[data-logo-variant="april-fools"] img.logo {
+    --hop: -1;
+    rotate: 180deg;
+}
+
+// While hovered it is held right side up; let go and it tips over again
+[data-logo-variant="april-fools"] img.logo {
+    transition: rotate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), scale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-logo-variant="april-fools"] img.logo:hover {
+    rotate: 360deg;
+    scale: 1.15;
+    animation: none;
 }

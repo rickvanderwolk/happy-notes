@@ -28,7 +28,7 @@
 
         @stack('head')
     </head>
-    <body>
+    <body @if($logoVariant) data-logo-variant="{{ $logoVariant }}" @endif @if($logoEmojis) data-logo-emojis="{{ json_encode($logoEmojis, JSON_UNESCAPED_UNICODE) }}" @endif>
         <x-banner/>
 
         <meta name="app-base-url" content="{{ url('/') }}">

@@ -606,3 +606,100 @@ function loadMoreData() {
             isLoading = false;
         });
 }
+
+// World Emoji Day: at the top of every jump the logo turns into one of the user's emojis,
+// most used first, and back
+const jumpPeaks = { 'happy-bounce-app': 0.5, 'gentle-bounce': 0.5, 'rail-logo-hop': 0.87 };
+const flipHalfMs = 140;
+
+const runningJump = (logo) => logo.getAnimations().find((animation) => animation.animationName in jumpPeaks);
+
+const emojiImage = (emoji) => {
+    const text = emoji.replace(/[<>&]/g, '');
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="56" font-size="70" text-anchor="middle" dominant-baseline="middle">${text}</text></svg>`;
+
+    return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+};
+
+const startEmojiDayLogos = () => {
+    if (document.body.dataset.logoVariant !== 'emoji-day') {
+        return;
+    }
+
+    const emojis = JSON.parse(document.body.dataset.logoEmojis ?? '[]');
+
+    if (emojis.length === 0) {
+        return;
+    }
+
+    document.querySelectorAll('img.logo, .empty-state-logo, .rail-logo img').forEach((logo) => {
+        if (logo.dataset.emojiDay) {
+            return;
+        }
+
+        logo.dataset.emojiDay = 'on';
+        const original = logo.src;
+        let next = 0;
+        let timer = null;
+
+        const swap = () => {
+            if (logo.src === original) {
+                logo.src = emojiImage(emojis[next]);
+                next = (next + 1) % emojis.length;
+            } else {
+                logo.src = original;
+            }
+        };
+
+        // A somersault: the image changes while it is edge-on, so the swap itself is never seen
+        const flip = () => {
+            logo.style.transition = `rotate ${flipHalfMs}ms ease-in`;
+            logo.style.rotate = 'x 90deg';
+
+            setTimeout(() => {
+                swap();
+                logo.style.transition = 'none';
+                logo.style.rotate = 'x -90deg';
+                void logo.offsetWidth;
+                logo.style.transition = `rotate ${flipHalfMs}ms ease-out`;
+                logo.style.rotate = 'x 0deg';
+
+                setTimeout(() => {
+                    logo.style.removeProperty('transition');
+                    logo.style.removeProperty('rotate');
+                }, flipHalfMs);
+            }, flipHalfMs);
+        };
+
+        // Waits for the next peak of the jump that is running. Hovering swaps the jump for
+        // a spin, which ends the chain; the jump starting again picks it up.
+        const scheduleSwap = () => {
+            clearTimeout(timer);
+            const jump = runningJump(logo);
+
+            if (!jump) {
+                return;
+            }
+
+            const duration = jump.effect.getTiming().duration;
+            let wait = jumpPeaks[jump.animationName] * duration - (jump.currentTime % duration) - flipHalfMs;
+
+            if (wait < 100) {
+                wait += duration;
+            }
+
+            timer = setTimeout(() => {
+                if (runningJump(logo)) {
+                    flip();
+                    scheduleSwap();
+                }
+            }, wait);
+        };
+
+        logo.addEventListener('animationstart', scheduleSwap);
+        scheduleSwap();
+    });
+};
+
+document.addEventListener('DOMContentLoaded', startEmojiDayLogos);
+document.addEventListener('livewire:navigated', startEmojiDayLogos);
