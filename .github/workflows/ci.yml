@@ -125,9 +125,17 @@ jobs:
       - name: Run PHPUnit (Unit + Feature)
         run: vendor/bin/phpunit --testdox
 
+  # The same specs run in WebKit, the engine of Safari, to catch what only breaks there. Cypress
+  # supports it as an experiment, so that run does not fail the build yet. playwright-webkit is
+  # only installed in this job, so the server, Docker and local installs do not download WebKit.
   cypress:
-    name: Cypress
+    name: ${{ matrix.browser == 'webkit' && 'Cypress (WebKit)' || 'Cypress' }}
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.browser == 'webkit' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [electron, webkit]
 
     steps:
       - name: Checkout
@@ -184,14 +192,20 @@ jobs:
           cat storage/logs/serve.log
           exit 1
 
+      - name: Install WebKit
+        if: matrix.browser == 'webkit'
+        run: |
+          npm install --no-save playwright-webkit@1.65.1
+          npx playwright-core install-deps webkit
+
       - name: Run Cypress
-        run: npx cypress run
+        run: npx cypress run --browser ${{ matrix.browser }}
 
       - name: Upload screenshots of failed tests
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-${{ matrix.browser }}
           path: cypress/screenshots
           if-no-files-found: ignore
 

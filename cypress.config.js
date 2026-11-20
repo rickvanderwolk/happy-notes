@@ -4,6 +4,8 @@ export default defineConfig({
   allowCypressEnv: false,
   // Keep the app's content security policy, so the tests notice when it is broken.
   experimentalCspAllowList: ['default-src', 'script-src', 'script-src-elem', 'form-action'],
+  // Lets CI also run the specs in WebKit, the engine of Safari (needs playwright-webkit)
+  experimentalWebKitSupport: true,
   expose: {
       users: {
           user1: {
