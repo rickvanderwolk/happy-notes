@@ -98,6 +98,9 @@ body {
     font-size: $font-size-base;
     line-height: $line-height-base;
     color: $text-primary;
+    // Long words and links break onto the next line instead of running off the screen,
+    // also when zoomed in or with large text
+    overflow-wrap: anywhere;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -121,7 +124,6 @@ hr {
 p {
     font-size: $font-size-base;
     line-height: $line-height-relaxed;
-    overflow-wrap: anywhere;
     margin-bottom: $space-4;
 }
 

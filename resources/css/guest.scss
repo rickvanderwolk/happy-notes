@@ -144,6 +144,9 @@ body {
     font-family: $font-family;
     color: $text-primary;
     background: $background;
+    // Long words and links break onto the next line instead of running off the screen,
+    // also when zoomed in or with large text
+    overflow-wrap: anywhere;
 }
 
 // Logo styles
